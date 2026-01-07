@@ -1,13 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/ui/header';
 import { useAuth } from '@/lib/auth-context';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
 
-export default function PlantContributionPage() {
+function PlantContributionForm() {
     const searchParams = useSearchParams();
     const districtId = searchParams.get('districtId') || '';
     const districtName = searchParams.get('districtName') || '';
@@ -91,9 +91,7 @@ export default function PlantContributionPage() {
     };
 
     return (
-        <>
-            <Header />
-            <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
+        <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
                 <section className="max-w-3xl mx-auto px-6 pt-10">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                         Plant a tree for your district
@@ -211,6 +209,28 @@ export default function PlantContributionPage() {
                     </p>
                 </section>
             </main>
+    );
+}
+
+export default function PlantContributionPage() {
+    return (
+        <>
+            <Header />
+            <Suspense fallback={
+                <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
+                    <section className="max-w-3xl mx-auto px-6 pt-10">
+                        <div className="bg-white rounded-2xl shadow px-6 py-6 border border-gray-100">
+                            <div className="animate-pulse">
+                                <div className="h-8 bg-gray-200 rounded w-3/4 mb-4"></div>
+                                <div className="h-4 bg-gray-200 rounded w-1/2 mb-6"></div>
+                                <div className="h-32 bg-gray-200 rounded mb-4"></div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+            }>
+                <PlantContributionForm />
+            </Suspense>
         </>
     );
 }
