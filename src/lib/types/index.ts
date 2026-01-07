@@ -40,9 +40,13 @@ export interface TreeContribution {
     healthScore?: number; // Health score 0-100
     speciesConfidence?: 'high' | 'medium' | 'low'; // Confidence in species identification
     analysisNotes?: string; // Notes from AI analysis
+    userId?: string; // Firebase Auth UID
     status: ContributionStatus;
     userName?: string;
+    userEmail?: string;
     notes?: string;
+    imageUrl?: string;
+    storagePath?: string;
     latitude?: number;
     longitude?: number;
     plantedAt: Date;
