@@ -1,4 +1,5 @@
 // Core domain types for the application
+import type { LeaderboardEntry } from './firestore';
 
 export interface District {
     id: string;
