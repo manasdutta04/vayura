@@ -17,6 +17,7 @@ interface ContributionStats {
     verifiedContributions: number;
     pendingContributions: number;
     rejectedContributions: number;
+    verifiedPlantationsCount?: number;
 }
 
 interface ContributionData {
@@ -108,7 +109,10 @@ export default function ContributionPage() {
                             <span className="text-sm text-gray-500">trees</span>
                         </div>
                         <p className="text-xs text-green-600 mt-2 font-medium">
-                            {stats.verifiedContributions > 0 ? `${stats.verifiedContributions} verified` : 'Keep planting!'}
+                            {stats.verifiedPlantationsCount !== undefined
+                                ? `${stats.verifiedPlantationsCount} verified`
+                                : (stats.verifiedContributions > 0 ? `${stats.verifiedContributions} verified` : '0 verified')
+                            }
                         </p>
                     </div>
 
@@ -215,11 +219,7 @@ export default function ContributionPage() {
                                                             </span>
                                                         )}
                                                     </div>
-                                                    {contribution.analysisNotes && (
-                                                        <p className="text-xs text-gray-500 mt-2 bg-gray-50 p-2 rounded border border-gray-100 italic inline-block">
-                                                            AI Note: "{contribution.analysisNotes}"
-                                                        </p>
-                                                    )}
+
                                                 </div>
                                             </div>
                                         </div>
@@ -237,7 +237,7 @@ export default function ContributionPage() {
                                                 </div>
                                                 <div>
                                                     <p className="font-semibold text-gray-900 mb-1">
-                                                        Donated {donation.treeCount} Trees via {donation.ngoReference}
+                                                        Donated {donation.treeCount} {donation.treeName || 'Trees'} via {donation.ngoReference}
                                                     </p>
                                                     <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-500">
                                                         <span className="flex items-center gap-1">
@@ -247,6 +247,18 @@ export default function ContributionPage() {
                                                         {donation.amount && (
                                                             <span className="font-medium text-gray-700">
                                                                 ₹{donation.amount.toLocaleString('en-IN')}
+                                                            </span>
+                                                        )}
+                                                        {donation.districtName && (
+                                                            <span className="flex items-center gap-1">
+                                                                <MapPin className="w-3.5 h-3.5" />
+                                                                {donation.districtName}, {donation.state}
+                                                            </span>
+                                                        )}
+                                                        {donation.totalLifespanO2 && (
+                                                            <span className="flex items-center gap-1 text-green-600 font-medium">
+                                                                <Wind className="w-3.5 h-3.5" />
+                                                                {formatCompactNumber(donation.totalLifespanO2)} kg O₂
                                                             </span>
                                                         )}
                                                     </div>

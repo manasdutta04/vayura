@@ -221,10 +221,35 @@ export async function POST(request: Request) {
             }
         );
 
+        // Species Reference Data (O2 in kg/year, Lifespan in years)
+        const SPECIES_DATA: Record<string, { o2: number, lifespan: number }> = {
+            'mango': { o2: 140, lifespan: 80 }, // Mangifera indica
+            'neem': { o2: 260, lifespan: 200 }, // Azadirachta indica
+            'peepal': { o2: 380, lifespan: 1000 }, // Ficus religiosa (High O2)
+            'banyan': { o2: 400, lifespan: 250 }, // Ficus benghalensis
+            'arjun': { o2: 240, lifespan: 150 }, // Terminalia arjuna
+            'amla': { o2: 125, lifespan: 60 }, // Phyllanthus emblica
+            'jamun': { o2: 130, lifespan: 100 }, // Syzygium cumini
+            'guava': { o2: 80, lifespan: 40 }, // Psidium guajava
+            'teak': { o2: 180, lifespan: 80 }, // Tectona grandis
+            'bamboo': { o2: 300, lifespan: 10 }, // High sequestration rate
+            'ashoka': { o2: 150, lifespan: 60 }, // Saraca asoca
+        };
+
+        function getSpeciesEstimates(name: string) {
+            if (!name) return { o2: 110, lifespan: 50 };
+            const normalized = name.toLowerCase().trim();
+            // Check partial matches (e.g. "Mango Tree" -> matches "mango")
+            const match = Object.keys(SPECIES_DATA).find(species => normalized.includes(species));
+            return match ? SPECIES_DATA[match] : { o2: 110, lifespan: 50 };
+        }
+
         if (!analysisMatrix) {
-            // Fallback: use standard calculation if Gemini fails
-            const standardO2PerYear = 110;
-            const standardLifespan = 50;
+            // Fallback: use species-specific estimates
+            const estimates = getSpeciesEstimates(treeName);
+            const standardO2PerYear = estimates.o2;
+            const standardLifespan = estimates.lifespan;
+
             analysisMatrix = {
                 treeName,
                 treeQuantity,
@@ -232,7 +257,7 @@ export async function POST(request: Request) {
                 estimatedLifespan: standardLifespan,
                 totalLifespanO2: treeQuantity * standardO2PerYear * standardLifespan,
                 speciesConfidence: 'low',
-                notes: 'Analysis unavailable, using standard estimates',
+                notes: 'Analysis unavailable. Estimates based on species data.',
             };
         }
 

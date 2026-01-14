@@ -42,6 +42,7 @@ export interface TreeContribution {
     speciesConfidence?: 'high' | 'medium' | 'low'; // Confidence in species identification
     analysisNotes?: string; // Notes from AI analysis
     userId?: string; // Firebase Auth UID
+    type?: 'plantation' | 'donation';
     status: ContributionStatus;
     userName?: string;
     userEmail?: string;
@@ -67,6 +68,11 @@ export interface Donation {
     amount?: number;
     donatedAt: Date;
     createdAt: Date;
+    // Display fields for verified donations
+    districtName?: string;
+    state?: string;
+    treeName?: string;
+    totalLifespanO2?: number;
 }
 
 // Re-export from firestore for consistency

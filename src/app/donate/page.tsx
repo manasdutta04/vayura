@@ -24,6 +24,7 @@ export default function DonatePage() {
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [treeQuantity, setTreeQuantity] = useState<number>(1);
+    const [treeName, setTreeName] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState<string | null>(null);
@@ -93,13 +94,20 @@ export default function DonatePage() {
             return;
         }
 
+        if (!treeName.trim()) {
+            setError('Please enter the plant/tree name');
+            return;
+        }
+
         try {
             setSubmitting(true);
             const formData = new FormData();
             formData.append('districtId', selectedDistrict.id);
             formData.append('districtName', selectedDistrict.name);
             formData.append('state', selectedDistrict.state);
-            formData.append('treeName', 'Donation Verification'); // Generic name for donation
+            formData.append('districtName', selectedDistrict.name);
+            formData.append('state', selectedDistrict.state);
+            formData.append('treeName', treeName.trim());
             formData.append('treeQuantity', treeQuantity.toString());
             formData.append('contributionType', 'donation');
 
@@ -122,6 +130,7 @@ export default function DonatePage() {
             setImage(null);
             if (previewUrl) revokeImagePreview(previewUrl);
             setPreviewUrl(null);
+            setTreeName('');
             setTreeQuantity(1);
             setSelectedDistrict(null);
 
@@ -302,19 +311,33 @@ export default function DonatePage() {
                                             )}
                                         </div>
 
-                                        {/* Tree Quantity */}
-                                        <div>
-                                            <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                                Trees Funded
-                                            </label>
-                                            <input
-                                                type="number"
-                                                min="1"
-                                                value={treeQuantity}
-                                                onChange={(e) => setTreeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                                                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
-                                                placeholder="Qty"
-                                            />
+                                        {/* Tree Name & Quantity Row */}
+                                        <div className="grid grid-cols-2 gap-4">
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                    Plant Name
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    value={treeName}
+                                                    onChange={(e) => setTreeName(e.target.value)}
+                                                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
+                                                    placeholder="e.g. Mango"
+                                                />
+                                            </div>
+                                            <div>
+                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                    Quantity
+                                                </label>
+                                                <input
+                                                    type="number"
+                                                    min="1"
+                                                    value={treeQuantity}
+                                                    onChange={(e) => setTreeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
+                                                    placeholder="Qty"
+                                                />
+                                            </div>
                                         </div>
 
                                         {/* Receipt Upload */}

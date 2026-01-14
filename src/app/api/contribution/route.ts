@@ -30,7 +30,7 @@ export async function GET(request: Request) {
             .limit(100)
             .get();
 
-        const contributions: TreeContribution[] = contributionsSnap.docs.map((doc) => {
+        const allTreeContributions = contributionsSnap.docs.map((doc) => {
             const data = doc.data();
             return {
                 id: doc.id,
@@ -40,10 +40,15 @@ export async function GET(request: Request) {
                 createdAt: timestampToDate(data.createdAt),
                 updatedAt: timestampToDate(data.updatedAt),
             } as TreeContribution;
-        }).sort((a, b) => {
-            // Sort by plantedAt descending (most recent first)
+        });
+
+        // Split into "Plantations" and "Donation Verifications"
+        // Default to 'plantation' if type is missing (legacy records)
+        const plantations = allTreeContributions.filter(c => !c.type || c.type === 'plantation').sort((a, b) => {
             return b.plantedAt.getTime() - a.plantedAt.getTime();
         });
+
+        const donationVerifications = allTreeContributions.filter(c => c.type === 'donation');
 
         // Fetch user's donations (by email or userId)
         const userEmail = searchParams.get('userEmail');
@@ -62,7 +67,7 @@ export async function GET(request: Request) {
             donationsSnap = { docs: [], empty: true };
         }
 
-        const donations: Donation[] = donationsSnap.docs.map((doc) => {
+        const standardDonations: Donation[] = donationsSnap.docs.map((doc) => {
             const data = doc.data();
             return {
                 id: doc.id,
@@ -70,34 +75,14 @@ export async function GET(request: Request) {
                 donatedAt: timestampToDate(data.donatedAt),
                 createdAt: timestampToDate(data.createdAt),
             } as Donation;
-        }).sort((a, b) => {
-            // Sort by donatedAt descending (most recent first)
-            return b.donatedAt.getTime() - a.donatedAt.getTime();
         });
 
-        // Calculate stats
-        const verifiedContributions = contributions.filter(c => c.status === 'VERIFIED');
-        const pendingContributions = contributions.filter(c => c.status === 'PENDING');
-        const rejectedContributions = contributions.filter(c => c.status === 'REJECTED');
-
-        // Sum tree quantities from verified contributions
-        const totalTreesPlanted = verifiedContributions.reduce((sum, c) => sum + (c.treeQuantity || 1), 0);
-        const totalTreesDonated = donations.reduce((sum, d) => sum + (d.treeCount || 0), 0);
-        const totalTrees = totalTreesPlanted + totalTreesDonated;
-
-        // Calculate O2 impact: use totalLifespanO2 if available, otherwise fallback to annual calculation
-        const totalO2Impact = verifiedContributions.reduce((sum, c) => {
-            if (c.totalLifespanO2) {
-                return sum + c.totalLifespanO2;
-            }
-            // Fallback: annual O2 * average lifespan
-            return sum + ((c.treeQuantity || 1) * 110 * 50);
-        }, 0);
-
-        // Get district names for contributions
-        const districtIds = [...new Set(contributions.map(c => c.districtId))];
+        // Get district names for plantations and donation verifications
+        const districtIds = [...new Set([
+            ...plantations.map(c => c.districtId),
+            ...donationVerifications.map(c => c.districtId)
+        ])];
         const districtsMap = new Map<string, string>();
-
 
         // Batch fetch districts to reduce quota usage
         if (districtIds.length > 0) {
@@ -118,20 +103,64 @@ export async function GET(request: Request) {
             }
         }
 
+        // Map Donation Verifications to Donation type
+        const verifiedDonations: Donation[] = donationVerifications.map(c => ({
+            id: c.id,
+            districtId: c.districtId,
+            ngoReference: 'Verified Donation', // Default for self-verified
+            treeCount: c.treeQuantity || 1,
+            donatedAt: c.plantedAt,
+            createdAt: c.createdAt,
+            // Display fields
+            districtName: c.districtName || districtsMap.get(c.districtId) || 'Unknown',
+            state: c.state,
+            treeName: c.treeName,
+            totalLifespanO2: c.totalLifespanO2
+        }));
+
+        // Merge and sort all donations
+        const allDonations = [...standardDonations, ...verifiedDonations].sort((a, b) => {
+            return b.donatedAt.getTime() - a.donatedAt.getTime();
+        });
+
+        // Calculate stats
+        const verifiedPlantations = plantations.filter(c => c.status === 'VERIFIED');
+        const pendingPlantations = plantations.filter(c => c.status === 'PENDING');
+        const rejectedPlantations = plantations.filter(c => c.status === 'REJECTED');
+
+        // Sum tree quantities
+        const totalTreesPlanted = verifiedPlantations.reduce((sum, c) => sum + (c.treeQuantity || 1), 0);
+        const totalTreesDonated = allDonations.reduce((sum, d) => sum + (d.treeCount || 0), 0);
+        const totalTrees = totalTreesPlanted + totalTreesDonated;
+
+        // Calculate O2 impact (only for plantations + verified donations)
+        let totalO2Impact = verifiedPlantations.reduce((sum, c) => {
+            if (c.totalLifespanO2) return sum + c.totalLifespanO2;
+            return sum + ((c.treeQuantity || 1) * 110 * 50);
+        }, 0);
+
+        // Also add O2 from donation verifications if they have it (since they are tree_contributions originally)
+        const verifiedDonationVerifications = donationVerifications.filter(c => c.status === 'VERIFIED');
+        totalO2Impact += verifiedDonationVerifications.reduce((sum, c) => {
+            if (c.totalLifespanO2) return sum + c.totalLifespanO2;
+            return sum + ((c.treeQuantity || 1) * 110 * 50);
+        }, 0);
+
         return NextResponse.json({
-            contributions: contributions.map(c => ({
+            contributions: plantations.map(c => ({
                 ...c,
                 districtName: districtsMap.get(c.districtId) || 'Unknown',
             })),
-            donations,
+            donations: allDonations,
             stats: {
                 totalTreesPlanted,
                 totalTreesDonated,
                 totalTrees,
                 totalO2Impact,
-                verifiedContributions: verifiedContributions.length,
-                pendingContributions: pendingContributions.length,
-                rejectedContributions: rejectedContributions.length,
+                verifiedContributions: verifiedPlantations.length + verifiedDonationVerifications.length,
+                verifiedPlantationsCount: verifiedPlantations.length,
+                pendingContributions: pendingPlantations.length + donationVerifications.filter(c => c.status === 'PENDING').length,
+                rejectedContributions: rejectedPlantations.length + donationVerifications.filter(c => c.status === 'REJECTED').length,
             },
         });
     } catch (error) {
@@ -142,4 +171,3 @@ export async function GET(request: Request) {
         );
     }
 }
-
