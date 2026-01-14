@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
@@ -278,59 +279,20 @@ function HomeContent() {
               </div>
 
               {/* Visual Element / Abstraction */}
-              <div className="relative group perspective-1000">
+              {/* Visual Element */}
+              <div className="relative group perspective-1000 flex justify-center items-center">
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
-                <div className="relative bg-white/80 backdrop-blur-xl rounded-3xl border border-white/50 shadow-2xl p-8 transform transition-all duration-500 hover:scale-[1.02]">
-                  {/* Glass highlight effect */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-3xl pointer-events-none" />
-
-                  <div className="space-y-8 relative z-10">
-                    {/* Mock Header */}
-                    <div className="flex items-center justify-between pb-6 border-b border-gray-100/50">
-                      <div>
-                        <div className="h-4 w-32 bg-gray-200 rounded mb-2 animate-pulse" />
-                        <div className="h-3 w-20 bg-gray-100 rounded animate-pulse delay-75" />
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-red-400 animate-pulse" />
-                        <div className="w-2 h-2 rounded-full bg-yellow-400 animate-pulse delay-75" />
-                        <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse delay-150" />
-                      </div>
-                    </div>
-
-                    {/* Mock Content Grid */}
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="bg-blue-50/50 p-5 rounded-2xl border border-blue-100/50">
-                        <div className="h-10 w-10 bg-blue-100 rounded-xl mb-3 flex items-center justify-center text-blue-500">
-                          <Wind className="w-5 h-5" />
-                        </div>
-                        <div className="h-4 w-20 bg-blue-200/50 rounded mb-2" />
-                        <div className="h-3 w-12 bg-blue-100/50 rounded" />
-                      </div>
-                      <div className="bg-green-50/50 p-5 rounded-2xl border border-green-100/50">
-                        <div className="h-10 w-10 bg-green-100 rounded-xl mb-3 flex items-center justify-center text-green-500">
-                          <Sprout className="w-5 h-5" />
-                        </div>
-                        <div className="h-4 w-20 bg-green-200/50 rounded mb-2" />
-                        <div className="h-3 w-12 bg-green-100/50 rounded" />
-                      </div>
-                    </div>
-
-                    {/* Mock Graph/Bar */}
-                    <div className="bg-gray-50/50 p-5 rounded-2xl border border-gray-100/50 space-y-3">
-                      <div className="flex justify-between text-xs text-gray-400 mb-1">
-                        <span>Analysis</span>
-                        <span>85% Match</span>
-                      </div>
-                      <div className="h-3 w-full bg-gray-100 rounded-full overflow-hidden">
-                        <div className="h-full w-[85%] bg-gradient-to-r from-blue-400 to-green-400 rounded-full" />
-                      </div>
-                      <div className="flex gap-2 mt-2">
-                        <div className="h-2 w-16 bg-gray-200 rounded-full" />
-                        <div className="h-2 w-10 bg-gray-100 rounded-full" />
-                      </div>
-                    </div>
-                  </div>
+                <div className="relative z-10 transform transition-all duration-500 hover:scale-[1.02] shadow-2xl rounded-3xl overflow-hidden bg-white/50 border border-white/50 p-2">
+                  <Image
+                    src="/demo.png"
+                    alt="Vayura Process Demo"
+                    width={1000}
+                    height={700}
+                    quality={100}
+                    priority
+                    unoptimized
+                    className="rounded-2xl object-cover w-full h-auto shadow-sm"
+                  />
                 </div>
               </div>
             </div>
