@@ -1,14 +1,14 @@
+import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
+import { ShareButtons } from '@/components/ui/share-buttons';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
     try {
-        // For server components, use absolute URL with environment variable or fallback
-        // In production, this should be set to the actual domain
         const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
                        (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
         
@@ -22,6 +22,67 @@ async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
         console.error('Error fetching district detail:', error);
         return null;
     }
+}
+
+// Generate dynamic metadata for each district
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+    const { slug } = await params;
+    const data = await getDistrictDetail(slug);
+    
+    if (!data) {
+        return {
+            title: 'District Not Found | Vayura',
+        };
+    }
+
+    const treesRequired = Math.round(data.oxygenCalculation.trees_required);
+    const aqi = Math.round(data.environmentalData.aqi);
+    
+    const title = `${data.name}, ${data.state} - Environmental Health Card | Vayura`;
+    const description = `${data.name} needs ${formatCompactNumber(treesRequired)} trees to balance oxygen demand. Current AQI: ${aqi}. Population: ${formatCompactNumber(data.population)}. Help spread awareness about environmental health!`;
+    
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 
+                   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000');
+    
+    const url = `${baseUrl}/district/${slug}`;
+    
+    // Dynamic OG image with district stats
+    const ogImage = `${baseUrl}/api/og?district=${encodeURIComponent(data.name)}&state=${encodeURIComponent(data.state)}&trees=${treesRequired}&aqi=${aqi}&population=${data.population}`;
+
+    return {
+        title,
+        description,
+        openGraph: {
+            title,
+            description,
+            url,
+            siteName: 'Vayura',
+            images: [
+                {
+                    url: ogImage,
+                    width: 1200,
+                    height: 630,
+                    alt: `Environmental data for ${data.name}, ${data.state}`,
+                },
+            ],
+            locale: 'en_IN',
+            type: 'website',
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [ogImage],
+            creator: '@vayura',
+        },
+        robots: {
+            index: true,
+            follow: true,
+        },
+        alternates: {
+            canonical: url,
+        },
+    };
 }
 
 interface DistrictPageProps {
@@ -58,7 +119,14 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                                 Estimated population {formatNumber(data.population)}. Data refreshed in the last 24 hours.
                             </p>
                         </div>
-                        <div className="flex gap-3">
+                        <div className="flex gap-3 flex-wrap">
+                            <ShareButtons
+                                districtName={data.name}
+                                state={data.state}
+                                aqi={data.environmentalData.aqi}
+                                treesRequired={calc.trees_required}
+                                population={data.population}
+                            />
                             <Link
                                 href="/plant"
                                 className="px-5 py-3 rounded-full bg-nature-600 text-white font-semibold hover:bg-nature-700 transition"
@@ -208,5 +276,3 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
         </>
     );
 }
-
-

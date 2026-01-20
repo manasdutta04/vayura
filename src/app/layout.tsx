@@ -18,10 +18,28 @@ export const metadata: Metadata = {
   description: "Discover your district's oxygen demand, environmental health, and the trees needed to restore balance. Track and contribute to India's green movement.",
   keywords: ["oxygen", "trees", "environment", "India", "districts", "plantation", "climate"],
   authors: [{ name: "Vayura Team" }],
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
   openGraph: {
     title: "Vayura - District Oxygen Intelligence",
     description: "Calculate oxygen demand and tree requirements for Indian districts",
     type: "website",
+    siteName: "Vayura",
+    locale: "en_IN",
+    images: [
+      {
+        url: "/og-image.png", // Add a default OG image at public/og-image.png
+        width: 1200,
+        height: 630,
+        alt: "Vayura - District Oxygen Intelligence for India",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Vayura - District Oxygen Intelligence",
+    description: "Calculate oxygen demand and tree requirements for Indian districts",
+    images: ["/og-image.png"],
+    creator: "@vayura",
   },
   icons: {
     icon: [
@@ -38,6 +56,10 @@ export const metadata: Metadata = {
     ],
   },
   manifest: '/favicon/site.webmanifest',
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({
