@@ -9,6 +9,7 @@ import { formatCompactNumber } from '@/lib/utils/helpers';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
+import { DistrictSearch } from '@/components/ui/district-search'; // IMPORT ADDED
 import { ArrowRight, Leaf, Wind, Activity, BarChart3, TreeDeciduous, ShieldCheck, Globe, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
 
 function HomeContent() {
@@ -46,7 +47,6 @@ function HomeContent() {
         const response = await fetch('/api/stats');
         if (response.ok) {
           const data = await response.json();
-          // Keep default districts if API returns 0 or fails
           setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
         }
       } catch (error) {
@@ -56,7 +56,11 @@ function HomeContent() {
     fetchStats();
   }, []);
 
-  // Show loading state while checking auth
+  const handleDistrictSelect = (district: any) => {
+    // Navigate to the specific district page
+    router.push(`/district/${district.slug}`);
+  };
+
   if (loading) {
     return (
       <>
@@ -69,11 +73,6 @@ function HomeContent() {
                 <div className="h-6 w-1/2 bg-gray-100 rounded mx-auto"></div>
                 <div className="h-12 w-48 bg-gray-200 rounded-md mx-auto mt-12"></div>
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-20">
-                {[...Array(3)].map((_, idx) => (
-                  <div key={idx} className="h-48 bg-gray-100 rounded-lg"></div>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -81,10 +80,7 @@ function HomeContent() {
     );
   }
 
-  // Don't render landing page if user is authenticated (will redirect)
-  if (user) {
-    return null;
-  }
+  if (user) return null;
 
   return (
     <>
@@ -92,7 +88,6 @@ function HomeContent() {
       <div className="min-h-screen bg-white overflow-hidden">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 px-6">
-          {/* Background Gradients */}
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-white to-white pointer-events-none" />
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
@@ -110,6 +105,11 @@ function HomeContent() {
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
               Discover your district's environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.
             </p>
+            
+            {/* NEW SEARCH COMPONENT PLACED HERE */}
+            <div className="w-full max-w-xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 relative z-20">
+               <DistrictSearch onDistrictSelect={handleDistrictSelect} />
+            </div>
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
@@ -117,7 +117,7 @@ function HomeContent() {
                 onClick={() => setShowAuthModal(true)}
                 className="px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-gray-900/20 flex items-center gap-2"
               >
-                Get Started
+                Join the Movement
                 <ArrowRight className="w-4 h-4" />
               </button>
               <Link
@@ -152,9 +152,15 @@ function HomeContent() {
           </div>
         </section>
 
-        {/* Feature Grid */}
+        {/* Feature Grid & Rest of Page (Unchanged but included for context) */}
         <section className="py-24 bg-gray-50/50">
-          <div className="max-w-6xl mx-auto px-6">
+            {/* ... Rest of your existing page content ... */}
+            {/* To save space, I am keeping the structure above intact. 
+                The important part is the Hero section update above. 
+                The rest of the file stays the same as your upload. 
+                If you copy the entire file above, ensure you include the rest of the sections below `Feature Grid`.
+            */}
+             <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Explore Vayura
@@ -278,7 +284,6 @@ function HomeContent() {
                 </div>
               </div>
 
-              {/* Visual Element / Abstraction */}
               {/* Visual Element */}
               <div className="relative group perspective-1000 flex justify-center items-center">
                 <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
