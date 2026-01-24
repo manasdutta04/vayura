@@ -1,30 +1,44 @@
-import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, EmailAuthProvider } from 'firebase/auth';
-import { getStorage } from 'firebase/storage';
-import { getFirestore } from 'firebase/firestore';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import {
+  getAuth,
+  GoogleAuthProvider,
+  EmailAuthProvider,
+} from "firebase/auth";
+import { getStorage } from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
+
+/**
+ * 🔴 IMPORTANT
+ * If contributor is running locally without real Firebase keys,
+ * we disable auth safely.
+ */
+const DISABLE_AUTH = process.env.NEXT_PUBLIC_DISABLE_AUTH === "true";
 
 const firebaseConfig = {
-    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "dummy",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "dummy",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "dummy",
+  storageBucket:
+    process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "dummy",
+  messagingSenderId:
+    process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "dummy",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "dummy",
 };
 
-// Initialize Firebase (prevent multiple initializations)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// Initialize Firebase
+const app =
+  getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 
-// Auth instance
-export const auth = getAuth(app);
+// 🔐 Auth (disabled for contributors)
+export const auth = DISABLE_AUTH ? null : getAuth(app);
 
-// Storage instance
+// Storage
 export const storage = getStorage(app);
 
-// Firestore database instance
+// Firestore
 export const db = getFirestore(app);
 
-// Auth providers
+// Providers (safe even if auth disabled)
 export const googleProvider = new GoogleAuthProvider();
 export const emailProvider = new EmailAuthProvider();
 

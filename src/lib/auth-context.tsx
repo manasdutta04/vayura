@@ -29,6 +29,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
+        // 🔴 If auth is disabled / not configured
+        if (!auth) {
+            setUser(null);
+            setLoading(false);
+            return;
+        }
+
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setUser(user);
             setLoading(false);
@@ -38,48 +45,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const signInWithGoogle = async () => {
-        try {
-            await signInWithPopup(auth, googleProvider);
-        } catch (error) {
-            console.error('Google sign-in error:', error);
-            throw error;
-        }
+        if (!auth) return;
+        await signInWithPopup(auth, googleProvider);
     };
 
     const signInWithEmail = async (email: string, password: string) => {
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-            console.error('Email sign-in error:', error);
-            throw error;
-        }
+        if (!auth) return;
+        await signInWithEmailAndPassword(auth, email, password);
     };
 
     const signUpWithEmail = async (email: string, password: string) => {
-        try {
-            await createUserWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-            console.error('Email sign-up error:', error);
-            throw error;
-        }
+        if (!auth) return;
+        await createUserWithEmailAndPassword(auth, email, password);
     };
 
     const signOut = async () => {
-        try {
-            await firebaseSignOut(auth);
-        } catch (error) {
-            console.error('Sign-out error:', error);
-            throw error;
-        }
+        if (!auth) return;
+        await firebaseSignOut(auth);
     };
 
     const resetPassword = async (email: string) => {
-        try {
-            await sendPasswordResetEmail(auth, email);
-        } catch (error) {
-            console.error('Password reset error:', error);
-            throw error;
-        }
+        if (!auth) return;
+        await sendPasswordResetEmail(auth, email);
     };
 
     return (
