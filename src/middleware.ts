@@ -1,38 +1,23 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { routing } from './i18n/routing';
 
 /**
- * Middleware to enforce authentication
- * Redirects unauthenticated users to home page
+ * Middleware to handle internationalization (i18n) routing
+ * - Detects user's preferred locale from browser settings
+ * - Redirects to appropriate locale-prefixed URLs
+ * - Handles locale switching
  */
-export function middleware(request: NextRequest) {
-    // Public paths that don't require auth
-    const publicPaths = ['/', '/signin'];
-    const path = request.nextUrl.pathname;
+export default createMiddleware(routing);
 
-    // Allow public paths and API routes
-    if (publicPaths.includes(path) || path.startsWith('/api/')) {
-        return NextResponse.next();
-    }
-
-    // Protected paths require authentication
-    // Note: We're using client-side auth checks in the actual pages
-    // This middleware is just for additional security layer
-    
-    return NextResponse.next();
-}
-
-// Configure which paths this middleware runs on
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * - public files (images, etc)
-         */
-        '/((?!_next/static|_next/image|favicon.ico|.*\\..*|api/).*)',
-    ],
+  // Match all pathnames except:
+  // - API routes (/api/...)
+  // - Static files (_next/static, _next/image, favicon.ico)
+  // - Public assets (images, etc.)
+  matcher: [
+    // Match all pathnames except for
+    // - … if they start with `/api`, `/_next` or `/_vercel`
+    // - … the ones containing a dot (e.g. `favicon.ico`)
+    '/((?!api|_next|_vercel|.*\\..*).*)',
+  ],
 };
-
