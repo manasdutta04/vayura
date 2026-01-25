@@ -1,8 +1,8 @@
 import BackToTop from "@/components/BackToTop";
+import { Providers } from "./providers";
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
-import { Providers } from "./providers";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -47,7 +47,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html suppressHydrationWarning>
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
         <Providers>
           {children}

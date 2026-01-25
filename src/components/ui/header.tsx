@@ -1,13 +1,16 @@
 'use client';
 
-import Link from 'next/link';
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from './auth-modal';
 import { Sprout } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { LanguageSwitcher } from './language-switcher';
 
 export function Header() {
+    const t = useTranslations();
     const { user, loading, signOut } = useAuth();
     const [showAuthModal, setShowAuthModal] = useState(false);
     const [showUserMenu, setShowUserMenu] = useState(false);
@@ -21,10 +24,12 @@ export function Header() {
                     <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                         <img
                             src="/logo.png"
-                            alt="Vayura"
+                            alt={t('common.brandName')}
                             className="h-8 sm:h-10 w-auto"
                         />
-                        <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
+                        <span className="text-lg font-semibold text-gray-900 tracking-tight">
+                            {t('common.brandName')}
+                        </span>
                     </Link>
 
                     {/* Desktop Navigation */}
@@ -71,7 +76,7 @@ export function Header() {
                                     href="/dashboard"
                                     className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
                                 >
-                                    Dashboard
+                                    {t('nav.dashboard')}
                                 </Link>
                                 <Link
                                     href="/analytics"
@@ -83,20 +88,23 @@ export function Header() {
                                     href="/plant"
                                     className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
                                 >
-                                    Plant a Tree
+                                    {t('nav.plantTree')}
                                 </Link>
                                 <Link
                                     href="/donate"
                                     className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
                                 >
-                                    Donate Tree
+                                    {t('nav.donateTree')}
                                 </Link>
                             </>
                         )}
                     </nav>
 
-                    {/* Mobile + Auth */}
+                    {/* Mobile + Auth + Language */}
                     <div className="flex items-center gap-2 sm:gap-3">
+                        {/* Language Switcher */}
+                        <LanguageSwitcher />
+
                         {/* Mobile Hamburger Menu */}
                         <button
                             onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -125,7 +133,7 @@ export function Header() {
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
                                     </svg>
-                                    Contribute
+                                    {t('nav.contribute')}
                                 </a>
                                 <div className="relative">
                                     <button
@@ -167,7 +175,7 @@ export function Header() {
                                                 className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                                                 onClick={() => setShowUserMenu(false)}
                                             >
-                                                My Contributions
+                                                {t('nav.myContributions')}
                                             </Link>
                                             <button
                                                 onClick={() => {
@@ -176,7 +184,7 @@ export function Header() {
                                                 }}
                                                 className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-50"
                                             >
-                                                Sign Out
+                                                {t('auth.signOut')}
                                             </button>
                                         </div>
                                     )}
@@ -193,13 +201,13 @@ export function Header() {
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
                                     </svg>
-                                    Contribute
+                                    {t('nav.contribute')}
                                 </a>
                                 <button
                                     onClick={() => setShowAuthModal(true)}
                                     className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
                                 >
-                                    Sign In
+                                    {t('auth.signIn')}
                                 </button>
                             </>
                         )}
@@ -231,13 +239,13 @@ export function Header() {
                         >
                             <nav className="flex flex-col p-4 pt-2 min-h-full">
                                 {/* Menu Header with Close Button */}
-                                <motion.div 
+                                <motion.div
                                     initial={{ opacity: 0, y: -10 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ delay: 0.1, duration: 0.3 }}
                                     className="flex items-center justify-between px-4 py-2 border-b border-gray-100"
                                 >
-                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Navigate</h3>
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">{t('nav.navigate')}</h3>
                                     <button
                                         onClick={() => setShowMobileMenu(false)}
                                         className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-all duration-200 transform hover:scale-110 active:scale-95"
@@ -275,7 +283,7 @@ export function Header() {
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
-                                    <span>Leaderboard</span>
+                                    <span>{t('nav.leaderboard')}</span>
                                 </Link>
 
                                 <Link
@@ -308,7 +316,7 @@ export function Header() {
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                     </svg>
-                                    <span>CO₂ Calculator</span>
+                                    <span>{t('nav.calculator')}</span>
                                 </Link>
 
                                 <Link
@@ -319,7 +327,7 @@ export function Header() {
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                     </svg>
-                                    <span>Methodology</span>
+                                    <span>{t('nav.methodology')}</span>
                                 </Link>
 
                                 {user && (
@@ -347,8 +355,10 @@ export function Header() {
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                                     </svg>
-                                    <span>Plant a Tree</span>
-                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Action</span>
+                                    <span>{t('nav.plantTree')}</span>
+                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                                        {t('common.action')}
+                                    </span>
                                 </Link>
 
                                 <Link
@@ -359,8 +369,10 @@ export function Header() {
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                     </svg>
-                                    <span>Donate Tree</span>
-                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Action</span>
+                                    <span>{t('nav.donateTree')}</span>
+                                    <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">
+                                        {t('common.action')}
+                                    </span>
                                 </Link>
                                 
                                 {/* Mobile Contribute Button */}
@@ -382,7 +394,7 @@ export function Header() {
                             {/* Footer Info */}
                             <div className="pt-6 pb-4 px-4 border-t border-gray-100">
                                 <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1">
-                                    Vayura - Making India Greener <Sprout className="w-4 h-4 text-green-500" />
+                                    {t('common.brandName')} - {t('common.builtWithLove')} <Sprout className="w-4 h-4 text-green-500" />
                                 </p>
                             </div>
                         </nav>

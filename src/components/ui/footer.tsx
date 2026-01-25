@@ -1,9 +1,13 @@
-import Link from 'next/link';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Github, Heart, Sprout, Linkedin } from 'lucide-react';
 import Image from 'next/image';
 
-
 export function Footer() {
+  const t = useTranslations();
+
   return (
     <footer className="bg-white border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
@@ -16,18 +20,18 @@ export function Footer() {
             <Link href="/" className="flex items-center gap-2 mb-4">
               <Image
                 src="/logo.png"
-                alt="Vayura"
+                alt={t('common.brandName')}
                 width={32}
                 height={32}
                 className="h-8 w-auto"
               />
               <span className="text-lg font-semibold text-gray-900 tracking-tight">
-                Vayura
+                {t('common.brandName')}
               </span>
             </Link>
 
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
-              Empowering India's green future through data-driven oxygen intelligence and community action.
+              {t('footer.description')}
             </p>
 
             <div className="flex gap-4">
@@ -63,19 +67,16 @@ export function Footer() {
                   Home
                 </Link>
               </li>
-
               <li>
                 <Link href="/about" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
                   About
                 </Link>
               </li>
-
               <li>
                 <Link href="/contact" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
                   Contact
                 </Link>
               </li>
-
               <li>
                 <Link href="/feedback" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
                   Feedback
@@ -87,33 +88,53 @@ export function Footer() {
           {/* Platform */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-              Platform
+              {t('footer.platform')}
             </h3>
             <ul className="space-y-3">
-              <li><Link href="/dashboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Dashboard</Link></li>
-              <li><Link href="/leaderboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">State Leaderboard</Link></li>
-              <li><Link href="/calculator" className="text-sm text-gray-500 hover:text-green-600 transition-colors">CO₂ Calculator</Link></li>
-              <li><Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Methodology</Link></li>
-              <li><Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Analytics</Link></li>
+              <li>
+                <Link href="/dashboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('nav.dashboard')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('footer.stateLeaderboard')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/calculator" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('nav.calculator')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('nav.methodology')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  Analytics
+                </Link>
+              </li>
             </ul>
           </div>
 
           {/* Take Action */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-              Take Action
+              {t('footer.takeAction')}
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/plant" className="text-sm text-gray-500 hover:text-green-600 transition-colors flex items-center gap-2">
                   <Sprout className="w-4 h-4" />
-                  Plant a Tree
+                  {t('nav.plantTree')}
                 </Link>
               </li>
               <li>
                 <Link href="/donate" className="text-sm text-gray-500 hover:text-green-600 transition-colors flex items-center gap-2">
                   <Heart className="w-4 h-4" />
-                  Donate Trees
+                  {t('footer.donateTrees')}
                 </Link>
               </li>
             </ul>
@@ -122,12 +143,24 @@ export function Footer() {
           {/* Legal */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-              Legal
+              {t('footer.legal')}
             </h3>
             <ul className="space-y-3">
-              <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/terms" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/data-policy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Data Sources</Link></li>
+              <li>
+                <Link href="/privacy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('footer.privacyPolicy')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('footer.termsOfService')}
+                </Link>
+              </li>
+              <li>
+                <Link href="/data-policy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  {t('footer.dataSources')}
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -136,12 +169,11 @@ export function Footer() {
         {/* Bottom Bar */}
         <div className="border-t border-gray-100 mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-400">
-            © {new Date().getFullYear()} Vayura. All rights reserved.
+            {t('footer.copyright', { year: new Date().getFullYear() })}
           </p>
           <div className="flex items-center gap-1 text-xs text-gray-400">
-            <span>Built with</span>
+            <span>{t('common.builtWithLove')}</span>
             <Heart className="w-3 h-3 text-red-400 fill-red-400" />
-            <span>for India</span>
           </div>
         </div>
       </div>

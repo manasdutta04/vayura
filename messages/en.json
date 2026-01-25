@@ -1,0 +1,244 @@
+{
+  "common": {
+    "brandName": "Vayura",
+    "tagline": "District Oxygen Intelligence for India",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Try again",
+    "cancel": "Cancel",
+    "save": "Save",
+    "submit": "Submit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "viewAll": "View All",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "districts": "Districts",
+    "treesPlanted": "Trees Planted",
+    "oxygenAdded": "Oxygen Added",
+    "liveMonitoring": "Live Monitoring",
+    "action": "Action",
+    "builtWithLove": "Built with love for India"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "leaderboard": "Leaderboard",
+    "calculator": "CO₂ Calculator",
+    "methodology": "Methodology",
+    "plantTree": "Plant a Tree",
+    "donateTree": "Donate Tree",
+    "contribute": "Contribute",
+    "myContributions": "My Contributions",
+    "navigate": "Navigate"
+  },
+  "footer": {
+    "description": "Empowering India's green future through data-driven oxygen intelligence and community action.",
+    "platform": "Platform",
+    "stateLeaderboard": "State Leaderboard",
+    "takeAction": "Take Action",
+    "donateTrees": "Donate Trees",
+    "legal": "Legal",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "dataSources": "Data Sources",
+    "copyright": "© {year} Vayura. All rights reserved."
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "welcomeBack": "Welcome Back",
+    "createAccount": "Create Account",
+    "resetPassword": "Reset Password",
+    "signInDescription": "Sign in to track your contributions",
+    "signUpDescription": "Join the green movement",
+    "resetDescription": "Enter your email to reset password",
+    "continueWithGoogle": "Continue with Google",
+    "or": "or",
+    "email": "Email",
+    "password": "Password",
+    "emailPlaceholder": "you@example.com",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "backToSignIn": "Back to sign in",
+    "sendResetEmail": "Send Reset Email",
+    "resetEmailSent": "Password reset email sent! Check your inbox.",
+    "googleSignInFailed": "Google sign-in failed"
+  },
+  "home": {
+    "hero": {
+      "badge": "Monitoring {count} Districts Across India",
+      "title": "District Oxygen",
+      "titleHighlight": "Intelligence",
+      "subtitle": "Discover your district's environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.",
+      "joinMovement": "Join the Movement",
+      "viewMethodology": "View Methodology"
+    },
+    "stats": {
+      "districts": "Districts",
+      "treesPlanted": "Trees Planted",
+      "oxygenAdded": "Oxygen Added",
+      "live": "Live",
+      "monitoring": "Monitoring"
+    },
+    "features": {
+      "title": "Explore Vayura",
+      "subtitle": "Powerful tools to monitor the environment, track your impact, and take action.",
+      "liveDashboard": {
+        "title": "Live Dashboard",
+        "description": "Real-time environmental monitoring with AQI, soil health, and disaster alerts for every district."
+      },
+      "leaderboard": {
+        "title": "Leaderboard",
+        "description": "Compete with other eco-warriors and see who is making the biggest difference across India."
+      },
+      "calculator": {
+        "title": "CO₂ Calculator",
+        "description": "Calculate your personal carbon footprint and understand your environmental impact."
+      },
+      "plantTree": {
+        "title": "Plant a Tree",
+        "description": "Take direct action by planting native trees in deforested areas with verified tracking."
+      },
+      "donateTree": {
+        "title": "Donate Tree",
+        "description": "Support local verified NGOs to plant and maintain trees on your behalf."
+      },
+      "contributions": {
+        "title": "My Contributions",
+        "description": "Track your personal planting history, certificates, and impact milestones."
+      }
+    },
+    "howItWorks": {
+      "badge": "The Process",
+      "title": "From Analysis to",
+      "titleHighlight": "Restoration",
+      "step1": {
+        "number": "01",
+        "title": "Select District",
+        "description": "Choose any Indian district to view its environmental report card."
+      },
+      "step2": {
+        "number": "02",
+        "title": "Analyze Deficit",
+        "description": "Our AI calculates the precise oxygen gap based on population and pollution."
+      },
+      "step3": {
+        "number": "03",
+        "title": "Plant & Restore",
+        "description": "Contribute trees directly or donate to verified local NGOs."
+      }
+    },
+    "cta": {
+      "title": "Ready to make an impact?",
+      "subtitle": "Join thousands of citizens using Vayura to monitor their local environment and take verified climate action.",
+      "button": "Join Vayura Now"
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome Back",
+    "searchDistrict": "Search for a district...",
+    "yourStats": "Your Impact Stats",
+    "treesPlanted": "Trees Planted",
+    "treesDonated": "Trees Donated",
+    "lifetimeOxygen": "Lifetime Oxygen",
+    "quickActions": "Quick Actions",
+    "environmentalTips": "Environmental Tips",
+    "tip1": "A single mature tree can absorb about 21 kg of CO₂ per year.",
+    "tip2": "Native trees support local wildlife and require less maintenance.",
+    "tip3": "Trees planted near homes can reduce cooling costs by up to 25%."
+  },
+  "leaderboard": {
+    "title": "State Leaderboard",
+    "subtitle": "See which states are leading the charge for a greener India.",
+    "rank": "Rank",
+    "state": "State",
+    "treesPlanted": "Trees Planted",
+    "oxygenGenerated": "O₂ Generated",
+    "selfSufficiency": "Self-Sufficiency"
+  },
+  "calculator": {
+    "title": "CO₂ Calculator",
+    "subtitle": "Calculate how many trees you need to offset your carbon footprint.",
+    "treesInput": "Number of Trees",
+    "calculate": "Calculate Impact",
+    "results": {
+      "co2Absorbed": "CO₂ Absorbed per Year",
+      "oxygenProduced": "Oxygen Produced per Year",
+      "equivalentTo": "Equivalent to"
+    }
+  },
+  "plant": {
+    "title": "Plant a Tree",
+    "subtitle": "Submit your tree planting contribution with photo verification.",
+    "form": {
+      "district": "District",
+      "selectDistrict": "Select your district",
+      "treesPlanted": "Number of Trees Planted",
+      "treeType": "Type of Tree (optional)",
+      "photo": "Upload Photo Proof",
+      "photoHint": "Upload a clear photo of the planted tree(s)",
+      "location": "Location (optional)",
+      "notes": "Additional Notes (optional)",
+      "submit": "Submit Contribution"
+    },
+    "success": "Thank you! Your contribution has been submitted for verification.",
+    "pending": "Pending Verification"
+  },
+  "donate": {
+    "title": "Donate Trees",
+    "subtitle": "Support verified NGOs to plant trees on your behalf.",
+    "verifiedNGO": "Verified NGO",
+    "treeCost": "per tree",
+    "donateNow": "Donate Now",
+    "totalDonated": "Total trees donated through this NGO"
+  },
+  "contribution": {
+    "title": "My Contributions",
+    "subtitle": "Track your environmental impact journey.",
+    "totalTrees": "Total Trees",
+    "totalOxygen": "Total Oxygen Impact",
+    "contributions": "Contributions",
+    "noContributions": "No contributions yet. Start planting!",
+    "status": {
+      "verified": "Verified",
+      "pending": "Pending",
+      "rejected": "Rejected"
+    }
+  },
+  "district": {
+    "environmentalHealth": "Environmental Health Score",
+    "airQuality": "Air Quality Index",
+    "soilQuality": "Soil Quality",
+    "disasterRisk": "Disaster Risk",
+    "population": "Population",
+    "oxygenDemand": "Oxygen Demand",
+    "oxygenSupply": "Oxygen Supply",
+    "deficit": "Deficit",
+    "treesNeeded": "Trees Needed",
+    "takeAction": "Take Action",
+    "viewFullReport": "View Full Report"
+  },
+  "methodology": {
+    "title": "Our Methodology",
+    "subtitle": "Understanding how we calculate oxygen demand and supply.",
+    "transparency": "Full Transparency",
+    "scientificBasis": "Scientific Basis"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "unauthorized": "Please sign in to access this page",
+    "serverError": "Something went wrong. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "validationError": "Please check your input and try again."
+  },
+  "metadata": {
+    "title": "Vayura - District Oxygen Intelligence for India",
+    "description": "Discover your district's oxygen demand, environmental health, and the trees needed to restore balance. Track and contribute to India's green movement.",
+    "ogTitle": "Vayura - District Oxygen Intelligence",
+    "ogDescription": "Calculate oxygen demand and tree requirements for Indian districts"
+  }
+}
