@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { AdminGuard } from '@/components/admin-guard';
+import { Header } from '@/components/ui/header';
+import { Footer } from '@/components/ui/footer';
 import { 
     LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
     BarChart, Bar, Cell, PieChart, Pie, Sector,
@@ -102,8 +104,10 @@ export default function AnalyticsPage() {
 
     return (
         <AdminGuard>
-            <div className="min-h-screen bg-gray-50 p-4 md:p-8 print:bg-white print:p-0">
-                <header className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 print:hidden">
+            <Header />
+            <div className="min-h-screen bg-gray-50 pt-24 pb-12 px-4 md:px-8 print:bg-white print:p-0">
+                <div className="max-w-7xl mx-auto">
+                    <header className="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 print:hidden">
                     <div>
                         <h1 className="text-3xl font-bold text-gray-900">Analytics Dashboard</h1>
                         <p className="text-gray-600">Comprehensive insights into oxygen intelligence and reforestation</p>
@@ -391,7 +395,9 @@ export default function AnalyticsPage() {
                         </div>
                     </>
                 )}
+                </div>
             </div>
+            <Footer />
         </AdminGuard>
     );
 }
