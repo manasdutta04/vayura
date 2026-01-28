@@ -94,6 +94,18 @@ export interface LeaderboardEntry {
     createdAt?: Date;
 }
 
+export interface UserProfile {
+    id: string; // Firebase Auth UID
+    name?: string;
+    email: string;
+    phone?: string;
+    bio?: string;
+    photoURL?: string;
+    address?: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 export interface AggregatedStats {
     totalDistricts: number;
     totalTrees: number;
@@ -109,4 +121,5 @@ export const Collections = {
     DONATIONS: 'donations',
     LEADERBOARD: 'leaderboard',
     AGGREGATED_STATS: 'aggregated_stats',
+    USERS: 'users',
 } as const;
