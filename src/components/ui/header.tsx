@@ -36,6 +36,12 @@ export function Header() {
                                     Dashboard
                                 </Link>
                                 <Link
+                                    href="/analytics"
+                                    className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                                >
+                                    Analytics
+                                </Link>
+                                <Link
                                     href="/leaderboard"
                                     className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
                                 >
