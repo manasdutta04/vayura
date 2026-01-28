@@ -5,6 +5,9 @@ import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
 import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+
+export const dynamic = 'force-dynamic';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -54,7 +57,7 @@ export async function GET(
 
         if (!envSnap.empty) {
             // Sort by timestamp in memory (newest first)
-            const sortedDocs = envSnap.docs.sort((a, b) => {
+            const sortedDocs = envSnap.docs.sort((a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
                 const aTime = a.data().timestamp?.toDate?.() || a.data().timestamp || new Date(0);
                 const bTime = b.data().timestamp?.toDate?.() || b.data().timestamp || new Date(0);
                 return new Date(bTime).getTime() - new Date(aTime).getTime();
@@ -169,7 +172,7 @@ export async function GET(
             .where('status', '==', 'VERIFIED')
             .get();
 
-        const totalTreesPlanted = contributionsSnap.docs.reduce((sum, doc) => {
+        const totalTreesPlanted = contributionsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return sum + (data.treeQuantity || 1);
         }, 0);
@@ -180,7 +183,7 @@ export async function GET(
             .where('districtId', '==', district.id)
             .get();
 
-        const totalTreesDonated = donationsSnap.docs.reduce((sum, doc) => {
+        const totalTreesDonated = donationsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return sum + (data.treeCount || 0);
         }, 0);

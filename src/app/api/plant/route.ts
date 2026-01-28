@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
+export const dynamic = 'force-dynamic';
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 // Use the same model as gemini-data-fetcher
 const GEMINI_MODEL = 'gemini-2.5-flash';

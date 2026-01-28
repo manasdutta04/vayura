@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+
+export const dynamic = 'force-dynamic';
 
 export const maxDuration = 300; // 5 minutes timeout for Vercel functions
 
@@ -63,13 +66,13 @@ export async function GET(request: Request) {
             adminDb.collection('leaderboard').get()
         ]);
 
-        const districts = districtsSnapshot.docs.map(doc => ({
+        const districts = districtsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({
             id: doc.id,
             ...doc.data()
         } as any));
 
         const leaderboardMap = new Map();
-        leaderboardSnapshot.docs.forEach(doc => {
+        leaderboardSnapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             // Map by state name
             if (data.state) {
@@ -130,7 +133,7 @@ export async function GET(request: Request) {
         }
 
         // Merge with leaderboard tree data
-        leaderboardMap.forEach((data, state) => {
+        leaderboardMap.forEach((data: any, state: string) => {
             const current = stateAggregates.get(state);
             if (current) {
                 const existing = data.existingForestTrees || 0;
@@ -152,7 +155,7 @@ export async function GET(request: Request) {
         let globalTotalTrees = 0;
         let globalTotalOxygen = 0;
 
-        stateAggregates.forEach((data, state) => {
+        stateAggregates.forEach((data: any, state: string) => {
             if (data.population === 0) return;
 
             const avgAQI = data.weightedAQI / data.population;
@@ -205,14 +208,14 @@ export async function GET(request: Request) {
         });
 
         // Sort
-        stateMetrics.sort((a, b) => {
+        stateMetrics.sort((a: any, b: any) => {
             if (b.percentageMet !== a.percentageMet) return b.percentageMet - a.percentageMet;
             if (b.totalTrees !== a.totalTrees) return b.totalTrees - a.totalTrees;
             return a.state.localeCompare(b.state);
         });
 
         // Assign Ranks
-        const rankedUpdates = stateMetrics.map((entry, index) => ({
+        const rankedUpdates = stateMetrics.map((entry: any, index: number) => ({
             ...entry,
             rank: index + 1,
             lastUpdated: new Date()
