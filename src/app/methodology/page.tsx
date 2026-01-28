@@ -267,7 +267,7 @@ export default function MethodologyPage() {
                                     <span className="text-amber-600 mt-1">•</span>
                                     <div>
                                         <strong className="text-amber-900">Simplified Environmental Factors:</strong>
-                                        <span className="text-amber-800"> Current penalty factors are broad estimates and don't capture hyperlocal variations.</span>
+                                        <span className="text-amber-800"> Current penalty factors are broad estimates and don&apos;t capture hyperlocal variations.</span>
                                     </div>
                                 </li>
                                 <li className="flex gap-3">
@@ -295,7 +295,7 @@ export default function MethodologyPage() {
                                     <span className="text-amber-600 mt-1">•</span>
                                     <div>
                                         <strong className="text-amber-900">Seasonal Variations:</strong>
-                                        <span className="text-amber-800"> Our annual calculations don't account for seasonal changes in photosynthesis rates.</span>
+                                        <span className="text-amber-800"> Our annual calculations don&apos;t account for seasonal changes in photosynthesis rates.</span>
                                     </div>
                                 </li>
                             </ul>
@@ -310,19 +310,19 @@ export default function MethodologyPage() {
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">1.</span>
                                     <div>
-                                        <span className="text-gray-700">Nowak, D. J., et al. (2007). "Oxygen production by urban trees in the United States." Arboriculture & Urban Forestry.</span>
+                                        <span className="text-gray-700">Nowak, D. J., et al. (2007). &ldquo;Oxygen production by urban trees in the United States.&rdquo; Arboriculture &amp; Urban Forestry.</span>
                                     </div>
                                 </li>
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">2.</span>
                                     <div>
-                                        <span className="text-gray-700">Forest Survey of India. (Latest). "State of Forest Report." Ministry of Environment & Forests, Government of India.</span>
+                                        <span className="text-gray-700">Forest Survey of India. (Latest). &ldquo;State of Forest Report.&rdquo; Ministry of Environment &amp; Forests, Government of India.</span>
                                     </div>
                                 </li>
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">3.</span>
                                     <div>
-                                        <span className="text-gray-700">Census of India. District-level population statistics. Office of the Registrar General & Census Commissioner, India.</span>
+                                        <span className="text-gray-700">Census of India. District-level population statistics. Office of the Registrar General &amp; Census Commissioner, India.</span>
                                     </div>
                                 </li>
                             </ul>

@@ -83,15 +83,16 @@ function PlantContributionForm() {
             if (previewUrl) revokeImagePreview(previewUrl);
             setPreviewUrl(null);
             setNotes('');
-        } catch (err: any) {
-            setError(err.message || 'Failed to submit contribution');
+        } catch (err: unknown) {
+            const error = err as Error;
+            setError(error.message || 'Failed to submit contribution');
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
+        <main className="min-h-screen bg-linear-to-br from-nature-50 via-white to-sky-50 pb-20">
                 <section className="max-w-3xl mx-auto px-6 pt-10">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                         Plant a tree for your district
@@ -143,6 +144,7 @@ function PlantContributionForm() {
                             {previewUrl && (
                                 <div className="mt-3">
                                     <p className="text-xs text-gray-500 mb-1">Preview</p>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img
                                         src={previewUrl}
                                         alt="Tree preview"
@@ -217,7 +219,7 @@ export default function PlantContributionPage() {
         <>
             <Header />
             <Suspense fallback={
-                <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
+                <main className="min-h-screen bg-linear-to-br from-nature-50 via-white to-sky-50 pb-20">
                     <section className="max-w-3xl mx-auto px-6 pt-10">
                         <div className="bg-white rounded-2xl shadow px-6 py-6 border border-gray-100">
                             <div className="animate-pulse">

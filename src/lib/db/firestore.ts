@@ -1,11 +1,9 @@
 import {
     collection,
     doc,
-    getDoc,
     getDocs,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
     where,
     orderBy,
@@ -14,19 +12,19 @@ import {
     QueryConstraint,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Collections, District, EnvironmentalData, TreeContribution, Donation, LeaderboardEntry } from '@/lib/types/firestore';
+import { Collections, District, EnvironmentalData, TreeContribution, LeaderboardEntry } from '@/lib/types/firestore';
 
 /**
  * Convert Firestore Timestamp to Date
  */
-function timestampToDate(timestamp: any): Date {
+function timestampToDate(timestamp: unknown): Date {
     if (timestamp instanceof Timestamp) {
         return timestamp.toDate();
     }
-    if (timestamp?.toDate) {
-        return timestamp.toDate();
+    if (timestamp && typeof timestamp === 'object' && typeof (timestamp as { toDate: unknown }).toDate === 'function') {
+        return (timestamp as { toDate: () => Date }).toDate();
     }
-    return timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return timestamp instanceof Date ? timestamp : new Date(timestamp as string | number);
 }
 
 /**

@@ -19,7 +19,7 @@ export default function TermsPage() {
                         <section>
                             <h2 className="text-lg font-semibold text-gray-900 mb-3">1. Acceptance of Terms</h2>
                             <p>
-                                By accessing and using Vayura ("the Platform"), you agree to comply with and be bound by these Terms of Service.
+                                By accessing and using Vayura (&ldquo;the Platform&rdquo;), you agree to comply with and be bound by these Terms of Service.
                                 If you do not agree to these terms, please do not use our services.
                             </p>
                         </section>
@@ -51,7 +51,7 @@ export default function TermsPage() {
                         <section>
                             <h2 className="text-lg font-semibold text-gray-900 mb-3">5. Limitation of Liability</h2>
                             <p>
-                                Vayura is provided "as is" without warranties of any kind. We are not liable for any damages arising from your use of the platform
+                                Vayura is provided &ldquo;as is&rdquo; without warranties of any kind. We are not liable for any damages arising from your use of the platform
                                 or reliance on the environmental data provided.
                             </p>
                         </section>

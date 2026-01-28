@@ -3,6 +3,7 @@
  * Uses Gemini AI, OpenWeatherMap, and published CPCB data
  */
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { getAQIFromOpenWeather, CPCB_AQI_AVERAGES_2024 } from './alternative-apis';
 
 interface AQIData {

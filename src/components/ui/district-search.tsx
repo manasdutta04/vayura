@@ -34,13 +34,16 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
 
 export function DistrictSearch({
   onDistrictSelect,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   districtNotFound,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   notFoundDistrictName,
   loadingDistrict,
 }: DistrictSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [error, setError] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1); // For keyboard nav
@@ -73,9 +76,10 @@ export function DistrictSearch({
           setResults(data);
           setShowDropdown(true);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!isCancelled) {
-          setError(err.message || "Failed to search districts");
+          const error = err as Error;
+          setError(error.message || "Failed to search districts");
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -163,7 +167,7 @@ export function DistrictSearch({
 
         {/* Dropdown Results */}
         {showDropdown && (debouncedQuery || loading) && (
-          <div className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-gray-100 bg-white shadow-xl max-h-[400px] overflow-y-auto overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-gray-100 bg-white shadow-xl max-h-100 overflow-y-auto overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {loading ? (
               // Loading Skeletons
               Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
@@ -209,7 +213,7 @@ export function DistrictSearch({
                 </div>
                 <h3 className="text-gray-900 font-medium mb-1">No districts found</h3>
                 <p className="text-sm text-gray-500 mb-3">
-                  We couldn't find "{debouncedQuery}".
+                  We couldn&apos;t find &quot;{debouncedQuery}&quot;.
                 </p>
                 <a
                   href="https://github.com/manasdutta04/vayura"
