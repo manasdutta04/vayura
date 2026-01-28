@@ -5,10 +5,12 @@ import { TreeContribution, Donation } from '@/lib/types';
 // Cache for 1 minute (60 seconds) - shorter cache for user-specific data
 export const revalidate = 60;
 
-function timestampToDate(value: any): Date {
+function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
-    if (typeof value.toDate === 'function') return value.toDate();
-    return value instanceof Date ? value : new Date(value);
+    if (typeof value === 'object' && value !== null && 'toDate' in value && typeof (value as { toDate: unknown }).toDate === 'function') {
+        return (value as { toDate: () => Date }).toDate();
+    }
+    return value instanceof Date ? value : new Date(value as string | number);
 }
 
 export async function GET(request: Request) {

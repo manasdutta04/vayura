@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Github, Twitter, Mail, Heart, Sprout, Linkedin } from 'lucide-react';
+import { Github, Heart, Sprout, Linkedin } from 'lucide-react';
 
 export function Footer() {
   return (
@@ -10,6 +10,7 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/logo.png"
                 alt="Vayura"
@@ -18,7 +19,7 @@ export function Footer() {
               <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
             </Link>
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
-              Empowering India's green future through data-driven oxygen intelligence and community action.
+              Empowering India&apos;s green future through data-driven oxygen intelligence and community action.
             </p>
             <div className="flex gap-4">
               <a

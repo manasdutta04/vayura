@@ -36,8 +36,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 await resetPassword(email);
                 setResetSent(true);
             }
-        } catch (err: any) {
-            setError(err.message || 'An error occurred');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -49,8 +50,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         try {
             await signInWithGoogle();
             onClose();
-        } catch (err: any) {
-            setError(err.message || 'Google sign-in failed');
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error ? err.message : 'Google sign-in failed';
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }
@@ -173,7 +175,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 bg-gradient-to-r from-nature-500 to-nature-600 text-white font-semibold rounded-lg hover:from-nature-600 hover:to-nature-700 transition-all disabled:opacity-50"
+                        className="w-full py-3 bg-linear-to-r from-nature-500 to-nature-600 text-white font-semibold rounded-lg hover:from-nature-600 hover:to-nature-700 transition-all disabled:opacity-50"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">
@@ -216,7 +218,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 Forgot password?
                             </button>
                             <p className="mt-2 text-gray-500">
-                                Don't have an account?{' '}
+                                Don&apos;t have an account?{' '}
                                 <button
                                     onClick={() => setMode('signup')}
                                     className="text-nature-600 font-medium hover:underline"

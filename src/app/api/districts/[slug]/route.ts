@@ -3,15 +3,15 @@ import { adminDb } from '@/lib/firebase-admin';
 import { getAQIData } from '@/lib/data-sources/air-quality';
 import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
-import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
+import { DistrictDetail, EnvironmentalData, OxygenCalculation, District } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-function timestampToDate(value: any): Date {
+function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
-    if (typeof value.toDate === 'function') return value.toDate();
-    return value instanceof Date ? value : new Date(value);
+    if (typeof value === 'object' && value !== null && typeof (value as { toDate: unknown }).toDate === 'function') return (value as { toDate: () => Date }).toDate();
+    return value instanceof Date ? value : new Date(value as string | number);
 }
 
 export async function GET(
@@ -40,7 +40,7 @@ export async function GET(
         }
 
         const districtDoc = districtSnap.docs[0];
-        const district = { id: districtDoc.id, ...(districtDoc.data() as any) };
+        const district = { id: districtDoc.id, ...(districtDoc.data() as Omit<District, 'id'>) };
 
         // Fetch latest environmental data (cached 24h)
         // Get all env data for this district and sort in memory to avoid index requirement
@@ -203,10 +203,11 @@ export async function GET(
         };
 
         return NextResponse.json(response);
-    } catch (error: any) {
-        console.error('Error fetching district details:', error);
-        console.error('Error stack:', error?.stack);
-        console.error('Error message:', error?.message);
+    } catch (error: unknown) {
+        const err = error as Error;
+        console.error('Error fetching district details:', err);
+        console.error('Error stack:', err?.stack);
+        console.error('Error message:', err?.message);
 
         // Provide more detailed error information in development
         const errorMessage = process.env.NODE_ENV === 'development'

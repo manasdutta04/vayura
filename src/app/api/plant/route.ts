@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import type { TreeContribution } from '@/lib/types';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 // Use the same model as gemini-data-fetcher
@@ -266,7 +267,7 @@ export async function POST(request: Request) {
             const contribRef = adminDb.collection('tree_contributions').doc();
 
             // Build document data, excluding undefined values
-            const docData: any = {
+            const docData: Omit<TreeContribution, 'id'> = {
                 districtId,
                 districtName,
                 state,
@@ -320,10 +321,11 @@ export async function POST(request: Request) {
             );
         }
 
-    } catch (error: any) {
-        console.error('Error submitting tree contribution:', error);
-        const errorMessage = error?.message || 'Unknown error occurred';
-        const errorStack = error?.stack || '';
+    } catch (error: unknown) {
+        const err = error as Error;
+        console.error('Error submitting tree contribution:', err);
+        const errorMessage = err?.message || 'Unknown error occurred';
+        const errorStack = err?.stack || '';
         console.error('Error details:', { errorMessage, errorStack });
         return NextResponse.json(
             {

@@ -3,6 +3,22 @@ import { adminDb } from '@/lib/firebase-admin';
 
 export const maxDuration = 300; // 5 minutes timeout for Vercel functions
 
+interface StateMetrics {
+  id: string;
+  state: string;
+  population: number;
+  totalTreesPlanted: number;
+  totalTreesDonated: number;
+  existingForestTrees: number;
+  totalTrees: number;
+  o2Needed: number;
+  o2Supply: number;
+  existingForestO2: number;
+  percentageMet: number;
+  avgAQI: number;
+  avgSoilQuality: number;
+}
+
 // Oxygen calculation constants
 const HUMAN_O2_CONSUMPTION_LITERS_PER_DAY = 550;
 const LITERS_TO_KG_O2_CONVERSION = 1.429 / 1000;
@@ -66,7 +82,7 @@ export async function GET(request: Request) {
         const districts = districtsSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data()
-        } as any));
+        }));
 
         const leaderboardMap = new Map();
         leaderboardSnapshot.docs.forEach(doc => {
@@ -148,7 +164,7 @@ export async function GET(request: Request) {
         });
 
         // 3. Calculate Metrics and Ranks
-        const stateMetrics: any[] = [];
+        const stateMetrics: StateMetrics[] = [];
         let globalTotalTrees = 0;
         let globalTotalOxygen = 0;
 

@@ -1,5 +1,6 @@
 'use client';
 
+import React from 'react';
 import { getAllNgos } from '@/lib/ngo/registry';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -138,8 +139,9 @@ export default function DonatePage() {
                 router.push('/contribution');
             }, 2000);
 
-        } catch (err: any) {
-            setError(err.message || 'Failed to submit verification');
+        } catch (err: unknown) {
+            const error = err as Error;
+            setError(error.message || 'Failed to submit verification');
         } finally {
             setSubmitting(false);
         }
@@ -208,7 +210,7 @@ export default function DonatePage() {
                                         </div>
 
                                         {/* Transparency Score */}
-                                        <div className="p-5 flex-grow">
+                                        <div className="p-5 grow">
                                             <div className="mb-4">
                                                 <div className="flex justify-between items-end mb-1">
                                                     <span className="text-xs font-semibold text-gray-700">Transparency</span>
@@ -262,7 +264,7 @@ export default function DonatePage() {
                             {/* Disclaimer in left column footer */}
                             <div className="bg-blue-50 border border-blue-100 rounded-lg p-4 mt-8">
                                 <div className="flex gap-3">
-                                    <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
+                                    <Info className="w-5 h-5 text-blue-600 shrink-0" />
                                     <div>
                                         <h3 className="text-sm font-semibold text-blue-900 mb-1">Transparency Score Methodology</h3>
                                         <p className="text-xs text-blue-800 leading-relaxed">
@@ -365,6 +367,7 @@ export default function DonatePage() {
                                                 />
                                                 {previewUrl ? (
                                                     <div className="space-y-2">
+                                                        {/* eslint-disable-next-line @next/next/no-img-element */}
                                                         <img
                                                             src={previewUrl}
                                                             alt="Receipt preview"
@@ -415,7 +418,7 @@ export default function DonatePage() {
     );
 }
 
-function TransparencyItem({ label, active, icon }: { label: string, active: boolean, icon: any }) {
+function TransparencyItem({ label, active, icon }: { label: string, active: boolean, icon: React.ReactNode }) {
     return (
         <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 text-gray-600">

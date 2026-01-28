@@ -17,6 +17,7 @@ Vayura is an open-source web application that estimates district-level oxygen de
 - **Tree Requirements**: Clear calculation of trees needed to offset oxygen deficit
 - **Environmental Health Card**: AQI, soil quality, disaster frequency, population data
 - **AI-Powered Data Fetching**: Uses Gemini AI to intelligently aggregate data from multiple government sources
+- **Offline Mode & Caching**: Access previously viewed district data without internet connection
 - **Tree Contribution System**: Upload tree plantation photos analyzed by AI for environmental impact
 - **NGO Donation Hub**: Donate trees through verified NGOs with transparency scores
 - **Contribution Dashboard**: Track your personal impact (planted vs donated trees)
@@ -27,12 +28,14 @@ Vayura is an open-source web application that estimates district-level oxygen de
 ## Tech Stack
 
 ### Frontend
+
 - **Next.js 16+** (App Router)
 - **React 19** with TypeScript
 - **Tailwind CSS** for styling
 - **Recharts** for data visualization
 
 ### Backend
+
 - **Node.js** (Next.js API Routes)
 - **Python FastAPI** microservice for oxygen calculations (optional)
 - **Firebase Firestore** for database
@@ -109,6 +112,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
    - Copy rules from `firestore.rules` to Firebase Console > Firestore > Rules
 
 3. Seed initial data:
+
 ```bash
 npx tsx scripts/seed-districts.ts
 npx tsx scripts/seed-forest-cover-data.ts
@@ -127,26 +131,31 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 Vayura uses a transparent, scientifically-based formula:
 
 ### 1. Base Human O₂ Demand
+
 ```
 Population × 550 L/day × 365 days → kg/year
 ```
 
 ### 2. Penalty Factors
+
 - **AQI Factor** (1.0 - 1.75×): Higher pollution increases respiratory demand
 - **Soil Degradation** (1.0 - 1.6×): Poor soil = less natural O₂ sources
 - **Disaster Loss** (1.05 - 1.5×): Frequent disasters destroy vegetation
 
 ### 3. Adjusted Demand
+
 ```
 Base Demand × AQI Factor × Soil Factor × Disaster Factor
 ```
 
 ### 4. Tree O₂ Supply
+
 - Base: 110 kg/year per mature tree
 - Adjusted by soil quality (healthier soil = healthier trees)
 - Lifespan calculation: 50 years average × 110 kg/year
 
 ### 5. Trees Required
+
 ```
 Oxygen Deficit ÷ Adjusted Tree Supply
 ```
@@ -261,4 +270,4 @@ Always verify critical information with official sources and domain experts.
 
 **Made with care for a greener India**
 
-*"Every tree counts. Every breath matters."*
+_"Every tree counts. Every breath matters."_

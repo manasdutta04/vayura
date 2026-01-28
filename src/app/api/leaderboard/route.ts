@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import type { LeaderboardEntry } from '@/lib/types';
 
 // Cache for 60 seconds (API route level)
 // Since updates happen daily via cron, we don't need frequent revalidation
@@ -21,9 +22,9 @@ export async function GET(request: Request) {
             .map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            } as any))
+            } as LeaderboardEntry))
             // Filter out invalid entries without state names
-            .filter((entry: any) => entry.state && entry.state.trim().length > 0);
+            .filter((entry: LeaderboardEntry) => entry.state && entry.state.trim().length > 0);
 
         return NextResponse.json(leaderboard, {
             headers: {

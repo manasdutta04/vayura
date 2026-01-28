@@ -2,7 +2,7 @@
 
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
-import { ShieldCheck, Server, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
+import { ShieldCheck, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
 
 const DATA_SOURCES = [
     {
@@ -60,7 +60,7 @@ export default function DataPolicy() {
                             Data Policy & Transparency
                         </h1>
                         <p className="text-gray-500 max-w-2xl">
-                            We believe in radical transparency. Here's exactly where our data comes from and how we handle your information.
+                            We believe in radical transparency. Here&apos;s exactly where our data comes from and how we handle your information.
                         </p>
                     </div>
 
@@ -112,11 +112,11 @@ export default function DataPolicy() {
 
                             {/* Estimates Note */}
                             <section className="bg-amber-50 rounded-xl border border-amber-100 p-6 flex items-start gap-4">
-                                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+                                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                                 <div>
                                     <h3 className="text-sm font-semibold text-amber-900 mb-1">A Note on Scientific Estimates</h3>
                                     <p className="text-sm text-amber-800 leading-relaxed">
-                                        While we strive for accuracy, environmental data involves complex calculations. Metrics like "Monthly Oxygen Output" and "CO₂ Offset" are estimates based on average tree species performance in Indian climates. Actual results may vary based on exact species, soil health, and local weather conditions.
+                                        While we strive for accuracy, environmental data involves complex calculations. Metrics like &quot;Monthly Oxygen Output&quot; and &quot;CO₂ Offset&quot; are estimates based on average tree species performance in Indian climates. Actual results may vary based on exact species, soil health, and local weather conditions.
                                     </p>
                                 </div>
                             </section>
