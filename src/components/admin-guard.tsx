@@ -5,10 +5,6 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
-    // TEMPORARY BYPASS: Allow access to analytics for development/preview
-    // TODO: Remove this bypass before production
-    return <>{children}</>;
-
     const { user, loading } = useAuth();
     const router = useRouter();
     const [isAdmin, setIsAdmin] = useState<boolean | null>(null);

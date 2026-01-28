@@ -15,6 +15,7 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     }
 
     const isConfigured = !!process.env.FIREBASE_PROJECT_ID;
+
     if (!isConfigured) {
         const mock = getMockAnalyticsData();
         cachedData = { data: mock, timestamp: Date.now() };

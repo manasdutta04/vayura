@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { useAuth } from '@/lib/auth-context';
 
-const PUBLIC_PATHS = ['/', '/terms', '/privacy', '/data-policy']; // TODO: Remove /analytics from public paths before production
+const PUBLIC_PATHS = ['/', '/terms', '/privacy', '/data-policy'];
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
