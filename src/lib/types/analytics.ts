@@ -31,6 +31,8 @@ export interface PredictiveInsights {
     treesNeededForSelfSufficiency: number;
     estimatedYearsToGoal: number;
     currentGrowthRate: number; // trees per month
+    aiSummary?: string;
+    recommendations?: string[];
 }
 
 export interface AnalyticsData {

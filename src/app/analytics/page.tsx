@@ -320,6 +320,32 @@ export default function AnalyticsPage() {
                                         <p className="text-xs text-purple-600 mt-1">Based on last 6 months activity</p>
                                     </div>
                                 </div>
+
+                                {data.predictive.aiSummary && (
+                                    <div className="mt-8 pt-6 border-t border-gray-100">
+                                        <div className="flex items-center justify-between mb-4">
+                                            <h4 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                                                AI Strategic Analysis
+                                            </h4>
+                                            <span className="px-2 py-0.5 bg-blue-100 text-blue-700 text-[10px] font-bold rounded uppercase tracking-wider">
+                                                Gemini Powered
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-600 leading-relaxed mb-4 italic">
+                                            "{data.predictive.aiSummary}"
+                                        </p>
+                                        {data.predictive.recommendations && (
+                                            <div className="space-y-2">
+                                                {data.predictive.recommendations.map((rec, i) => (
+                                                    <div key={i} className="flex gap-2 items-start">
+                                                        <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
+                                                        <p className="text-xs text-gray-700">{rec}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
 
