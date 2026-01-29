@@ -7,13 +7,25 @@ import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/h
 import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
 import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
 import Skeleton from "@/components/ui/skeleton-card";
+import EmptyState from "@/components/ui/EmptyState";
+
 
 interface DistrictResultsProps {
-  data: DistrictDetail;
+  data: DistrictDetail | null;
 }
+
 
 export function DistrictResults({ data }: DistrictResultsProps) {
   const [exportLoading, setExportLoading] = useState<'csv' | 'json' | null>(null);
+    if (!data) {
+    return (
+      <EmptyState
+        title="District data not available"
+        subtitle="Try searching for another district"
+      />
+    );
+  }
+
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
