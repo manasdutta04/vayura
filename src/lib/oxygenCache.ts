@@ -1,103 +1,73 @@
 import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
-import { db } from './firebase'; // Ensure this points to your firebase.ts
+import { db } from '@/lib/firebase';
 
-// Simple In-Memory LRU Cache (No npm packages required)
-class MemoryCache<K, V> {
-  private capacity: number;
-  private cache: Map<K, V>;
-
-  constructor(capacity: number) {
-    this.capacity = capacity;
-    this.cache = new Map();
-  }
-
-  get(key: K): V | undefined {
-    if (!this.cache.has(key)) return undefined;
-    // Refresh item (move to end)
-    const val = this.cache.get(key)!;
-    this.cache.delete(key);
-    this.cache.set(key, val);
-    return val;
-  }
-
-  set(key: K, value: V): void {
-    if (this.cache.has(key)) {
-      this.cache.delete(key);
-    } else if (this.cache.size >= this.capacity) {
-      // Remove oldest item (first key)
-      const firstKey = this.cache.keys().next().value;
-      if (firstKey) this.cache.delete(firstKey);
-    }
-    this.cache.set(key, value);
-  }
-}
-
-// Global instance to persist across requests in serverless environment
-// Capacity: 100 most active districts
-const hotCache = new MemoryCache<string, any>(100);
+// Simple In-Memory Cache for Memoization
+const memoizationMap = new Map<string, { value: any; expiry: number }>();
 
 export const oxygenCache = {
-  /**
-   * Tries to get data from Memory -> Firestore.
-   * Returns null if calculation is needed.
-   */
-  async getCachedCalculation(districtId: string) {
-    const cacheKey = `oxygen_calc_${districtId}`;
-
-    // 1. Check Memory (Hot Path) ⚡
-    const memResult = hotCache.get(cacheKey);
-    if (memResult) {
-      console.log(`[CACHE] Memory Hit for ${districtId}`);
-      return { data: memResult, source: 'memory' };
+  // Memoization: Check RAM before anything else
+  getMemoized(key: string) {
+    const cached = memoizationMap.get(key);
+    if (cached && Date.now() < cached.expiry) {
+      return cached.value;
     }
-
-    // 2. Check Firestore (Warm Path) ☁️
-    try {
-      const docRef = doc(db, 'oxygen_cache', districtId);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        // Check TTL (Time To Live) - e.g., 24 hours
-        const now = Timestamp.now().toMillis();
-        const cachedAt = data.cachedAt?.toMillis() || 0;
-        const OneDay = 24 * 60 * 60 * 1000;
-
-        if (now - cachedAt < OneDay) {
-          console.log(`[CACHE] Firestore Hit for ${districtId}`);
-          // Hydrate memory cache for next time
-          hotCache.set(cacheKey, data.result);
-          return { data: data.result, source: 'firestore' };
-        }
-      }
-    } catch (error) {
-      console.warn('[CACHE] Firestore read failed, skipping cache', error);
-    }
-
-    // 3. Cache Miss (Cold Path) ❄️
-    console.log(`[CACHE] Miss for ${districtId} - Calculation required`);
     return null;
   },
 
-  /**
-   * Saves result to Memory & Firestore
-   */
-  async setCachedCalculation(districtId: string, result: any) {
-    const cacheKey = `oxygen_calc_${districtId}`;
-
-    // 1. Save to Memory
-    hotCache.set(cacheKey, result);
-
-    // 2. Save to Firestore (Fire and Forget - don't await strictly if performance matters)
-    try {
-      const docRef = doc(db, 'oxygen_cache', districtId);
-      await setDoc(docRef, {
-        result,
-        cachedAt: Timestamp.now(),
-        districtId
-      });
-    } catch (error) {
-      console.error('[CACHE] Failed to save to Firestore', error);
+  setMemoized(key: string, value: any, ttlSeconds: number = 300) {
+    memoizationMap.set(key, {
+      value,
+      expiry: Date.now() + (ttlSeconds * 1000)
+    });
+    
+    // Memory Usage Protection: Clear if too big
+    if (memoizationMap.size > 1000) {
+      const firstKey = memoizationMap.keys().next().value;
+      if (firstKey) memoizationMap.delete(firstKey);
     }
+  },
+
+  // Firestore Cache (L2)
+  async get(key: string) {
+    // 1. Check Memoization (L1)
+    const mem = this.getMemoized(key);
+    if (mem) return { data: mem, source: 'memory_memoized' };
+
+    // 2. Check Firestore (L2)
+    try {
+      const docRef = doc(db, 'oxygen_cache', key);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        const now = Date.now();
+        const cachedTime = data.timestamp?.toMillis ? data.timestamp.toMillis() : data.timestamp;
+        
+        // 24h TTL for Firestore
+        if (now - cachedTime < 86400000) {
+          this.setMemoized(key, data.result); // Hydrate L1
+          return { data: data.result, source: 'firestore' };
+        }
+      }
+    } catch (e) {
+      console.warn('Cache read warning:', e);
+    }
+    return null;
+  },
+
+  async set(key: string, result: any) {
+    this.setMemoized(key, result);
+    setDoc(doc(db, 'oxygen_cache', key), {
+      result,
+      timestamp: Timestamp.now(),
+      districtId: key
+    }).catch(e => console.error('Cache write error:', e));
+  },
+
+  // Monitoring Requirement
+  getMemoryUsage() {
+    return {
+      cacheSize: memoizationMap.size,
+      heapUsed: process.memoryUsage().heapUsed / 1024 / 1024 // MB
+    };
   }
 };

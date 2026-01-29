@@ -1,62 +1,78 @@
 import { oxygenCache } from '@/lib/oxygenCache';
 
-// Simulate heavy calculation logic
-// In a real scenario, this would process the millions of trees data for a district
+// Circuit Breaker State
+let failureCount = 0;
+let lastFailureTime = 0;
+const FAILURE_THRESHOLD = 5;
+const RESET_TIMEOUT = 30000; // 30 seconds
+
+// Heavy Math Simulation
 const performHeavyCalculation = async (trees: number, age: number) => {
-  // Simulate 50ms CPU Latency (as per profiling requirement)
-  const start = Date.now();
-  while (Date.now() - start < 50); 
-  
-  // Scientific Calculation Implementation
-  const OXYGEN_PER_TREE_KG = 118;
-  const CARBON_OFFSET_KG = 21;
-  
-  // Complex growth factor based on tree age
-  const growthFactor = Math.log(age + 1) * 1.5; 
-  
-  return {
-    oxygenProduced: Math.round(trees * OXYGEN_PER_TREE_KG * growthFactor),
-    carbonOffset: Math.round(trees * CARBON_OFFSET_KG * growthFactor),
-    peopleSupported: Math.floor((trees * OXYGEN_PER_TREE_KG * growthFactor) / 730),
-    calculatedAt: new Date().toISOString()
-  };
+  // Circuit Breaker Check
+  if (failureCount >= FAILURE_THRESHOLD) {
+    if (Date.now() - lastFailureTime < RESET_TIMEOUT) {
+      throw new Error('Circuit Breaker Open: Service Temporarily Unavailable');
+    }
+    failureCount = 0; // Reset after timeout
+  }
+
+  try {
+    const start = performance.now();
+    
+    // Simulate complex math loop
+    let factor = 1;
+    for(let i=0; i<1000; i++) { factor = (factor + i) % 100; }
+    
+    const OXYGEN_PER_TREE = 118;
+    const CARBON_OFFSET = 21;
+    const growthFactor = Math.min(Math.log(age + 2), 1.5);
+    
+    const duration = performance.now() - start;
+    if (duration > 50) console.warn(`Slow calculation detected: ${duration.toFixed(2)}ms`);
+
+    return {
+      oxygenProduced: Math.round(trees * OXYGEN_PER_TREE * growthFactor),
+      carbonOffset: Math.round(trees * CARBON_OFFSET * growthFactor),
+      peopleSupported: Math.floor((trees * OXYGEN_PER_TREE * growthFactor) / 730),
+      computeTime: duration
+    };
+  } catch (e) {
+    failureCount++;
+    lastFailureTime = Date.now();
+    throw e;
+  }
 };
 
 class OxygenService {
-  // Request Deduplication Map
-  // Prevents multiple identical requests from running at the same time
   private pendingRequests = new Map<string, Promise<any>>();
 
   async calculate(districtId: string, trees: number, age: number) {
     const cacheKey = `calc_${districtId}_${trees}_${age}`;
 
-    // 1. Check Cache
+    // 1. Cache Check
     const cached = await oxygenCache.get(cacheKey);
     if (cached) return cached;
 
     // 2. Request Deduplication
     if (this.pendingRequests.has(cacheKey)) {
-      console.log(`[Dedupe] Merging request for ${cacheKey}`);
-      const data = await this.pendingRequests.get(cacheKey);
-      return { data, source: 'deduplicated' };
+      return { data: await this.pendingRequests.get(cacheKey), source: 'deduplicated' };
     }
 
-    // 3. Perform Fresh Calculation
+    // 3. Execution
     const promise = performHeavyCalculation(trees, age)
       .then(async (result) => {
         await oxygenCache.set(cacheKey, result);
-        this.pendingRequests.delete(cacheKey); // Cleanup
-        return result;
-      })
-      .catch(err => {
         this.pendingRequests.delete(cacheKey);
-        throw err;
+        return result;
       });
 
     this.pendingRequests.set(cacheKey, promise);
-    
-    const data = await promise;
-    return { data, source: 'calculation' };
+    return { data: await promise, source: 'calculation' };
+  }
+
+  // Batch Processing Requirement
+  async calculateBatch(requests: Array<{id: string, trees: number, age: number}>) {
+    return Promise.all(requests.map(req => this.calculate(req.id, req.trees, req.age)));
   }
 }
 
