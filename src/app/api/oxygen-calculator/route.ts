@@ -2,37 +2,33 @@ import { NextResponse } from 'next/server';
 import { oxygenService } from '@/services/oxygenService';
 import { oxygenCache } from '@/lib/oxygenCache';
 
-// Simple In-Memory Rate Limiter (IP based)
+// 1. Rate Limiter (IP Based)
 const rateLimitMap = new Map<string, { count: number, reset: number }>();
 
 function checkRateLimit(ip: string) {
   const now = Date.now();
-  const window = 60000; // 1 minute
-  const limit = 60; // 60 req/min
-
+  const limit = 60; // 60 requests per minute
+  
   let record = rateLimitMap.get(ip);
   if (!record || now > record.reset) {
-    record = { count: 0, reset: now + window };
+    record = { count: 0, reset: now + 60000 };
     rateLimitMap.set(ip, record);
   }
-
+  
   record.count++;
   return record.count <= limit;
 }
 
-// Metrics Storage (for /api/metrics endpoint)
+// Global Metrics Store
 export const metrics = {
-  totalRequests: 0,
+  requests: 0,
   cacheHits: 0,
-  errors: 0,
-  avgLatency: 0
+  errors: 0
 };
 
 export async function POST(req: Request) {
-  const start = performance.now();
-  // Get IP (Generic fallback)
+  // Rate Limit Check
   const ip = req.headers.get('x-forwarded-for') || 'unknown';
-
   if (!checkRateLimit(ip)) {
     return NextResponse.json({ error: "Rate limit exceeded" }, { status: 429 });
   }
@@ -40,7 +36,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     
-    // Handle Batch Requests
+    // Batch Request Handler
     if (Array.isArray(body.requests)) {
         const results = await oxygenService.calculateBatch(body.requests);
         return NextResponse.json({ success: true, data: results });
@@ -51,16 +47,13 @@ export async function POST(req: Request) {
     const result = await oxygenService.calculate(districtId, Number(trees), Number(age));
 
     // Update Metrics
-    const latency = performance.now() - start;
-    metrics.totalRequests++;
-    metrics.avgLatency = (metrics.avgLatency * (metrics.totalRequests - 1) + latency) / metrics.totalRequests;
+    metrics.requests++;
     if (result.source !== 'calculation') metrics.cacheHits++;
 
     return NextResponse.json({
       success: true,
       data: result.data,
       meta: {
-        duration: `${latency.toFixed(2)}ms`,
         source: result.source,
         memory: oxygenCache.getMemoryUsage()
       }
