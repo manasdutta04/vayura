@@ -8,7 +8,7 @@ const RESET_TIMEOUT = 30000; // 30 seconds
 
 // Heavy Math Simulation
 const performHeavyCalculation = async (trees: number, age: number) => {
-  // Circuit Breaker Check
+  // 1. Circuit Breaker Check
   if (failureCount >= FAILURE_THRESHOLD) {
     if (Date.now() - lastFailureTime < RESET_TIMEOUT) {
       throw new Error('Circuit Breaker Open: Service Temporarily Unavailable');
@@ -19,7 +19,7 @@ const performHeavyCalculation = async (trees: number, age: number) => {
   try {
     const start = performance.now();
     
-    // Simulate complex math loop
+    // Simulate complex math loop (CPU load)
     let factor = 1;
     for(let i=0; i<1000; i++) { factor = (factor + i) % 100; }
     
@@ -27,14 +27,11 @@ const performHeavyCalculation = async (trees: number, age: number) => {
     const CARBON_OFFSET = 21;
     const growthFactor = Math.min(Math.log(age + 2), 1.5);
     
-    const duration = performance.now() - start;
-    if (duration > 50) console.warn(`Slow calculation detected: ${duration.toFixed(2)}ms`);
-
     return {
       oxygenProduced: Math.round(trees * OXYGEN_PER_TREE * growthFactor),
       carbonOffset: Math.round(trees * CARBON_OFFSET * growthFactor),
       peopleSupported: Math.floor((trees * OXYGEN_PER_TREE * growthFactor) / 730),
-      computeTime: duration
+      computeTime: (performance.now() - start).toFixed(2)
     };
   } catch (e) {
     failureCount++;
@@ -49,16 +46,15 @@ class OxygenService {
   async calculate(districtId: string, trees: number, age: number) {
     const cacheKey = `calc_${districtId}_${trees}_${age}`;
 
-    // 1. Cache Check
+    // 2. Cache Check
     const cached = await oxygenCache.get(cacheKey);
     if (cached) return cached;
 
-    // 2. Request Deduplication
+    // 3. Request Deduplication
     if (this.pendingRequests.has(cacheKey)) {
       return { data: await this.pendingRequests.get(cacheKey), source: 'deduplicated' };
     }
 
-    // 3. Execution
     const promise = performHeavyCalculation(trees, age)
       .then(async (result) => {
         await oxygenCache.set(cacheKey, result);
@@ -70,7 +66,7 @@ class OxygenService {
     return { data: await promise, source: 'calculation' };
   }
 
-  // Batch Processing Requirement
+  // 4. Batch Processing
   async calculateBatch(requests: Array<{id: string, trees: number, age: number}>) {
     return Promise.all(requests.map(req => this.calculate(req.id, req.trees, req.age)));
   }
