@@ -1,4 +1,9 @@
 # Vayura
+## Why Vayura?
+
+India lacks district-level visibility into environmental oxygen demand.
+Vayura bridges the gap between **data, awareness, and action** by turning
+abstract environmental metrics into real-world tree plantation workflows.
 
 **District-Level Oxygen Intelligence for a Greener India**
 
@@ -121,6 +126,13 @@ npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to see the application.
+
+## Development Notes
+
+- Firebase Admin keys must never be committed
+- Use `.env.local` only
+- Prefer mock data when working on UI
+- Python microservice is optional for frontend contributors
 
 ## Oxygen Calculation Methodology
 
