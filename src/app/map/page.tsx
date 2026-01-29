@@ -35,7 +35,7 @@ export default function MapPage() {
               India <span className="text-emerald-600">District Map</span>
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl">
-              Visualize oxygen self-sufficiency and environmental health across 700+ districts. 
+              Visualize oxygen self-sufficiency and environmental health across 200+ major districts. 
               Click on any district to dive deeper into its environmental statistics.
             </p>
           </div>
@@ -84,7 +84,7 @@ export default function MapPage() {
               <div className="space-y-4">
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
                   <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Total Districts</div>
-                  <div className="text-2xl font-black text-slate-900">700+</div>
+                  <div className="text-2xl font-black text-slate-900">200+</div>
                 </div>
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
                   <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Real-time Data</div>

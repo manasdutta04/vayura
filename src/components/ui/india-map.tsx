@@ -36,6 +36,11 @@ const IndiaMap = () => {
         ]);
         
         if (!geoRes.ok || !stateRes.ok || !dataRes.ok) {
+          console.error('Fetch error:', {
+            districtsGeo: { ok: geoRes.ok, status: geoRes.status },
+            statesGeo: { ok: stateRes.ok, status: stateRes.status },
+            mapData: { ok: dataRes.ok, status: dataRes.status }
+          });
           throw new Error('Failed to fetch map data');
         }
         
@@ -79,8 +84,8 @@ const IndiaMap = () => {
   };
 
   const style = (feature: any) => {
-    const districtName = feature.properties.NAME_2;
-    const stateName = feature.properties.NAME_1;
+    const districtName = feature.properties.district || feature.properties.NAME_2;
+    const stateName = feature.properties.st_nm || feature.properties.NAME_1;
     
     const key = `${districtName?.toLowerCase()}-${stateName?.toLowerCase()}`;
     const data = dataMap.get(key) || dataMap.get(districtName?.toLowerCase());
@@ -95,8 +100,8 @@ const IndiaMap = () => {
   };
 
   const onEachFeature = (feature: any, layer: L.Layer) => {
-    const districtName = feature.properties.NAME_2;
-    const stateName = feature.properties.NAME_1;
+    const districtName = feature.properties.district || feature.properties.NAME_2;
+    const stateName = feature.properties.st_nm || feature.properties.NAME_1;
     
     const key = `${districtName?.toLowerCase()}-${stateName?.toLowerCase()}`;
     const data = dataMap.get(key) || dataMap.get(districtName?.toLowerCase());
@@ -201,7 +206,7 @@ const IndiaMap = () => {
               fillColor: 'transparent',
               weight: 2,
               opacity: 1,
-              color: '#475569', // Slate-600 for state boundaries
+              color: '#000000', // Black for state boundaries
               fillOpacity: 0,
               interactive: false // Don't block clicks to districts
             }}
