@@ -1,23 +1,29 @@
 import { NextResponse } from 'next/server';
-import { metrics } from '../calculator/route'; // Import shared metrics
+// ✅ FIXED: Import from correct relative path
+import { metrics } from '../calculator/route'; 
 import { oxygenCache } from '@/lib/oxygenCache';
 
 export async function GET() {
   const mem = oxygenCache.getMemoryUsage();
   
+  // ✅ FIXED: Calculate Average Latency
+  const avgLatency = metrics.requests > 0 
+    ? (metrics.totalLatency / metrics.requests).toFixed(2) 
+    : 0;
+
   return NextResponse.json({
     status: 'healthy',
-    uptime: process.uptime(),
-    throughput: {
-      total_requests: metrics.totalRequests,
+    timestamp: new Date().toISOString(),
+    metrics: {
+      requests: metrics.requests,
       cache_hits: metrics.cacheHits,
-      hit_rate: metrics.totalRequests ? (metrics.cacheHits / metrics.totalRequests).toFixed(2) : 0,
-      errors: metrics.errors
+      hit_rate: metrics.requests ? (metrics.cacheHits / metrics.requests).toFixed(2) : 0,
+      errors: metrics.errors,
+      avg_latency_ms: avgLatency, // ✅ REQUIREMENT: Added missing calculation
     },
-    performance: {
-      avg_latency_ms: metrics.avgLatency.toFixed(2),
-      memory_usage_mb: mem.heapUsed.toFixed(2),
-      cache_items: mem.cacheSize
+    system: {
+      memory_usage_mb: mem.heapUsedMB,
+      cache_entries: mem.cacheSize
     }
   });
 }
