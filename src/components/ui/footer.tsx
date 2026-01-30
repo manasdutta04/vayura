@@ -65,6 +65,11 @@ export function Footer() {
                   Methodology
                 </Link>
               </li>
+              <li>
+                <Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                  Analytics
+                </Link>
+              </li>
             </ul>
           </div>
 

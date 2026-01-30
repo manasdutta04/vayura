@@ -1,8 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
-// Cache for 5 minutes (300 seconds) to reduce Firestore quota usage
-export const revalidate = 300;
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {

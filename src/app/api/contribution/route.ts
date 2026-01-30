@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { TreeContribution, Donation } from '@/lib/types';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-// Cache for 1 minute (60 seconds) - shorter cache for user-specific data
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
             .limit(100)
             .get();
 
-        const allTreeContributions = contributionsSnap.docs.map((doc) => {
+        const allTreeContributions = contributionsSnap.docs.map((doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return {
                 id: doc.id,
@@ -46,11 +46,11 @@ export async function GET(request: Request) {
 
         // Split into "Plantations" and "Donation Verifications"
         // Default to 'plantation' if type is missing (legacy records)
-        const plantations = allTreeContributions.filter(c => !c.type || c.type === 'plantation').sort((a, b) => {
+        const plantations = allTreeContributions.filter((c: TreeContribution) => !c.type || c.type === 'plantation').sort((a: TreeContribution, b: TreeContribution) => {
             return b.plantedAt.getTime() - a.plantedAt.getTime();
         });
 
-        const donationVerifications = allTreeContributions.filter(c => c.type === 'donation');
+        const donationVerifications = allTreeContributions.filter((c: TreeContribution) => c.type === 'donation');
 
         // Fetch user's donations (by email or userId)
         const userEmail = searchParams.get('userEmail');
@@ -66,10 +66,10 @@ export async function GET(request: Request) {
                 .get();
         } else {
             // If no email, return empty donations
-            donationsSnap = { docs: [], empty: true };
+            donationsSnap = { docs: [], empty: true } as any;
         }
 
-        const standardDonations: Donation[] = donationsSnap.docs.map((doc) => {
+        const standardDonations: Donation[] = donationsSnap.docs.map((doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return {
                 id: doc.id,
@@ -81,8 +81,8 @@ export async function GET(request: Request) {
 
         // Get district names for plantations and donation verifications
         const districtIds = [...new Set([
-            ...plantations.map(c => c.districtId),
-            ...donationVerifications.map(c => c.districtId)
+            ...plantations.map((c: TreeContribution) => c.districtId),
+            ...donationVerifications.map((c: TreeContribution) => c.districtId)
         ])];
         const districtsMap = new Map<string, string>();
 
@@ -92,7 +92,7 @@ export async function GET(request: Request) {
                 const districtRefs = districtIds.map(id => adminDb.collection('districts').doc(id));
                 const districtDocs = await adminDb.getAll(...districtRefs);
 
-                districtDocs.forEach((doc) => {
+                districtDocs.forEach((doc: any) => {
                     if (doc.exists) {
                         districtsMap.set(doc.id, doc.data()?.name || 'Unknown');
                     } else {
@@ -106,7 +106,7 @@ export async function GET(request: Request) {
         }
 
         // Map Donation Verifications to Donation type
-        const verifiedDonations: Donation[] = donationVerifications.map(c => ({
+        const verifiedDonations: Donation[] = donationVerifications.map((c: TreeContribution) => ({
             id: c.id,
             districtId: c.districtId,
             ngoReference: 'Verified Donation', // Default for self-verified
@@ -126,30 +126,29 @@ export async function GET(request: Request) {
         });
 
         // Calculate stats
-        const verifiedPlantations = plantations.filter(c => c.status === 'VERIFIED');
-        const pendingPlantations = plantations.filter(c => c.status === 'PENDING');
-        const rejectedPlantations = plantations.filter(c => c.status === 'REJECTED');
+        const verifiedPlantations = plantations.filter((c: TreeContribution) => c.status === 'VERIFIED');
+        const pendingPlantations = plantations.filter((c: TreeContribution) => c.status === 'PENDING');
+        const rejectedPlantations = plantations.filter((c: TreeContribution) => c.status === 'REJECTED');
 
-        // Sum tree quantities
-        const totalTreesPlanted = verifiedPlantations.reduce((sum, c) => sum + (c.treeQuantity || 1), 0);
-        const totalTreesDonated = allDonations.reduce((sum, d) => sum + (d.treeCount || 0), 0);
+        const totalTreesPlanted = verifiedPlantations.reduce((sum: number, c: TreeContribution) => sum + (c.treeQuantity || 0), 0);
+        const totalTreesDonated = allDonations.reduce((sum: number, d: Donation) => sum + (d.treeCount || 0), 0);
         const totalTrees = totalTreesPlanted + totalTreesDonated;
 
         // Calculate O2 impact (only for plantations + verified donations)
-        let totalO2Impact = verifiedPlantations.reduce((sum, c) => {
+        let totalO2Impact = verifiedPlantations.reduce((sum: number, c: TreeContribution) => {
             if (c.totalLifespanO2) return sum + c.totalLifespanO2;
             return sum + ((c.treeQuantity || 1) * 110 * 50);
         }, 0);
 
         // Also add O2 from donation verifications if they have it (since they are tree_contributions originally)
-        const verifiedDonationVerifications = donationVerifications.filter(c => c.status === 'VERIFIED');
-        totalO2Impact += verifiedDonationVerifications.reduce((sum, c) => {
+        const verifiedDonationVerifications = donationVerifications.filter((c: TreeContribution) => c.status === 'VERIFIED');
+        totalO2Impact += verifiedDonationVerifications.reduce((sum: number, c: TreeContribution) => {
             if (c.totalLifespanO2) return sum + c.totalLifespanO2;
             return sum + ((c.treeQuantity || 1) * 110 * 50);
         }, 0);
 
         return NextResponse.json({
-            contributions: plantations.map(c => ({
+            contributions: plantations.map((c: TreeContribution) => ({
                 ...c,
                 districtName: districtsMap.get(c.districtId) || 'Unknown',
             })),
@@ -161,8 +160,8 @@ export async function GET(request: Request) {
                 totalO2Impact,
                 verifiedContributions: verifiedPlantations.length + verifiedDonationVerifications.length,
                 verifiedPlantationsCount: verifiedPlantations.length,
-                pendingContributions: pendingPlantations.length + donationVerifications.filter(c => c.status === 'PENDING').length,
-                rejectedContributions: rejectedPlantations.length + donationVerifications.filter(c => c.status === 'REJECTED').length,
+                pendingContributions: pendingPlantations.length + donationVerifications.filter((c: TreeContribution) => c.status === 'PENDING').length,
+                rejectedContributions: rejectedPlantations.length + donationVerifications.filter((c: TreeContribution) => c.status === 'REJECTED').length,
             },
         });
     } catch (error) {
