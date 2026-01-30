@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-// Cache for 60 seconds (API route level)
-// Since updates happen daily via cron, we don't need frequent revalidation
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
     try {
@@ -18,7 +17,7 @@ export async function GET(request: Request) {
             .get();
 
         const leaderboard = snapshot.docs
-            .map(doc => ({
+            .map((doc: QueryDocumentSnapshot) => ({
                 id: doc.id,
                 ...doc.data()
             } as any))

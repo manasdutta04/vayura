@@ -1,4 +1,9 @@
 # Vayura
+## Why Vayura?
+
+India lacks district-level visibility into environmental oxygen demand.
+Vayura bridges the gap between **data, awareness, and action** by turning
+abstract environmental metrics into real-world tree plantation workflows.
 
 **District-Level Oxygen Intelligence for a Greener India**
 
@@ -23,6 +28,126 @@ Vayura is an open-source web application that estimates district-level oxygen de
 - **Legal & Privacy**: Dedicated Terms of Service and Privacy Policy for secure usage
 - **State Leaderboard**: Rankings by oxygen self-sufficiency across Indian states
 - **Transparent Methodology**: All formulas and assumptions clearly explained
+
+### Website Features
+## District-Level Environmental Intelligence
+
+- **Search and explore all Indian districts**
+
+- **District-wise oxygen demand vs supply estimation**
+
+- **Visual oxygen deficit / surplus indicators**
+
+- **District environmental health score**
+
+## Oxygen & Tree Impact Calculations
+
+- **Scientifically backed human oxygen demand calculation**
+
+- **Dynamic adjustment using AQI, soil quality, and disaster frequency**
+
+- **Automatic calculation of trees required to offset oxygen deficit**
+
+- **Transparent formulas and assumptions shown to users**
+
+## Tree Plantation & Contribution System
+
+- **Upload tree plantation photos**
+
+- **AI-based image verification for plantation authenticity**
+
+- **Auto-calculation of oxygen contribution from planted trees**
+
+- **Track planted trees at district & user level**
+
+## NGO Donation Hub
+
+- **Donate trees via verified environmental NGOs**
+
+- **NGO profiles with transparency & impact scores**
+
+- **Track donated trees separately from planted trees**
+
+- **Clear mapping between donations and districts**
+
+## Personal Contribution Dashboard
+
+- **User-specific dashboard**
+
+- **View total trees planted vs donated**
+
+- **See personal oxygen contribution impact***
+
+- **Contribution history & activity logs**
+
+## Leaderboards & Rankings
+
+- **State-wise oxygen self-sufficiency leaderboard**
+
+- **Rankings based on forest cover and oxygen balance**
+
+- **Public comparison across states and districts**
+
+## Data Visualization & Insights
+
+- **Interactive charts for oxygen demand & supply**
+
+- **Environmental metric graphs (AQI, population, forest cover)**
+
+- **District comparison visuals**
+
+- **Trend-based insights for environmental planning**
+
+## AI-Powered Data Aggregation
+
+- **Intelligent data fetching using Google Gemini AI**
+
+- **Automatic aggregation from multiple government sources**
+
+- **Fallback mechanisms for missing or inconsistent data**
+
+- **Explainable AI outputs for transparency**
+
+## Authentication & Security
+
+- **Secure user authentication (Email / Google)**
+
+- **Role-based access for contributors and admins**
+
+- **Secure image storage for tree uploads**
+
+- **Environment-safe configuration using Firebase**
+
+## Transparency, Legal & Ethics
+
+- **Dedicated Terms of Service and Privacy Policy**
+
+- **Clear disclaimers on estimation accuracy**
+
+- **Responsible AI usage principles**
+
+- **Publicly documented calculation methodology**
+
+## Developer & Open-Source Friendly
+
+- **Modular and scalable architecture**
+
+- **Optional Python microservice for calculations**
+
+- **Firestore-based structured data model**
+
+- **Ready for community contributions**
+
+## Accessibility & Scalability
+
+- **Responsive UI for desktop and mobile**
+
+- **Designed for pan-India scalability**
+
+- **Easily extendable to other countries or regions**
+
+- **Performance-optimized data fetching**
+
 
 ## Tech Stack
 
@@ -121,6 +246,13 @@ npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) to see the application.
+
+## Development Notes
+
+- Firebase Admin keys must never be committed
+- Use `.env.local` only
+- Prefer mock data when working on UI
+- Python microservice is optional for frontend contributors
 
 ## Oxygen Calculation Methodology
 
