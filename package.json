@@ -12,7 +12,8 @@
     "db:migrate": "prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:push": "prisma db push",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "npm rebuild lightningcss --force || true"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -61,6 +62,10 @@
     "typescript": "^5"
   },
   "optionalDependencies": {
+    "lightningcss-darwin-arm64": "^1.31.1",
+    "lightningcss-darwin-x64": "^1.31.1",
+    "lightningcss-linux-arm64-gnu": "^1.31.1",
+    "lightningcss-linux-x64-gnu": "^1.31.1",
     "lightningcss-win32-x64-msvc": "^1.31.1"
   }
 }
