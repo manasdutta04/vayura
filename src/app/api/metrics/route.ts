@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 // ✅ FIXED: Import from correct relative path
-import { metrics } from '../calculator/route'; 
+import { metrics } from '../oxygen-calculator/route'; 
 import { oxygenCache } from '@/lib/oxygenCache';
 
 export async function GET() {

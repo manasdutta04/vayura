@@ -1,7 +1,7 @@
 import { oxygenCache } from '@/lib/oxygenCache';
 // ✅ REQUIREMENT: Use the real calculator logic instead of simulation
 // If this import fails, ensure the file exists at this path.
-import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
+import { calculateTreeOxygenProduction } from '@/lib/utils/oxygen-calculator';
 
 // Circuit Breaker State
 let failureCount = 0;
@@ -37,7 +37,7 @@ class OxygenService {
         const start = performance.now();
 
         // ✅ REQUIREMENT: Real Calculator Integration
-        const result = calculateOxygenRequirements(trees, age);
+        const result = calculateTreeOxygenProduction(trees, age);
         
         const duration = performance.now() - start;
 

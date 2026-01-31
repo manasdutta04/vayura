@@ -304,40 +304,44 @@ Vayura uses a multi-tier data fetching approach:
 
 See [DATA_SOURCES.md](./DATA_SOURCES.md) for complete data source documentation.
 
-## Project Structure
+---
 
-```
+## 📂 Project Structure
+
+Vayura follows the Next.js 16+ `src/app` directory convention for modularity and scalability:
+
+```text
 vayura/
 ├── src/
-│   ├── app/                    # Next.js pages and API routes
-│   │   ├── api/               # Backend API endpoints
-│   │   │   ├── districts/     # District search and details
-│   │   │   ├── plant/         # Tree planting submission
-│   │   │   ├── contribution/  # User contributions
-│   │   │   └── leaderboard/   # State rankings
-│   │   ├── dashboard/         # Main dashboard
-│   │   ├── contribution/       # User contributions page
-│   │   ├── leaderboard/        # Leaderboard page
-│   │   └── plant/              # Plant a tree page
-│   ├── components/            # React components
-│   │   └── ui/                # Reusable UI components
-│   ├── lib/                   # Utility functions and shared code
-│   │   ├── types/             # TypeScript type definitions
-│   │   ├── data-sources/      # Environmental data integrations
-│   │   ├── firebase.ts        # Firebase client config
-│   │   ├── firebase-admin.ts  # Firebase Admin SDK
-│   │   └── utils/             # Helper functions
-│   └── middleware.ts          # Next.js middleware
-├── scripts/                    # Database seeding scripts
-├── services/
-│   └── oxygen-calculator/      # Python FastAPI microservice (optional)
-├── public/                     # Static assets
-│   ├── logo.png               # Application logo
-│   └── favicon/               # Favicon files
-├── firestore.indexes.json     # Firestore index definitions
-├── firestore.rules            # Firestore security rules
-└── package.json
+│   ├── app/                      # 🚀 NEXT.JS APP ROUTER (Pages & APIs)
+│   │   ├── (auth)/               # Auth-related route groups
+│   │   ├── api/                  # Serverless Backend Endpoints
+│   │   │   ├── districts/        # Oxygen & environmental data fetching
+│   │   │   ├── plant/            # AI image verification & uploads
+│   │   │   └── leaderboard/      # State-level ranking logic
+│   │   ├── dashboard/            # User-specific impact analytics
+│   │   ├── districts/            # District-level detail pages
+│   │   └── layout.tsx            # Global providers & root UI
+│   ├── components/               # 🧱 REUSABLE UI COMPONENTS
+│   │   ├── ui/                   # Shadcn/Radix primitive components
+│   │   ├── charts/               # Recharts environmental visualizations
+│   │   └── maps/                 # Interactive Indian district maps
+│   ├── lib/                      # ⚙️ CORE LOGIC & UTILITIES
+│   │   ├── firebase/             # Client & Admin SDK configurations
+│   │   ├── calculations/         # Scientific O2 demand formulas
+│   │   ├── types/                # TypeScript interfaces & enums
+│   │   └── utils/                # Formatting & helper functions
+│   └── middleware.ts             # Auth & Route protection logic
+├── services/                     # 🐍 OPTIONAL MICROSERVICES
+│   └── oxygen-calculator/        # Python FastAPI engine (Advanced logic)
+├── scripts/                      # 🛠️ AUTOMATION
+│   └── seed-data.ts              # Firestore initial seeding scripts
+├── public/                       # 🖼️ STATIC ASSETS (Logos, Icons)
+├── firestore.rules               # 🔥 Database Security Rules
+└── package.json                  # Dependencies & Scripts
 ```
+
+---
 
 ## Contributing
 
