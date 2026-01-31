@@ -10,7 +10,7 @@ import { formatCompactNumber } from '@/lib/utils/helpers';
 import { TreeContribution, Donation } from '@/lib/types';
 import { ContributorProfile, BADGE_DEFINITIONS } from '@/lib/types/champions';
 import { BadgeShowcase, NextBadgeProgress } from '@/components/ui/badge-display';
-import { TreeDeciduous, Heart, Wind, Calendar, MapPin, CheckCircle, Clock, XCircle, Trophy, Medal, Award, Sparkles } from 'lucide-react';
+import { TreeDeciduous, Heart, Wind, Calendar, MapPin, CheckCircle, Clock, XCircle, Trophy, Medal, Award, Sparkles, Sprout, Star } from 'lucide-react';
 
 interface ContributionStats {
     totalTreesPlanted: number;
@@ -206,7 +206,9 @@ export default function ContributionPage() {
                             ) : (
                                 <div className="text-center py-4">
                                     <p className="text-sm text-gray-500">No badges earned yet</p>
-                                    <p className="text-xs text-gray-400 mt-1">Get your first verified contribution to earn 🌱 Green Starter!</p>
+                                    <p className="text-xs text-gray-400 mt-1 flex items-center gap-1">
+                                        Get your first verified contribution to earn <Sprout className="w-4 h-4 text-green-500" /> Green Starter!
+                                    </p>
                                 </div>
                             )}
                             {/* Next badge progress */}
@@ -253,10 +255,10 @@ export default function ContributionPage() {
                                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${profile.districtRank === 1
-                                                        ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-white'
-                                                        : profile.districtRank <= 3
-                                                            ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white'
-                                                            : 'bg-gray-200 text-gray-600'
+                                                    ? 'bg-gradient-to-br from-yellow-400 to-amber-500 text-white'
+                                                    : profile.districtRank <= 3
+                                                        ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white'
+                                                        : 'bg-gray-200 text-gray-600'
                                                     }`}>
                                                     {profile.districtRank === 1 ? (
                                                         <Medal className="w-5 h-5" />
@@ -270,7 +272,7 @@ export default function ContributionPage() {
                                                 </div>
                                             </div>
                                             {profile.districtRank === 1 && (
-                                                <span className="text-2xl">🏆</span>
+                                                <Trophy className="w-6 h-6 text-amber-500" />
                                             )}
                                         </div>
                                     )}
@@ -280,10 +282,10 @@ export default function ContributionPage() {
                                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                                             <div className="flex items-center gap-3">
                                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center ${profile.stateRank === 1
-                                                        ? 'bg-gradient-to-br from-purple-400 to-indigo-500 text-white'
-                                                        : profile.stateRank <= 3
-                                                            ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white'
-                                                            : 'bg-gray-200 text-gray-600'
+                                                    ? 'bg-gradient-to-br from-purple-400 to-indigo-500 text-white'
+                                                    : profile.stateRank <= 3
+                                                        ? 'bg-gradient-to-br from-gray-300 to-gray-400 text-white'
+                                                        : 'bg-gray-200 text-gray-600'
                                                     }`}>
                                                     {profile.stateRank === 1 ? (
                                                         <Award className="w-5 h-5" />
@@ -297,7 +299,7 @@ export default function ContributionPage() {
                                                 </div>
                                             </div>
                                             {profile.stateRank === 1 && (
-                                                <span className="text-2xl">⭐</span>
+                                                <Star className="w-6 h-6 text-yellow-500 fill-yellow-500" />
                                             )}
                                         </div>
                                     )}
