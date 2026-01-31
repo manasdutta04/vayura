@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
+import { toast } from 'sonner';
 
 interface AuthModalProps {
     isOpen: boolean;
@@ -12,9 +13,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const [mode, setMode] = useState<'signin' | 'signup' | 'reset'>('signin');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [resetSent, setResetSent] = useState(false);
 
     const { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword } = useAuth();
 
@@ -22,35 +21,38 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        setError('');
         setLoading(true);
 
         try {
             if (mode === 'signin') {
                 await signInWithEmail(email, password);
+                toast.success('Welcome back!');
                 onClose();
             } else if (mode === 'signup') {
                 await signUpWithEmail(email, password);
+                toast.success('Account created successfully!');
                 onClose();
             } else if (mode === 'reset') {
                 await resetPassword(email);
-                setResetSent(true);
+                toast.success('Password reset email sent!', {
+                    description: 'Please check your inbox.'
+                });
             }
         } catch (err: any) {
-            setError(err.message || 'An error occurred');
+            toast.error(err.message || 'Authentication failed');
         } finally {
             setLoading(false);
         }
     };
 
     const handleGoogleSignIn = async () => {
-        setError('');
         setLoading(true);
         try {
             await signInWithGoogle();
+            toast.success('Signed in with Google');
             onClose();
         } catch (err: any) {
-            setError(err.message || 'Google sign-in failed');
+            toast.error(err.message || 'Google sign-in failed');
         } finally {
             setLoading(false);
         }
@@ -80,20 +82,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         {mode === 'reset' && 'Enter your email to reset password'}
                     </p>
                 </div>
-
-                {/* Error message */}
-                {error && (
-                    <div className="bg-red-50 text-red-600 p-3 rounded-lg mb-4 text-sm">
-                        {error}
-                    </div>
-                )}
-
-                {/* Reset sent message */}
-                {resetSent && (
-                    <div className="bg-green-50 text-green-600 p-3 rounded-lg mb-4 text-sm">
-                        Password reset email sent! Check your inbox.
-                    </div>
-                )}
 
                 {/* Google Sign In */}
                 {mode !== 'reset' && (
@@ -241,7 +229,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                         <button
                             onClick={() => {
                                 setMode('signin');
-                                setResetSent(false);
                             }}
                             className="text-nature-600 hover:underline"
                         >
