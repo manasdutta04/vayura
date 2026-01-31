@@ -9,6 +9,7 @@ import {
   getAQICategory,
 } from "@/lib/utils/helpers";
 import EmptyState from "@/components/ui/EmptyState";
+import { ExportButtons } from "@/components/district/ExportButtons";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   try {
@@ -82,6 +83,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
               </p>
             </div>
             <div className="flex gap-3">
+              <ExportButtons data={data} slug={slug} />
               <Link
                 href="/plant"
                 className="px-5 py-3 rounded-full bg-nature-600 text-white font-semibold hover:bg-nature-700 transition"
