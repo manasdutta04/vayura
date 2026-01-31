@@ -45,8 +45,17 @@
           "order": "DESCENDING"
         }
       ]
+    },
+    {
+      "collectionGroup": "oxygen_cache",
+      "queryScope": "COLLECTION",
+      "fields": [
+        {
+          "fieldPath": "timestamp",
+          "order": "ASCENDING"
+        }
+      ]
     }
   ],
   "fieldOverrides": []
 }
-

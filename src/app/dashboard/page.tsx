@@ -109,14 +109,7 @@ export default function Dashboard() {
                 <p className="text-gray-500 mb-4">
                   Track your environmental impact and explore district data
                 </p>
-                <div className="flex gap-3">
-                  <button 
-                    onClick={() => router.push('/profile')} 
-                    className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors font-medium"
-                  >
-                    View Profile
-                  </button>
-                </div>
+
               </div>
               <div className="text-right hidden md:block">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Current Impact</p>
@@ -331,6 +324,21 @@ export default function Dashboard() {
                       <p className="text-xs text-blue-700/80">Check state rankings</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-blue-400 ml-auto group-hover:translate-x-1 transition-transform" />
+                  </button>
+
+                  {/* Champions Card */}
+                  <button
+                    onClick={() => router.push('/champions')}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-100 hover:border-orange-200 transition-all group text-left"
+                  >
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-orange-600 shadow-sm group-hover:scale-105 transition-transform">
+                      <span className="text-2xl">🏆</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-orange-900 group-hover:text-orange-700">Champions</h3>
+                      <p className="text-xs text-orange-700/80">View top contributors</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-orange-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
 
                   {/* Calculator Card */}

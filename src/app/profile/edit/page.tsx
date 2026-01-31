@@ -7,8 +7,9 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { Button } from '@/components/ui/button';
 import { updateUserProfileFields } from '@/lib/utils/user-profile';
+import { uploadProfileImage } from '@/lib/utils/storage';
 import { UserProfile } from '@/lib/types/firestore';
-import { User, Mail, Phone, MapPin, Camera, Save, ArrowLeft, Upload, X } from 'lucide-react';
+import { User, Mail, Camera, Save, ArrowLeft, Upload, X } from 'lucide-react';
 import Link from 'next/link';
 
 export default function EditProfilePage() {
@@ -20,6 +21,7 @@ export default function EditProfilePage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Redirect to home if not authenticated
@@ -38,6 +40,8 @@ export default function EditProfilePage() {
         photoURL: user.photoURL || '',
       });
       setPreviewImage(user.photoURL || '');
+      // Don't set selectedFile here since we're not dealing with a new file
+      setSelectedFile(null);
       setLoadingProfile(false);
     }
   }, [user]);
@@ -59,16 +63,20 @@ export default function EditProfilePage() {
         return;
       }
 
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('File size should be less than 5MB');
+      // Validate file size (max 10MB to match storage validation)
+      if (file.size > 10 * 1024 * 1024) {
+        setError('File size should be less than 10MB');
         return;
       }
+
+      // Store the selected file for later upload
+      setSelectedFile(file);
 
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
+        // Store the data URL as photoURL for preview purposes
         setProfile(prev => ({
           ...prev,
           photoURL: reader.result as string
@@ -85,10 +93,15 @@ export default function EditProfilePage() {
 
   const removeImage = () => {
     setPreviewImage(null);
+    setSelectedFile(null);
     setProfile(prev => ({
       ...prev,
       photoURL: ''
     }));
+    // Clear the file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -103,21 +116,35 @@ export default function EditProfilePage() {
       }
 
       // Prepare update data, excluding undefined/null values
+      // Also exclude phone and address as they should not be stored
       const updateData: any = {};
       if (profile.name !== undefined && profile.name !== null && profile.name.trim() !== '') {
         updateData.name = profile.name.trim();
       }
-      if (profile.phone !== undefined && profile.phone !== null && profile.phone.trim() !== '') {
-        updateData.phone = profile.phone.trim();
-      }
       if (profile.bio !== undefined && profile.bio !== null && profile.bio.trim() !== '') {
         updateData.bio = profile.bio.trim();
       }
-      if (profile.address !== undefined && profile.address !== null && profile.address.trim() !== '') {
-        updateData.address = profile.address.trim();
-      }
+      
+      // Handle photoURL - if it's a data URL (local file), upload it to storage first
       if (profile.photoURL !== undefined && profile.photoURL !== null && profile.photoURL.trim() !== '') {
-        updateData.photoURL = profile.photoURL.trim();
+        if (profile.photoURL.startsWith('data:image')) {
+          // This is a local file, use the stored selected file
+          if (selectedFile) {
+            try {
+              const uploadResult = await uploadProfileImage(selectedFile, user.uid);
+              updateData.photoURL = uploadResult.url;
+            } catch (uploadError) {
+              console.error('Error uploading profile image:', uploadError);
+              throw new Error('Failed to upload profile image. Please make sure Firebase Storage is properly configured in your project.');
+            }
+          } else {
+            // If we don't have the file, we can't upload it, so we'll skip updating the photoURL
+            console.log('No file to upload for profile image');
+          }
+        } else {
+          // It's a valid URL, so we can update it
+          updateData.photoURL = profile.photoURL.trim();
+        }
       }
       
       console.log('Update data:', updateData); // Debug log
@@ -303,26 +330,7 @@ export default function EditProfilePage() {
               </div>
             </div>
 
-            {/* Phone Field */}
-            <div className="mb-6">
-              <label htmlFor="phone" className="block text-sm font-semibold text-gray-900 mb-2">
-                Phone Number
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <Phone className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={profile.phone || ''}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors bg-gray-50 focus:bg-white"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-            </div>
+
 
             {/* Bio Field */}
             <div className="mb-6">
@@ -340,26 +348,7 @@ export default function EditProfilePage() {
               />
             </div>
 
-            {/* Address Field */}
-            <div className="mb-8">
-              <label htmlFor="address" className="block text-sm font-semibold text-gray-900 mb-2">
-                Address
-              </label>
-              <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <MapPin className="h-5 w-5 text-gray-400" />
-                </div>
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={profile.address || ''}
-                  onChange={handleChange}
-                  className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors bg-gray-50 focus:bg-white"
-                  placeholder="Enter your address"
-                />
-              </div>
-            </div>
+
 
             {/* Submit Button */}
             <div className="flex gap-4">

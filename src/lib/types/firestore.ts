@@ -98,10 +98,8 @@ export interface UserProfile {
     id: string; // Firebase Auth UID
     name?: string;
     email: string;
-    phone?: string;
     bio?: string;
     photoURL?: string;
-    address?: string;
     createdAt: Date;
     updatedAt: Date;
 }

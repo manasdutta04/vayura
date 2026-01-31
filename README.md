@@ -1,4 +1,9 @@
 # Vayura
+## Why Vayura?
+
+India lacks district-level visibility into environmental oxygen demand.
+Vayura bridges the gap between **data, awareness, and action** by turning
+abstract environmental metrics into real-world tree plantation workflows.
 
 **District-Level Oxygen Intelligence for a Greener India**
 
@@ -23,6 +28,126 @@ Vayura is an open-source web application that estimates district-level oxygen de
 - **Legal & Privacy**: Dedicated Terms of Service and Privacy Policy for secure usage
 - **State Leaderboard**: Rankings by oxygen self-sufficiency across Indian states
 - **Transparent Methodology**: All formulas and assumptions clearly explained
+
+### Website Features
+## District-Level Environmental Intelligence
+
+- **Search and explore all Indian districts**
+
+- **District-wise oxygen demand vs supply estimation**
+
+- **Visual oxygen deficit / surplus indicators**
+
+- **District environmental health score**
+
+## Oxygen & Tree Impact Calculations
+
+- **Scientifically backed human oxygen demand calculation**
+
+- **Dynamic adjustment using AQI, soil quality, and disaster frequency**
+
+- **Automatic calculation of trees required to offset oxygen deficit**
+
+- **Transparent formulas and assumptions shown to users**
+
+## Tree Plantation & Contribution System
+
+- **Upload tree plantation photos**
+
+- **AI-based image verification for plantation authenticity**
+
+- **Auto-calculation of oxygen contribution from planted trees**
+
+- **Track planted trees at district & user level**
+
+## NGO Donation Hub
+
+- **Donate trees via verified environmental NGOs**
+
+- **NGO profiles with transparency & impact scores**
+
+- **Track donated trees separately from planted trees**
+
+- **Clear mapping between donations and districts**
+
+## Personal Contribution Dashboard
+
+- **User-specific dashboard**
+
+- **View total trees planted vs donated**
+
+- **See personal oxygen contribution impact***
+
+- **Contribution history & activity logs**
+
+## Leaderboards & Rankings
+
+- **State-wise oxygen self-sufficiency leaderboard**
+
+- **Rankings based on forest cover and oxygen balance**
+
+- **Public comparison across states and districts**
+
+## Data Visualization & Insights
+
+- **Interactive charts for oxygen demand & supply**
+
+- **Environmental metric graphs (AQI, population, forest cover)**
+
+- **District comparison visuals**
+
+- **Trend-based insights for environmental planning**
+
+## AI-Powered Data Aggregation
+
+- **Intelligent data fetching using Google Gemini AI**
+
+- **Automatic aggregation from multiple government sources**
+
+- **Fallback mechanisms for missing or inconsistent data**
+
+- **Explainable AI outputs for transparency**
+
+## Authentication & Security
+
+- **Secure user authentication (Email / Google)**
+
+- **Role-based access for contributors and admins**
+
+- **Secure image storage for tree uploads**
+
+- **Environment-safe configuration using Firebase**
+
+## Transparency, Legal & Ethics
+
+- **Dedicated Terms of Service and Privacy Policy**
+
+- **Clear disclaimers on estimation accuracy**
+
+- **Responsible AI usage principles**
+
+- **Publicly documented calculation methodology**
+
+## Developer & Open-Source Friendly
+
+- **Modular and scalable architecture**
+
+- **Optional Python microservice for calculations**
+
+- **Firestore-based structured data model**
+
+- **Ready for community contributions**
+
+## Accessibility & Scalability
+
+- **Responsive UI for desktop and mobile**
+
+- **Designed for pan-India scalability**
+
+- **Easily extendable to other countries or regions**
+
+- **Performance-optimized data fetching**
+
 
 ## Tech Stack
 
@@ -122,6 +247,13 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
+## Development Notes
+
+- Firebase Admin keys must never be committed
+- Use `.env.local` only
+- Prefer mock data when working on UI
+- Python microservice is optional for frontend contributors
+
 ## Oxygen Calculation Methodology
 
 Vayura uses a transparent, scientifically-based formula:
@@ -163,40 +295,44 @@ Vayura uses a multi-tier data fetching approach:
 
 See [DATA_SOURCES.md](./DATA_SOURCES.md) for complete data source documentation.
 
-## Project Structure
+---
 
-```
+## 📂 Project Structure
+
+Vayura follows the Next.js 16+ `src/app` directory convention for modularity and scalability:
+
+```text
 vayura/
 ├── src/
-│   ├── app/                    # Next.js pages and API routes
-│   │   ├── api/               # Backend API endpoints
-│   │   │   ├── districts/     # District search and details
-│   │   │   ├── plant/         # Tree planting submission
-│   │   │   ├── contribution/  # User contributions
-│   │   │   └── leaderboard/   # State rankings
-│   │   ├── dashboard/         # Main dashboard
-│   │   ├── contribution/       # User contributions page
-│   │   ├── leaderboard/        # Leaderboard page
-│   │   └── plant/              # Plant a tree page
-│   ├── components/            # React components
-│   │   └── ui/                # Reusable UI components
-│   ├── lib/                   # Utility functions and shared code
-│   │   ├── types/             # TypeScript type definitions
-│   │   ├── data-sources/      # Environmental data integrations
-│   │   ├── firebase.ts        # Firebase client config
-│   │   ├── firebase-admin.ts  # Firebase Admin SDK
-│   │   └── utils/             # Helper functions
-│   └── middleware.ts          # Next.js middleware
-├── scripts/                    # Database seeding scripts
-├── services/
-│   └── oxygen-calculator/      # Python FastAPI microservice (optional)
-├── public/                     # Static assets
-│   ├── logo.png               # Application logo
-│   └── favicon/               # Favicon files
-├── firestore.indexes.json     # Firestore index definitions
-├── firestore.rules            # Firestore security rules
-└── package.json
+│   ├── app/                      # 🚀 NEXT.JS APP ROUTER (Pages & APIs)
+│   │   ├── (auth)/               # Auth-related route groups
+│   │   ├── api/                  # Serverless Backend Endpoints
+│   │   │   ├── districts/        # Oxygen & environmental data fetching
+│   │   │   ├── plant/            # AI image verification & uploads
+│   │   │   └── leaderboard/      # State-level ranking logic
+│   │   ├── dashboard/            # User-specific impact analytics
+│   │   ├── districts/            # District-level detail pages
+│   │   └── layout.tsx            # Global providers & root UI
+│   ├── components/               # 🧱 REUSABLE UI COMPONENTS
+│   │   ├── ui/                   # Shadcn/Radix primitive components
+│   │   ├── charts/               # Recharts environmental visualizations
+│   │   └── maps/                 # Interactive Indian district maps
+│   ├── lib/                      # ⚙️ CORE LOGIC & UTILITIES
+│   │   ├── firebase/             # Client & Admin SDK configurations
+│   │   ├── calculations/         # Scientific O2 demand formulas
+│   │   ├── types/                # TypeScript interfaces & enums
+│   │   └── utils/                # Formatting & helper functions
+│   └── middleware.ts             # Auth & Route protection logic
+├── services/                     # 🐍 OPTIONAL MICROSERVICES
+│   └── oxygen-calculator/        # Python FastAPI engine (Advanced logic)
+├── scripts/                      # 🛠️ AUTOMATION
+│   └── seed-data.ts              # Firestore initial seeding scripts
+├── public/                       # 🖼️ STATIC ASSETS (Logos, Icons)
+├── firestore.rules               # 🔥 Database Security Rules
+└── package.json                  # Dependencies & Scripts
 ```
+
+---
 
 ## Contributing
 

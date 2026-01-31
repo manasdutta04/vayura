@@ -1,18 +1,56 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
 import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
+import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
 import Skeleton from "@/components/ui/skeleton-card";
+import EmptyState from "@/components/ui/EmptyState";
+
 
 interface DistrictResultsProps {
-  data: DistrictDetail;
+  data: DistrictDetail | null;
 }
 
+
 export function DistrictResults({ data }: DistrictResultsProps) {
+  const [exportLoading, setExportLoading] = useState<'csv' | 'json' | null>(null);
+    if (!data) {
+    return (
+      <EmptyState
+        title="District data not available"
+        subtitle="Try searching for another district"
+      />
+    );
+  }
+
+
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+
+  const handleExportCSV = async () => {
+    setExportLoading('csv');
+    try {
+      exportDistrictAsCSV(data, data.slug);
+    } catch (error) {
+      console.error('Failed to export CSV:', error);
+    } finally {
+      setExportLoading(null);
+    }
+  };
+
+  const handleExportJSON = async () => {
+    setExportLoading('json');
+    try {
+      exportDistrictAsJSON(data, data.slug);
+    } catch (error) {
+      console.error('Failed to export JSON:', error);
+    } finally {
+      setExportLoading(null);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -27,7 +65,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
               Population: {formatNumber(data.population)}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link
               href="/plant"
               className="px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
@@ -42,6 +80,20 @@ export function DistrictResults({ data }: DistrictResultsProps) {
             >
               Donate
             </a>
+            <button
+              onClick={handleExportCSV}
+              disabled={exportLoading !== null}
+              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exportLoading === 'csv' ? '⏳ Exporting...' : '📥 CSV'}
+            </button>
+            <button
+              onClick={handleExportJSON}
+              disabled={exportLoading !== null}
+              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exportLoading === 'json' ? '⏳ Exporting...' : '📥 JSON'}
+            </button>
           </div>
         </div>
       </div>

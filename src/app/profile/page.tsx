@@ -8,11 +8,11 @@ import { Footer } from '@/components/ui/footer';
 import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/utils/user-profile';
 import { UserProfile } from '@/lib/types/firestore';
-import { User, Mail, Phone, MapPin, Calendar, Edit3, ArrowLeft, Camera } from 'lucide-react';
+import { User, Mail, Calendar, Edit3, ArrowLeft, Camera, LogOut, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function ProfilePage() {
-  const { user, loading } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [profileLoading, setProfileLoading] = useState(true);
@@ -41,6 +41,7 @@ export default function ProfilePage() {
             email: user.email || '',
             name: user.displayName || user.email?.split('@')[0] || '',
             photoURL: user.photoURL || '',
+            bio: '',
             createdAt: new Date(),
             updatedAt: new Date()
           });
@@ -102,6 +103,25 @@ export default function ProfilePage() {
   }
 
   if (!user || !profile) return null;
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      router.push('/');
+    } catch (error) {
+      console.error('Error signing out:', error);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+      return;
+    }
+    
+    // Note: Actual account deletion would require additional implementation
+    // This is a placeholder for the functionality
+    alert('Account deletion functionality would be implemented here');
+  };
 
   return (
     <>
@@ -168,41 +188,15 @@ export default function ProfilePage() {
             </h2>
             
             <div className="space-y-6">
-              {/* Bio */}
+              {/* Login Info */}
               <div className="flex items-start gap-4 p-4 bg-gray-50 rounded-2xl">
                 <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <User className="w-6 h-6 text-blue-600" />
+                  <Mail className="w-6 h-6 text-blue-600" />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">About Me</h3>
+                  <h3 className="font-semibold text-gray-900 mb-1">Login Email</h3>
                   <p className="text-gray-600">
-                    {profile.bio || 'No bio added yet. Tell us about yourself!'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Phone */}
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-6 h-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Phone Number</h3>
-                  <p className="text-gray-600">
-                    {profile.phone || 'Not provided'}
-                  </p>
-                </div>
-              </div>
-
-              {/* Address */}
-              <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl">
-                <div className="w-12 h-12 bg-amber-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-6 h-6 text-amber-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Address</h3>
-                  <p className="text-gray-600">
-                    {profile.address || 'Not provided'}
+                    {profile.email}
                   </p>
                 </div>
               </div>
@@ -223,6 +217,31 @@ export default function ProfilePage() {
                   </p>
                 </div>
               </div>
+            </div>
+          </div>
+
+          {/* Account Actions */}
+          <div className="bg-white rounded-3xl shadow-lg p-8 border border-gray-100 mt-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100">
+              Account Actions
+            </h2>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <button 
+                onClick={handleLogout}
+                className="flex items-center justify-center gap-3 p-4 bg-red-50 hover:bg-red-100 text-red-700 rounded-2xl border border-red-200 transition-colors"
+              >
+                <LogOut className="w-5 h-5" />
+                <span className="font-medium">Log Out</span>
+              </button>
+              
+              <button 
+                onClick={handleDeleteAccount}
+                className="flex items-center justify-center gap-3 p-4 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-2xl border border-gray-200 transition-colors"
+              >
+                <Trash2 className="w-5 h-5" />
+                <span className="font-medium">Delete Account</span>
+              </button>
             </div>
           </div>
         </div>
