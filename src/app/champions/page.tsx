@@ -29,23 +29,55 @@ import {
     Sparkles,
     Users,
     Target,
+    Globe,
+    Building2,
+    Sprout,
 } from 'lucide-react';
+import { ReactNode } from 'react';
+
+// Mapping from icon names to components
+function getBadgeIcon(iconName: string, className: string): ReactNode {
+    switch (iconName) {
+        case 'Sprout':
+            return <Sprout className={className} />;
+        case 'TreeDeciduous':
+            return <TreeDeciduous className={className} />;
+        case 'Trophy':
+            return <Trophy className={className} />;
+        case 'Star':
+            return <Star className={className} />;
+        case 'Shield':
+            return <Shield className={className} />;
+        case 'Crown':
+            return <Crown className={className} />;
+        default:
+            return <Sparkles className={className} />;
+    }
+}
+
+const tierIconColors: Record<string, string> = {
+    bronze: 'text-orange-600',
+    silver: 'text-gray-600',
+    gold: 'text-amber-600',
+    platinum: 'text-purple-600',
+};
 
 // Badge Component
 function BadgeDisplay({ badge, size = 'sm' }: { badge: Badge; size?: 'sm' | 'md' | 'lg' }) {
     const definition = BADGE_DEFINITIONS[badge.type];
     const sizeClasses = {
-        sm: 'text-lg',
-        md: 'text-2xl',
-        lg: 'text-3xl',
+        sm: 'w-4 h-4',
+        md: 'w-5 h-5',
+        lg: 'w-6 h-6',
     };
+    const iconColor = tierIconColors[definition.tier];
 
     return (
         <span
-            className={`inline-block ${sizeClasses[size]} cursor-help transition-transform hover:scale-110`}
+            className={`inline-flex items-center justify-center cursor-help transition-transform hover:scale-110`}
             title={`${definition.name}: ${definition.description}`}
         >
-            {definition.icon}
+            {getBadgeIcon(definition.icon, `${sizeClasses[size]} ${iconColor}`)}
         </span>
     );
 }
@@ -190,30 +222,33 @@ function ScopeSelector({
             <div className="flex flex-wrap gap-2 mb-4">
                 <button
                     onClick={() => onScopeChange('national')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${scope === 'national'
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'national'
                         ? 'bg-gray-900 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                 >
-                    🇮🇳 National
+                    <Globe className="w-4 h-4" />
+                    National
                 </button>
                 <button
                     onClick={() => onScopeChange('state')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${scope === 'state'
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'state'
                         ? 'bg-gray-900 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                 >
-                    🏛️ By State
+                    <Building2 className="w-4 h-4" />
+                    By State
                 </button>
                 <button
                     onClick={() => onScopeChange('district')}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${scope === 'district'
+                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'district'
                         ? 'bg-gray-900 text-white shadow-md'
                         : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }`}
                 >
-                    📍 By District
+                    <MapPin className="w-4 h-4" />
+                    By District
                 </button>
             </div>
 
@@ -241,8 +276,9 @@ function ScopeSelector({
                         onDistrictSelect={(district) => onDistrictSelect(district)}
                     />
                     {selectedDistrict && (
-                        <p className="mt-2 text-sm text-green-600 font-medium">
-                            📍 {selectedDistrict.name}, {selectedDistrict.state}
+                        <p className="mt-2 text-sm text-green-600 font-medium flex items-center gap-1">
+                            <MapPin className="w-4 h-4" />
+                            {selectedDistrict.name}, {selectedDistrict.state}
                         </p>
                     )}
                 </div>
@@ -348,7 +384,7 @@ function ChampionsPageContent() {
                     <div className="flex flex-wrap gap-4">
                         {Object.values(BADGE_DEFINITIONS).map((badge) => (
                             <div key={badge.type} className="flex items-center gap-2">
-                                <span className="text-xl">{badge.icon}</span>
+                                {getBadgeIcon(badge.icon, `w-5 h-5 ${tierIconColors[badge.tier]}`)}
                                 <div>
                                     <p className="text-xs font-semibold text-gray-900">{badge.name}</p>
                                     <p className="text-[10px] text-gray-500">{badge.requirement}</p>
