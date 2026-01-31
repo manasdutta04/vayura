@@ -207,3 +207,26 @@ export function calculateOxygenRequirements(data: OxygenCalculationInput): Oxyge
     };
 }
 
+/**
+ * Simple calculation for oxygen production from trees
+ * Used by oxygen calculator service for quick estimates
+ * 
+ * @param trees - Number of trees
+ * @param age - Average age of trees in years
+ * @returns Oxygen production data
+ */
+export function calculateTreeOxygenProduction(trees: number, age: number) {
+    // Age factor: trees reach full production capacity at 10+ years
+    const ageFactor = Math.min(age / 10, 1);
+    const oxygenPerTree = BASE_TREE_O2_SUPPLY_KG_PER_YEAR * ageFactor;
+    const totalOxygen = trees * oxygenPerTree;
+
+    return {
+        trees,
+        age,
+        oxygen_per_tree_kg_per_year: Math.round(oxygenPerTree * 100) / 100,
+        total_oxygen_kg_per_year: Math.round(totalOxygen * 100) / 100,
+        age_factor: Math.round(ageFactor * 100) / 100,
+    };
+}
+

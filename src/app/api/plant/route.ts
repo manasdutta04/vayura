@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
+import { updateContributorProfile } from '@/lib/services/champions';
+
+export const dynamic = 'force-dynamic';
+
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 // Use the same model as gemini-data-fetcher
 const GEMINI_MODEL = 'gemini-2.5-flash';
@@ -306,6 +310,16 @@ export async function POST(request: Request) {
             docData.type = contributionType;
 
             await contribRef.set(docData);
+
+            // Update contributor profile (stats, badges, rankings)
+            if (userId && userName) {
+                try {
+                    await updateContributorProfile(userId, userName, userEmail || undefined);
+                } catch (err) {
+                    console.error('Failed to update contributor profile:', err);
+                    // Continue even if profile update fails to return success for the planting
+                }
+            }
 
             return NextResponse.json({
                 message: 'Tree contribution analyzed and saved successfully',

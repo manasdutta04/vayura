@@ -1,17 +1,56 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
 import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
+import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
+import Skeleton from "@/components/ui/skeleton-card";
+import EmptyState from "@/components/ui/EmptyState";
+
 
 interface DistrictResultsProps {
-  data: DistrictDetail;
+  data: DistrictDetail | null;
 }
 
+
 export function DistrictResults({ data }: DistrictResultsProps) {
+  const [exportLoading, setExportLoading] = useState<'csv' | 'json' | null>(null);
+    if (!data) {
+    return (
+      <EmptyState
+        title="District data not available"
+        subtitle="Try searching for another district"
+      />
+    );
+  }
+
+
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+
+  const handleExportCSV = async () => {
+    setExportLoading('csv');
+    try {
+      exportDistrictAsCSV(data, data.slug);
+    } catch (error) {
+      console.error('Failed to export CSV:', error);
+    } finally {
+      setExportLoading(null);
+    }
+  };
+
+  const handleExportJSON = async () => {
+    setExportLoading('json');
+    try {
+      exportDistrictAsJSON(data, data.slug);
+    } catch (error) {
+      console.error('Failed to export JSON:', error);
+    } finally {
+      setExportLoading(null);
+    }
+  };
 
   return (
     <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
@@ -26,7 +65,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
               Population: {formatNumber(data.population)}
             </p>
           </div>
-          <div className="flex gap-2">
+          <div className="flex flex-wrap gap-2">
             <Link
               href="/plant"
               className="px-4 py-2 rounded-md bg-gray-900 text-white text-sm font-medium hover:bg-gray-800 transition-colors"
@@ -41,6 +80,20 @@ export function DistrictResults({ data }: DistrictResultsProps) {
             >
               Donate
             </a>
+            <button
+              onClick={handleExportCSV}
+              disabled={exportLoading !== null}
+              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exportLoading === 'csv' ? '⏳ Exporting...' : '📥 CSV'}
+            </button>
+            <button
+              onClick={handleExportJSON}
+              disabled={exportLoading !== null}
+              className="px-4 py-2 rounded-md border border-gray-300 text-gray-700 text-sm font-medium hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {exportLoading === 'json' ? '⏳ Exporting...' : '📥 JSON'}
+            </button>
           </div>
         </div>
       </div>
@@ -282,3 +335,74 @@ export function DistrictResults({ data }: DistrictResultsProps) {
   );
 }
 
+export function DistrictResultsSkeleton() {
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+      {/* Header Skeleton */}
+      <div className="bg-gray-50 px-6 py-5 border-b border-gray-200">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="space-y-2">
+            <Skeleton className="h-7 w-64" />
+            <Skeleton className="h-4 w-32" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-9 w-24 rounded-md" />
+            <Skeleton className="h-9 w-24 rounded-md" />
+          </div>
+        </div>
+      </div>
+
+      {/* Summary Cards Skeleton */}
+      <div className="p-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+          {[...Array(5)].map((_, i) => (
+            <div key={i} className="bg-gray-50 rounded-xl p-4 border border-gray-200 h-32 flex flex-col justify-between">
+              <div className="flex items-center gap-2">
+                <Skeleton className="w-8 h-8 rounded-lg" />
+                <Skeleton className="h-3 w-16" />
+              </div>
+              <Skeleton className="h-8 w-24" />
+              <Skeleton className="h-3 w-12" />
+            </div>
+          ))}
+        </div>
+
+        {/* Oxygen Analysis Skeleton */}
+        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
+          <div className="flex items-center gap-3 mb-6">
+            <Skeleton className="w-10 h-10 rounded-lg" />
+            <div className="space-y-2">
+              <Skeleton className="h-6 w-48" />
+              <Skeleton className="h-3 w-32" />
+            </div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {[...Array(3)].map((_, i) => (
+              <div key={i} className="p-4 rounded-lg bg-gray-50 border border-gray-100 h-24 flex flex-col justify-between">
+                <Skeleton className="h-3 w-24" />
+                <Skeleton className="h-8 w-32" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Detailed Breakdown Skeleton */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+           {[...Array(2)].map((_, i) => (
+             <div key={i} className="bg-gray-50 rounded-lg p-5 border border-gray-200 h-64">
+               <Skeleton className="h-5 w-48 mb-6" />
+               <div className="space-y-4">
+                 {[...Array(4)].map((_, j) => (
+                   <div key={j} className="flex justify-between">
+                     <Skeleton className="h-4 w-32" />
+                     <Skeleton className="h-4 w-20" />
+                   </div>
+                 ))}
+               </div>
+             </div>
+           ))}
+        </div>
+      </div>
+    </div>
+  );
+}

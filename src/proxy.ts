@@ -5,7 +5,7 @@ import type { NextRequest } from 'next/server';
  * Middleware to enforce authentication
  * Redirects unauthenticated users to home page
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
     // Public paths that don't require auth
     const publicPaths = ['/', '/signin'];
     const path = request.nextUrl.pathname;

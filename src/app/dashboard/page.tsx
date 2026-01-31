@@ -325,6 +325,21 @@ export default function Dashboard() {
                     <ArrowRight className="w-4 h-4 text-blue-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
 
+                  {/* Champions Card */}
+                  <button
+                    onClick={() => router.push('/champions')}
+                    className="w-full flex items-center gap-4 p-4 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-100 hover:border-orange-200 transition-all group text-left"
+                  >
+                    <div className="w-12 h-12 bg-white rounded-lg flex items-center justify-center text-orange-600 shadow-sm group-hover:scale-105 transition-transform">
+                      <span className="text-2xl">🏆</span>
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-orange-900 group-hover:text-orange-700">Champions</h3>
+                      <p className="text-xs text-orange-700/80">View top contributors</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-orange-400 ml-auto group-hover:translate-x-1 transition-transform" />
+                  </button>
+
                   {/* Calculator Card */}
                   <button
                     onClick={() => router.push('/calculator')}

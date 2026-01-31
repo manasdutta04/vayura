@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminDb, adminStorage } from '@/lib/firebase-admin';
 import { TreeContribution } from '@/lib/types';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+
+export const dynamic = 'force-dynamic';
 
 function timestampToDate(value: any): Date {
     if (!value) return new Date();
@@ -126,7 +129,7 @@ export async function GET(request: Request) {
 
         const snapshot = await queryRef.get();
 
-        const contributions: TreeContribution[] = snapshot.docs.map((docSnap) => {
+        const contributions: TreeContribution[] = snapshot.docs.map((docSnap: QueryDocumentSnapshot) => {
             const data = docSnap.data();
             return {
                 id: docSnap.id,

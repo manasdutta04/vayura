@@ -3,6 +3,7 @@
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { ShieldCheck, Server, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
+import LegalHeader from "@/components/LegalHeader"
 
 const DATA_SOURCES = [
     {
@@ -56,6 +57,7 @@ export default function DataPolicy() {
 
                     {/* Page Header */}
                     <div className="mb-8">
+                        <LegalHeader />
                         <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
                             Data Policy & Transparency
                         </h1>
