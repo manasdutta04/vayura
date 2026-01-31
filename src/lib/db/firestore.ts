@@ -21,8 +21,8 @@ function timestampToDate(timestamp: unknown): Date {
     if (timestamp instanceof Timestamp) {
         return timestamp.toDate();
     }
-    if (timestamp && typeof timestamp === 'object' && typeof (timestamp as { toDate: unknown }).toDate === 'function') {
-        return (timestamp as { toDate: () => Date }).toDate();
+    if (timestamp && typeof timestamp === 'object' && 'toDate' in timestamp && typeof timestamp.toDate === 'function') {
+        return timestamp.toDate();
     }
     return timestamp instanceof Date ? timestamp : new Date(timestamp as string | number);
 }

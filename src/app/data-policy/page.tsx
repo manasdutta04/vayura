@@ -3,8 +3,6 @@
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { ShieldCheck, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
-import { ShieldCheck, Server, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
-import LegalHeader from "@/components/LegalHeader"
 
 const DATA_SOURCES = [
     {
@@ -58,7 +56,6 @@ export default function DataPolicy() {
 
                     {/* Page Header */}
                     <div className="mb-8">
-                        <LegalHeader />
                         <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
                             Data Policy & Transparency
                         </h1>
@@ -115,7 +112,7 @@ export default function DataPolicy() {
 
                             {/* Estimates Note */}
                             <section className="bg-amber-50 rounded-xl border border-amber-100 p-6 flex items-start gap-4">
-                                <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                                <AlertCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                                 <div>
                                     <h3 className="text-sm font-semibold text-amber-900 mb-1">A Note on Scientific Estimates</h3>
                                     <p className="text-sm text-amber-800 leading-relaxed">

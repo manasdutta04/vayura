@@ -1,10 +1,5 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import type { TreeContribution } from '@/lib/types';
-
-import { updateContributorProfile } from '@/lib/services/champions';
-
-export const dynamic = 'force-dynamic';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
 // Use the same model as gemini-data-fetcher
@@ -271,7 +266,7 @@ export async function POST(request: Request) {
             const contribRef = adminDb.collection('tree_contributions').doc();
 
             // Build document data, excluding undefined values
-            const docData: Omit<TreeContribution, 'id'> = {
+            const docData: Record<string, unknown> = {
                 districtId,
                 districtName,
                 state,
@@ -312,16 +307,6 @@ export async function POST(request: Request) {
 
             await contribRef.set(docData);
 
-            // Update contributor profile (stats, badges, rankings)
-            if (userId && userName) {
-                try {
-                    await updateContributorProfile(userId, userName, userEmail || undefined);
-                } catch (err) {
-                    console.error('Failed to update contributor profile:', err);
-                    // Continue even if profile update fails to return success for the planting
-                }
-            }
-
             return NextResponse.json({
                 message: 'Tree contribution analyzed and saved successfully',
                 contributionId: contribRef.id,
@@ -336,10 +321,9 @@ export async function POST(request: Request) {
         }
 
     } catch (error: unknown) {
-        const err = error as Error;
-        console.error('Error submitting tree contribution:', err);
-        const errorMessage = err?.message || 'Unknown error occurred';
-        const errorStack = err?.stack || '';
+        console.error('Error submitting tree contribution:', error);
+        const errorMessage = (error as Error)?.message || 'Unknown error occurred';
+        const errorStack = (error as Error)?.stack || '';
         console.error('Error details:', { errorMessage, errorStack });
         return NextResponse.json(
             {

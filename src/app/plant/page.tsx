@@ -9,6 +9,7 @@ import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib
 import { DistrictSearchResult } from '@/lib/types';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { Leaf, Camera, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
+import Image from 'next/image';
 
 function PlantPageContent() {
     const router = useRouter();
@@ -139,8 +140,7 @@ function PlantPageContent() {
                 router.push('/contribution');
             }, 2000);
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : 'Failed to submit contribution';
-            setError(errorMessage);
+            setError((err as Error).message || 'Failed to submit contribution');
         } finally {
             setSubmitting(false);
         }
@@ -235,21 +235,21 @@ function PlantPageContent() {
                             </div>
                             <div className="p-6 space-y-4">
                                 <div className="flex gap-3">
-                                    <Camera className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
+                                    <Camera className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <h3 className="text-sm font-semibold text-gray-900">Clear Photos Required</h3>
                                         <p className="text-sm text-gray-500">Ensure the sapling is clearly visible. Avoid blurry or dark images.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3">
-                                    <MapPin className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
+                                    <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <h3 className="text-sm font-semibold text-gray-900">Correct Location</h3>
                                         <p className="text-sm text-gray-500">Select the district where the tree was actually planted.</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3">
-                                    <AlertCircle className="w-5 h-5 text-gray-400 shrink-0 mt-0.5" />
+                                    <AlertCircle className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
                                         <h3 className="text-sm font-semibold text-gray-900">No Fakes</h3>
                                         <p className="text-sm text-gray-500">Stock images or duplicate submissions will be rejected by our AI verification system.</p>
@@ -261,7 +261,7 @@ function PlantPageContent() {
                         {/* AI Message */}
                         <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
                             <div className="flex gap-3">
-                                <Info className="w-5 h-5 text-blue-600 shrink-0" />
+                                <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
                                 <div>
                                     <h3 className="text-sm font-semibold text-blue-900 mb-1">Powered by AI</h3>
                                     <p className="text-xs text-blue-800 leading-relaxed">
@@ -358,10 +358,11 @@ function PlantPageContent() {
                                         />
                                         {previewUrl ? (
                                             <div className="space-y-2">
-                                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                                <img
+                                                <Image
                                                     src={previewUrl}
                                                     alt="Tree preview"
+                                                    width={200}
+                                                    height={128}
                                                     className="mx-auto rounded-lg max-h-32 object-contain"
                                                     draggable={false}
                                                 />

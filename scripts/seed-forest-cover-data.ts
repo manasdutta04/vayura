@@ -89,7 +89,6 @@ async function seedForestData() {
         }
 
         const doc = snapshot.docs[0];
-        // const currentData = doc.data();
 
         // Update with estimated existing forest trees
         // Note: This is SEPARATE from user-planted trees

@@ -5,7 +5,6 @@ import { DistrictSearchResult } from "@/lib/types";
 import { apiClient, cn } from "@/lib/utils/helpers";
 import SkeletonCard from "./skeleton-card";
 import { Search, Loader2, MapPin } from "lucide-react";
-import EmptyState from "@/components/ui/EmptyState";
 
 interface DistrictSearchProps {
   onDistrictSelect?: (district: DistrictSearchResult) => void;
@@ -27,7 +26,7 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
           </span>
         ) : (
           part
-        ),
+        )
       )}
     </>
   );
@@ -35,17 +34,11 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
 
 export function DistrictSearch({
   onDistrictSelect,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  districtNotFound,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  notFoundDistrictName,
   loadingDistrict,
 }: DistrictSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [error, setError] = useState<string | null>(null);
   const [showDropdown, setShowDropdown] = useState(false);
   const [activeIndex, setActiveIndex] = useState(-1); // For keyboard nav
   const containerRef = useRef<HTMLDivElement>(null);
@@ -71,7 +64,7 @@ export function DistrictSearch({
       setError(null);
       try {
         const data = await apiClient<DistrictSearchResult[]>(
-          `/api/districts?q=${encodeURIComponent(debouncedQuery)}`,
+          `/api/districts?q=${encodeURIComponent(debouncedQuery)}`
         );
         if (!isCancelled) {
           setResults(data);
@@ -79,8 +72,7 @@ export function DistrictSearch({
         }
       } catch (err: unknown) {
         if (!isCancelled) {
-          const error = err as Error;
-          setError(error.message || "Failed to search districts");
+          console.error('Search error:', err);
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -168,7 +160,7 @@ export function DistrictSearch({
 
         {/* Dropdown Results */}
         {showDropdown && (debouncedQuery || loading) && (
-          <div className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-gray-100 bg-white shadow-xl max-h-100 overflow-y-auto overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+          <div className="absolute top-full left-0 right-0 mt-2 rounded-xl border border-gray-100 bg-white shadow-xl max-h-[400px] overflow-y-auto overflow-hidden animate-in fade-in zoom-in-95 duration-200">
             {loading ? (
               // Loading Skeletons
               Array.from({ length: 3 }).map((_, i) => <SkeletonCard key={i} />)
@@ -186,27 +178,21 @@ export function DistrictSearch({
                       "w-full text-left px-4 py-3 flex items-center gap-3 transition-colors",
                       index === activeIndex
                         ? "bg-blue-50 text-blue-700"
-                        : "hover:bg-gray-50 text-gray-700",
+                        : "hover:bg-gray-50 text-gray-700"
                     )}
                   >
                     <MapPin
                       className={cn(
                         "w-5 h-5 shrink-0",
-                        index === activeIndex
-                          ? "text-blue-600"
-                          : "text-gray-400",
+                        index === activeIndex ? "text-blue-600" : "text-gray-400"
                       )}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">
-                        <HighlightMatch
-                          text={district.name}
-                          query={debouncedQuery}
-                        />
+                        <HighlightMatch text={district.name} query={debouncedQuery} />
                       </div>
                       <div className="text-xs text-gray-500 truncate">
-                        {district.state} •{" "}
-                        {district.population?.toLocaleString()} people
+                        {district.state} • {district.population?.toLocaleString()} people
                       </div>
                     </div>
                   </button>
@@ -221,14 +207,6 @@ export function DistrictSearch({
                 <h3 className="text-gray-900 font-medium mb-1">No districts found</h3>
                 <p className="text-sm text-gray-500 mb-3">
                   We couldn&apos;t find &quot;{debouncedQuery}&quot;.
-                <h3 className="text-gray-900 font-medium mb-1">
-                  No districts found
-                </h3>
-                <p className="text-sm text-gray-500 mb-1">
-                  We couldn't find "{debouncedQuery}".
-                </p>
-                <p className="text-sm text-gray-400 mb-3">
-                  Try adjusting your search or filters.
                 </p>
                 <a
                   href="https://github.com/manasdutta04/vayura"

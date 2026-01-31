@@ -3,20 +3,12 @@
  * These are publicly accessible APIs that don't require registration
  */
 
-interface AQIData {
-    aqi: number;
-    pm25?: number;
-    pm10?: number;
-    timestamp: Date;
-    source: string;
-}
-
 /**
  * OpenWeatherMap Air Quality API (Easier Alternative)
  * Free tier: 1000 calls/day
  * Sign up: https://openweathermap.org/api
  */
-export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<AQIData | null> {
+export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<{ aqi: number; pm25: number; pm10: number; source: string } | null> {
     const apiKey = process.env.OPENWEATHER_API_KEY;
     if (!apiKey) return null;
 
@@ -33,7 +25,6 @@ export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<A
             aqi,
             pm25: data.list[0].components.pm2_5,
             pm10: data.list[0].components.pm10,
-            timestamp: new Date(data.list[0].dt * 1000), // Convert Unix timestamp
             source: 'openweathermap',
         };
     } catch (error) {

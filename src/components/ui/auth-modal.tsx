@@ -37,8 +37,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 setResetSent(true);
             }
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : 'An error occurred';
-            setError(errorMessage);
+            setError((err as Error).message || 'An error occurred');
         } finally {
             setLoading(false);
         }
@@ -51,8 +50,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             await signInWithGoogle();
             onClose();
         } catch (err: unknown) {
-            const errorMessage = err instanceof Error ? err.message : 'Google sign-in failed';
-            setError(errorMessage);
+            setError((err as Error).message || 'Google sign-in failed');
         } finally {
             setLoading(false);
         }
@@ -175,7 +173,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 bg-linear-to-r from-nature-500 to-nature-600 text-white font-semibold rounded-lg hover:from-nature-600 hover:to-nature-700 transition-all disabled:opacity-50"
+                        className="w-full py-3 bg-gradient-to-r from-nature-500 to-nature-600 text-white font-semibold rounded-lg hover:from-nature-600 hover:to-nature-700 transition-all disabled:opacity-50"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">

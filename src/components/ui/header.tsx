@@ -1,11 +1,10 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from './auth-modal';
-import { OfflineBanner } from './offline-indicator';
-import { Sprout } from 'lucide-react';
 
 export function Header() {
     const { user, loading, signOut } = useAuth();
@@ -15,15 +14,15 @@ export function Header() {
 
     return (
         <>
-            <OfflineBanner />
             <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200/50">
                 <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                             src="/logo.png"
                             alt="Vayura"
+                            width={40}
+                            height={40}
                             className="h-10 w-auto"
                         />
                         <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
@@ -31,36 +30,6 @@ export function Header() {
 
                     {/* Desktop Navigation */}
                     <nav className="hidden md:flex items-center gap-8">
-                        <Link
-                            href="/map"
-                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
-                        >
-                            Map View
-                        </Link>
-                        <Link
-                            href="/leaderboard"
-                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
-                        >
-                            Leaderboard
-                        </Link>
-                        <Link
-                            href="/champions"
-                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
-                        >
-                            Champions
-                        </Link>
-                        <Link
-                            href="/calculator"
-                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
-                        >
-                            CO₂ Calculator
-                        </Link>
-                        <Link
-                            href="/methodology"
-                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
-                        >
-                            Methodology
-                        </Link>
                         {user && (
                             <>
                                 <Link
@@ -70,10 +39,22 @@ export function Header() {
                                     Dashboard
                                 </Link>
                                 <Link
-                                    href="/analytics"
+                                    href="/leaderboard"
                                     className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
                                 >
-                                    Analytics
+                                    Leaderboard
+                                </Link>
+                                <Link
+                                    href="/calculator"
+                                    className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                                >
+                                    CO₂ Calculator
+                                </Link>
+                                <Link
+                                    href="/methodology"
+                                    className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                                >
+                                    Methodology
                                 </Link>
                                 <Link
                                     href="/plant"
@@ -93,20 +74,22 @@ export function Header() {
 
                     {/* Mobile + Auth */}
                     <div className="flex items-center gap-3">
-                        {/* Mobile Hamburger Menu */}
-                        <button
-                            onClick={() => setShowMobileMenu(!showMobileMenu)}
-                            className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                            aria-label="Toggle menu"
-                        >
-                            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                {showMobileMenu ? (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                ) : (
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                                )}
-                            </svg>
-                        </button>
+                        {/* Mobile Hamburger Menu - Only show when user is logged in */}
+                        {user && (
+                            <button
+                                onClick={() => setShowMobileMenu(!showMobileMenu)}
+                                className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+                                aria-label="Toggle menu"
+                            >
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {showMobileMenu ? (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    ) : (
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                                    )}
+                                </svg>
+                            </button>
+                        )}
 
                         {loading ? (
                             <div className="w-8 h-8 rounded-full bg-gray-200 animate-pulse" />
@@ -129,10 +112,11 @@ export function Header() {
                                         className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
                                     >
                                         {user.photoURL ? (
-                                            // eslint-disable-next-line @next/next/no-img-element
-                                            <img
+                                            <Image
                                                 src={user.photoURL}
                                                 alt={user.displayName || 'User'}
+                                                width={32}
+                                                height={32}
                                                 className="w-8 h-8 rounded-full"
                                             />
                                         ) : (
@@ -198,7 +182,7 @@ export function Header() {
             </header>
 
             {/* Mobile Navigation Menu */}
-            {showMobileMenu && (
+            {showMobileMenu && user && (
                 <>
                     {/* Backdrop */}
                     <div
@@ -216,15 +200,14 @@ export function Header() {
 
                             <div className="mt-2 space-y-1 flex-1">
                                 <Link
-                                    href="/map"
+                                    href="/dashboard"
                                     onClick={() => setShowMobileMenu(false)}
                                     className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
                                 >
                                     <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A2 2 0 013 15.487V6.513a2 2 0 011.553-1.943L9 2l5.447 2.724A2 2 0 0116 6.513v8.974a2 2 0 01-1.553 1.943L9 20z" />
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 2v18M16 6.513l-7-3.5M9 20l7-3.5" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                                     </svg>
-                                    <span>Map View</span>
+                                    <span>Dashboard</span>
                                 </Link>
 
                                 <Link
@@ -236,17 +219,6 @@ export function Header() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                                     </svg>
                                     <span>Leaderboard</span>
-                                </Link>
-
-                                <Link
-                                    href="/champions"
-                                    onClick={() => setShowMobileMenu(false)}
-                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
-                                >
-                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
-                                    </svg>
-                                    <span>Champions</span>
                                 </Link>
 
                                 <Link
@@ -270,21 +242,6 @@ export function Header() {
                                     </svg>
                                     <span>Methodology</span>
                                 </Link>
-
-                                {user && (
-                                    <>
-                                        <Link
-                                            href="/dashboard"
-                                            onClick={() => setShowMobileMenu(false)}
-                                            className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
-                                        >
-                                            <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                                            </svg>
-                                            <span>Dashboard</span>
-                                        </Link>
-                                    </>
-                                )}
 
                                 <div className="my-3 border-t border-gray-100"></div>
 
@@ -315,8 +272,8 @@ export function Header() {
 
                             {/* Footer Info */}
                             <div className="pt-6 pb-4 px-4 border-t border-gray-100">
-                                <p className="text-xs text-gray-500 text-center flex items-center justify-center gap-1">
-                                    Vayura - Making India Greener <Sprout className="w-4 h-4 text-green-500" />
+                                <p className="text-xs text-gray-500 text-center">
+                                    Vayura - Making India Greener 🌱
                                 </p>
                             </div>
                         </nav>

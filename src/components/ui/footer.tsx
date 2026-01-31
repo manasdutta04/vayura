@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { Github, Heart, Sprout, Linkedin } from 'lucide-react';
 
 export function Footer() {
@@ -10,10 +11,11 @@ export function Footer() {
           {/* Brand Column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+              <Image
                 src="/logo.png"
                 alt="Vayura"
+                width={32}
+                height={32}
                 className="h-8 w-auto"
               />
               <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
@@ -63,11 +65,6 @@ export function Footer() {
               <li>
                 <Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
                   Methodology
-                </Link>
-              </li>
-              <li>
-                <Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Analytics
                 </Link>
               </li>
             </ul>

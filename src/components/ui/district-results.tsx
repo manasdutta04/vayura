@@ -4,29 +4,17 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
+// Validation utilities imported but not used in current implementation
+// import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
 import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
 import Skeleton from "@/components/ui/skeleton-card";
-import EmptyState from "@/components/ui/EmptyState";
-
 
 interface DistrictResultsProps {
-  data: DistrictDetail | null;
+  data: DistrictDetail;
 }
-
 
 export function DistrictResults({ data }: DistrictResultsProps) {
   const [exportLoading, setExportLoading] = useState<'csv' | 'json' | null>(null);
-    if (!data) {
-    return (
-      <EmptyState
-        title="District data not available"
-        subtitle="Try searching for another district"
-      />
-    );
-  }
-
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
@@ -103,7 +91,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
       <div className="p-6">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
           {/* Population Card */}
-          <div className="relative bg-linear-to-br from-blue-50 to-blue-100/50 rounded-xl p-4 border border-blue-200 overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-blue-50 to-blue-100/50 rounded-xl p-4 border border-blue-200 overflow-hidden group">
             <div className="absolute top-0 right-0 w-20 h-20 bg-blue-200/30 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
@@ -121,7 +109,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
           </div>
 
           {/* Air Quality Card */}
-          <div className="relative bg-linear-to-br from-red-50 to-red-100/50 rounded-xl p-4 border border-red-200 overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-red-50 to-red-100/50 rounded-xl p-4 border border-red-200 overflow-hidden group">
             <div className="absolute top-0 right-0 w-20 h-20 bg-red-200/30 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
@@ -140,7 +128,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
           </div>
 
           {/* Soil Quality Card */}
-          <div className="relative bg-linear-to-br from-amber-50 to-amber-100/50 rounded-xl p-4 border border-amber-200 overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-amber-50 to-amber-100/50 rounded-xl p-4 border border-amber-200 overflow-hidden group">
             <div className="absolute top-0 right-0 w-20 h-20 bg-amber-200/30 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
@@ -158,7 +146,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
           </div>
 
           {/* Disasters Card */}
-          <div className="relative bg-linear-to-br from-purple-50 to-purple-100/50 rounded-xl p-4 border border-purple-200 overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-purple-50 to-purple-100/50 rounded-xl p-4 border border-purple-200 overflow-hidden group">
             <div className="absolute top-0 right-0 w-20 h-20 bg-purple-200/30 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">
@@ -177,7 +165,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
           </div>
 
           {/* Trees Planted Card */}
-          <div className="relative bg-linear-to-br from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200 overflow-hidden group">
+          <div className="relative bg-gradient-to-br from-green-50 to-green-100/50 rounded-xl p-4 border border-green-200 overflow-hidden group">
             <div className="absolute top-0 right-0 w-20 h-20 bg-green-200/30 rounded-full -mr-10 -mt-10 group-hover:scale-110 transition-transform"></div>
             <div className="relative">
               <div className="flex items-center gap-2 mb-2">

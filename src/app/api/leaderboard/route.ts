@@ -1,9 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import type { LeaderboardEntry } from '@/lib/types';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-export const dynamic = 'force-dynamic';
+// Cache for 60 seconds (API route level)
+// Since updates happen daily via cron, we don't need frequent revalidation
+export const revalidate = 60;
 
 export async function GET(request: Request) {
     try {
@@ -18,12 +18,12 @@ export async function GET(request: Request) {
             .get();
 
         const leaderboard = snapshot.docs
-            .map((doc: QueryDocumentSnapshot) => ({
+            .map(doc => ({
                 id: doc.id,
                 ...doc.data()
-            } as LeaderboardEntry))
+            } as Record<string, unknown>))
             // Filter out invalid entries without state names
-            .filter((entry: LeaderboardEntry) => entry.state && entry.state.trim().length > 0);
+            .filter((entry: Record<string, unknown>) => entry.state && typeof entry.state === 'string' && entry.state.trim().length > 0);
 
         return NextResponse.json(leaderboard, {
             headers: {

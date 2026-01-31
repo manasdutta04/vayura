@@ -310,19 +310,19 @@ export default function MethodologyPage() {
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">1.</span>
                                     <div>
-                                        <span className="text-gray-700">Nowak, D. J., et al. (2007). &ldquo;Oxygen production by urban trees in the United States.&rdquo; Arboriculture &amp; Urban Forestry.</span>
+                                        <span className="text-gray-700">Nowak, D. J., et al. (2007). &quot;Oxygen production by urban trees in the United States.&quot; Arboriculture & Urban Forestry.</span>
                                     </div>
                                 </li>
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">2.</span>
                                     <div>
-                                        <span className="text-gray-700">Forest Survey of India. (Latest). &ldquo;State of Forest Report.&rdquo; Ministry of Environment &amp; Forests, Government of India.</span>
+                                        <span className="text-gray-700">Forest Survey of India. (Latest). &quot;State of Forest Report.&quot; Ministry of Environment & Forests, Government of India.</span>
                                     </div>
                                 </li>
                                 <li className="flex gap-2">
                                     <span className="text-gray-400">3.</span>
                                     <div>
-                                        <span className="text-gray-700">Census of India. District-level population statistics. Office of the Registrar General &amp; Census Commissioner, India.</span>
+                                        <span className="text-gray-700">Census of India. District-level population statistics. Office of the Registrar General & Census Commissioner, India.</span>
                                     </div>
                                 </li>
                             </ul>

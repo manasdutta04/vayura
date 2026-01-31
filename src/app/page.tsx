@@ -9,18 +9,20 @@ import { formatCompactNumber } from '@/lib/utils/helpers';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
-import { DistrictSearch } from '@/components/ui/district-search';
-import { DistrictSearchResult } from '@/lib/types';
+import { DistrictSearch } from '@/components/ui/district-search'; // IMPORT ADDED
 import { ArrowRight, Activity, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
 
 function HomeContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showAuthModal, setShowAuthModal] = useState(() => {
-    // Initialize based on search params
-    return (searchParams.get('action') === 'login' && !user) || searchParams?.get('auth_required') === 'true';
-  });
+  
+  // Derive auth modal state from URL params
+  const shouldShowAuthModal = 
+    (searchParams.get('action') === 'login' && !user) ||
+    searchParams?.get('auth_required') === 'true';
+  
+  const [showAuthModal, setShowAuthModal] = useState(shouldShowAuthModal);
   const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
 
   // Redirect authenticated users to dashboard
@@ -29,6 +31,18 @@ function HomeContent() {
       router.push('/dashboard');
     }
   }, [user, loading, router]);
+
+  // Update auth modal state when URL params change
+  useEffect(() => {
+    const shouldShow = 
+      (searchParams.get('action') === 'login' && !user) ||
+      searchParams?.get('auth_required') === 'true';
+    
+    if (shouldShow && !showAuthModal) {
+      // Use a microtask to avoid synchronous state update
+      Promise.resolve().then(() => setShowAuthModal(true));
+    }
+  }, [searchParams, user, showAuthModal]);
 
   // Fetch stats
   useEffect(() => {
@@ -46,7 +60,7 @@ function HomeContent() {
     fetchStats();
   }, []);
 
-  const handleDistrictSelect = (district: DistrictSearchResult) => {
+  const handleDistrictSelect = (district: { slug: string }) => {
     // Navigate to the specific district page
     router.push(`/district/${district.slug}`);
   };
@@ -78,8 +92,8 @@ function HomeContent() {
       <div className="min-h-screen bg-white overflow-hidden">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 px-6">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-blue-50 via-white to-white pointer-events-none" />
-          <div className="absolute top-0 right-0 w-125 h-125 bg-green-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-white to-white pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           <div className="max-w-6xl mx-auto text-center relative z-10">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-green-700 text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
@@ -89,7 +103,7 @@ function HomeContent() {
 
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
               District Oxygen <br className="hidden md:block" />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-green-600">Intelligence</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">Intelligence</span>
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
@@ -233,11 +247,11 @@ function HomeContent() {
                 </div>
                 <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
                   From Analysis to <br />
-                  <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-green-600">Restoration</span>
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">Restoration</span>
                 </h2>
                 <div className="space-y-12 relative">
                   {/* Vertical Connecting Line */}
-                  <div className="absolute left-4.75 top-4 bottom-4 w-0.5 bg-linear-to-b from-blue-200 via-purple-200 to-green-200" />
+                  <div className="absolute left-[19px] top-4 bottom-4 w-0.5 bg-gradient-to-b from-blue-200 via-purple-200 to-green-200" />
 
                   {[
                     {
@@ -260,7 +274,7 @@ function HomeContent() {
                     },
                   ].map((item, idx) => (
                     <div key={idx} className="flex gap-6 relative">
-                      <div className={`shrink-0 w-10 h-10 rounded-full bg-${item.color}-50 border-2 border-${item.color}-100 text-${item.color}-600 flex items-center justify-center font-bold text-sm relative z-10 shadow-sm transition-transform hover:scale-110 bg-white`}>
+                      <div className={`flex-shrink-0 w-10 h-10 rounded-full bg-${item.color}-50 border-2 border-${item.color}-100 text-${item.color}-600 flex items-center justify-center font-bold text-sm relative z-10 shadow-sm transition-transform hover:scale-110 bg-white`}>
                         {item.step}
                       </div>
                       <div className="pt-1">
@@ -276,7 +290,7 @@ function HomeContent() {
 
               {/* Visual Element */}
               <div className="relative group perspective-1000 flex justify-center items-center">
-                <div className="absolute inset-0 bg-linear-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
                 <div className="relative z-10 transform transition-all duration-500 hover:scale-[1.02] shadow-2xl rounded-3xl overflow-hidden bg-white/50 border border-white/50 p-2">
                   <Image
                     src="/demo.png"
@@ -296,7 +310,7 @@ function HomeContent() {
 
         {/* Improved CTA Section */}
         <section className="py-20 px-6">
-          <div className="max-w-5xl mx-auto bg-linear-to-br from-gray-900 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden">
+          <div className="max-w-5xl mx-auto bg-gradient-to-br from-gray-900 to-blue-900 rounded-3xl p-12 text-center text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
 
             <div className="relative z-10">

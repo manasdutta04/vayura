@@ -3,6 +3,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Header } from '@/components/ui/header';
 import { useAuth } from '@/lib/auth-context';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
@@ -84,15 +85,14 @@ function PlantContributionForm() {
             setPreviewUrl(null);
             setNotes('');
         } catch (err: unknown) {
-            const error = err as Error;
-            setError(error.message || 'Failed to submit contribution');
+            setError((err as Error).message || 'Failed to submit contribution');
         } finally {
             setSubmitting(false);
         }
     };
 
     return (
-        <main className="min-h-screen bg-linear-to-br from-nature-50 via-white to-sky-50 pb-20">
+        <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
                 <section className="max-w-3xl mx-auto px-6 pt-10">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                         Plant a tree for your district
@@ -144,10 +144,11 @@ function PlantContributionForm() {
                             {previewUrl && (
                                 <div className="mt-3">
                                     <p className="text-xs text-gray-500 mb-1">Preview</p>
-                                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                                    <img
+                                    <Image
                                         src={previewUrl}
                                         alt="Tree preview"
+                                        width={400}
+                                        height={300}
                                         className="rounded-xl border border-gray-200 max-h-64 object-cover"
                                     />
                                 </div>
@@ -219,7 +220,7 @@ export default function PlantContributionPage() {
         <>
             <Header />
             <Suspense fallback={
-                <main className="min-h-screen bg-linear-to-br from-nature-50 via-white to-sky-50 pb-20">
+                <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
                     <section className="max-w-3xl mx-auto px-6 pt-10">
                         <div className="bg-white rounded-2xl shadow px-6 py-6 border border-gray-100">
                             <div className="animate-pulse">
