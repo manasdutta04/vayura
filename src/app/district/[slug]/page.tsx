@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils/helpers";
 import EmptyState from "@/components/ui/EmptyState";
 import { ExportButtons } from "@/components/district/ExportButtons";
+import { PlantationRecommendations } from "@/components/district/PlantationRecommendations";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   try {
@@ -282,6 +283,10 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
               </div>
             </div>
           </div>
+
+          {data.recommendations && data.recommendations.length > 0 && (
+            <PlantationRecommendations recommendations={data.recommendations} />
+          )}
 
           <ShareButtons
             districtName={data.name}

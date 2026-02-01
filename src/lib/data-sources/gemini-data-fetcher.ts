@@ -4,6 +4,8 @@
  * from various sources including government portals and public information
  */
 
+import { TreeRecommendation } from '../types';
+
 interface GeminiConfig {
     apiKey: string;
     model: string;
@@ -17,7 +19,7 @@ const config: GeminiConfig = {
 interface DistrictDataRequest {
     districtName: string;
     stateName: string;
-    dataType: 'population' | 'air_quality' | 'soil_quality' | 'disasters' | 'all';
+    dataType: 'population' | 'air_quality' | 'soil_quality' | 'disasters' | 'recommendations' | 'all';
 }
 
 interface GeminiDistrictData {
@@ -28,6 +30,7 @@ interface GeminiDistrictData {
     soilQuality?: number;
     disasterFrequency?: number;
     commonDisasters?: string[];
+    recommendations?: TreeRecommendation[];
     sources?: string[];
     confidence?: 'high' | 'medium' | 'low';
 }
@@ -172,8 +175,31 @@ function buildPrompt(request: DistrictDataRequest): string {
       "confidence": "high|medium|low"
     }`,
 
+        recommendations: `${basePrompt}
+    Task: Recommend the top 3-5 tree species for plantation in ${districtName}, ${stateName}.
+    Consider local climate (temp/rainfall/humidity), soil type, native status, and oxygen efficiency.
+    
+    Return JSON:
+    {
+      "recommendations": [
+        {
+          "speciesName": "Common Name",
+          "scientificName": "Scientific Name",
+          "suitabilityScore": <0-100>,
+          "survivalProbability": <0-100>,
+          "oxygenEfficiency": "high|medium|low",
+          "soilSuitability": "Brief description of soil needs",
+          "climateSuitability": "Brief description of climate needs",
+          "nativeStatus": "native|introduced|endemic",
+          "description": "Short explanation of why this tree is good for this district"
+        }
+      ],
+      "sources": ["forestry/ecological research sources"],
+      "confidence": "high|medium|low"
+    }`,
+
         all: `${basePrompt}
-    Task: Provide comprehensive environmental data for ${districtName}.
+    Task: Provide comprehensive environmental data and tree recommendations for ${districtName}.
     
     Return JSON:
     {
@@ -184,6 +210,19 @@ function buildPrompt(request: DistrictDataRequest): string {
       "soilQuality": <number>,
       "disasterFrequency": <number>,
       "commonDisasters": ["type1", "type2"],
+      "recommendations": [
+        {
+          "speciesName": "Name",
+          "scientificName": "Scientific",
+          "suitabilityScore": 90,
+          "survivalProbability": 85,
+          "oxygenEfficiency": "high",
+          "soilSuitability": "...",
+          "climateSuitability": "...",
+          "nativeStatus": "native",
+          "description": "..."
+        }
+      ],
       "sources": ["source1"],
       "confidence": "high|medium|low"
     }`,
@@ -217,6 +256,7 @@ function parseGeminiResponse(text: string): GeminiDistrictData | null {
             soilQuality: parsed.soilQuality,
             disasterFrequency: parsed.disasterFrequency,
             commonDisasters: parsed.commonDisasters,
+            recommendations: parsed.recommendations,
             sources: parsed.sources,
             confidence: parsed.confidence || 'medium',
         };
@@ -239,6 +279,68 @@ export async function fetchCompleteDistrictData(
         stateName,
         dataType: 'all',
     });
+}
+
+/**
+ * Fetch plantation recommendations for a district
+ */
+export async function fetchPlantationRecommendations(
+    districtName: string,
+    stateName: string
+): Promise<TreeRecommendation[]> {
+    if (!config.apiKey) {
+        console.warn('GEMINI_API_KEY not configured, returning mock recommendations');
+        return getMockRecommendations(districtName, stateName);
+    }
+
+    const data = await fetchDistrictDataWithGemini({
+        districtName,
+        stateName,
+        dataType: 'recommendations',
+    });
+
+    return data?.recommendations || getMockRecommendations(districtName, stateName);
+}
+
+/**
+ * Fallback mock recommendations for development/testing
+ */
+function getMockRecommendations(district: string, state: string): TreeRecommendation[] {
+    return [
+        {
+            speciesName: "Neem",
+            scientificName: "Azadirachta indica",
+            suitabilityScore: 95,
+            survivalProbability: 90,
+            oxygenEfficiency: "high",
+            soilSuitability: "Well-drained sandy or loamy soil",
+            climateSuitability: "Hot and dry climate, drought resistant",
+            nativeStatus: "native",
+            description: `Neem is exceptionally well-suited for ${district}. It is a hardy tree that provides excellent shade and has significant medicinal properties while being highly efficient at producing oxygen.`
+        },
+        {
+            speciesName: "Banyan",
+            scientificName: "Ficus benghalensis",
+            suitabilityScore: 88,
+            survivalProbability: 85,
+            oxygenEfficiency: "high",
+            soilSuitability: "Adaptable to various soil types",
+            climateSuitability: "Tropical and subtropical climate",
+            nativeStatus: "native",
+            description: "The Banyan tree is known for its massive canopy and ability to produce large amounts of oxygen. It is a keystone species that supports local biodiversity."
+        },
+        {
+            speciesName: "Peepal",
+            scientificName: "Ficus religiosa",
+            suitabilityScore: 92,
+            survivalProbability: 88,
+            oxygenEfficiency: "high",
+            soilSuitability: "Deep, well-drained soil",
+            climateSuitability: "Wide range of temperatures",
+            nativeStatus: "native",
+            description: "Peepal is unique for its ability to release oxygen even at night (Crassulacean Acid Metabolism). It is culturally significant and highly resilient."
+        }
+    ];
 }
 
 /**
@@ -275,6 +377,18 @@ export function validateGeminiData(data: GeminiDistrictData): {
     if (data.disasterFrequency !== undefined) {
         if (data.disasterFrequency < 0 || data.disasterFrequency > 20) {
             errors.push('Disaster frequency out of reasonable range');
+        }
+    }
+
+    // Validate recommendations
+    if (data.recommendations !== undefined) {
+        if (!Array.isArray(data.recommendations)) {
+            errors.push('Recommendations must be an array');
+        } else if (data.recommendations.length > 0) {
+            data.recommendations.forEach((rec, index) => {
+                if (!rec.speciesName) errors.push(`Recommendation ${index} missing speciesName`);
+                if (typeof rec.survivalProbability !== 'number') errors.push(`Recommendation ${index} missing survivalProbability`);
+            });
         }
     }
 

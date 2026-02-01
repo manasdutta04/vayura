@@ -3,6 +3,7 @@ import { adminDb } from '@/lib/firebase-admin';
 import { getAQIData } from '@/lib/data-sources/air-quality';
 import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
+import { fetchPlantationRecommendations } from '@/lib/data-sources/gemini-data-fetcher';
 import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
@@ -79,10 +80,11 @@ export async function GET(
         const isStale = !envData || forceFresh || (now - envData.timestamp.getTime() > ONE_DAY_MS);
 
         if (isStale) {
-            const [aqiData, soilData, disasterData] = await Promise.all([
+            const [aqiData, soilData, disasterData, recommendations] = await Promise.all([
                 getAQIData(district.latitude, district.longitude, district.slug, district.name, district.state),
                 getSoilQualityData(district.slug, district.name, district.state),
                 getDisasterData(district.slug, district.name, district.state),
+                fetchPlantationRecommendations(district.name, district.state),
             ]);
 
             const newEnvRef = adminDb.collection('environmental_data').doc();
@@ -92,7 +94,8 @@ export async function GET(
                 pm25: aqiData.pm25,
                 soilQuality: soilData.soilQuality,
                 disasterFrequency: disasterData.disasterFrequency,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source}`,
+                recommendations: recommendations,
+                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
                 timestamp: new Date(),
                 createdAt: new Date(),
             });
@@ -104,7 +107,8 @@ export async function GET(
                 pm25: aqiData.pm25,
                 soilQuality: soilData.soilQuality,
                 disasterFrequency: disasterData.disasterFrequency,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source}`,
+                recommendations: recommendations,
+                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
                 timestamp: new Date(),
                 createdAt: new Date(),
             };
@@ -202,6 +206,7 @@ export async function GET(
             ...district,
             environmentalData: envData,
             oxygenCalculation,
+            recommendations: envData.recommendations,
             stats, // state-level contribution stats
         };
 
