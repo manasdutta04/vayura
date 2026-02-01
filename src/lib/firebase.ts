@@ -12,8 +12,15 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
-// Check if we have a valid config
-const isConfigured = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
+// Check if we have a valid config (not just placeholder values)
+const isConfigured = 
+    !!firebaseConfig.apiKey && 
+    !!firebaseConfig.projectId &&
+    firebaseConfig.apiKey !== 'your-api-key-here' &&
+    firebaseConfig.apiKey !== 'fake-key' &&
+    !firebaseConfig.apiKey.startsWith('NEXT_PUBLIC_') &&
+    firebaseConfig.projectId !== 'your-project-id' &&
+    firebaseConfig.projectId !== 'fake-project';
 
 // Initialize Firebase only if properly configured
 let app;
@@ -21,13 +28,39 @@ let auth;
 let storage;
 let db;
 
-if (isConfigured && getApps().length === 0) {
+if (isConfigured) {
     try {
-        app = initializeApp(firebaseConfig);
-        auth = getAuth(app);
-        storage = getStorage(app);
-        db = getFirestore(app);
-        console.log('Firebase initialized successfully');
+        // Initialize or get existing app
+        app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+        
+        // Try to initialize each service separately with error handling
+        try {
+            auth = getAuth(app);
+        } catch (authError) {
+            console.warn('Firebase Auth initialization failed:', authError);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            auth = null as any;
+        }
+        
+        try {
+            storage = getStorage(app);
+        } catch (storageError) {
+            console.warn('Firebase Storage initialization failed:', storageError);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            storage = null as any;
+        }
+        
+        try {
+            db = getFirestore(app);
+        } catch (dbError) {
+            console.warn('Firebase Firestore initialization failed:', dbError);
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            db = null as any;
+        }
+        
+        if (auth) {
+            console.log('Firebase initialized successfully');
+        }
     } catch (error) {
         console.warn('Firebase initialization failed:', error);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -37,11 +70,6 @@ if (isConfigured && getApps().length === 0) {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         db = null as any;
     }
-} else if (isConfigured) {
-    app = getApp();
-    auth = getAuth(app);
-    storage = getStorage(app);
-    db = getFirestore(app);
 } else {
     console.warn('Firebase configuration not found - Firebase features disabled');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

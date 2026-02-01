@@ -57,6 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
             console.error('Google sign-in error:', error);
+            // Provide user-friendly error message
+            const err = error as { code?: string; message?: string };
+            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/invalid-api-key') {
+                throw new Error('Firebase authentication is not properly configured. Please contact the administrator.');
+            }
             throw error;
         }
     };
