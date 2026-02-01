@@ -4,6 +4,7 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./providers";
 import "@/lib/utils/suppress-console";
+import { SuppressOverlay } from "./suppress-overlay";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -50,6 +51,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} ${outfit.variable} antialiased`}>
+        <SuppressOverlay />
         <Providers>
           {children}
           <BackToTop />
