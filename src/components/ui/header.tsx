@@ -47,6 +47,12 @@ export function Header() {
                             Champions
                         </Link>
                         <Link
+                            href="/challenges"
+                            className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
+                        >
+                            Challenges
+                        </Link>
+                        <Link
                             href="/calculator"
                             className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
                         >
@@ -243,6 +249,17 @@ export function Header() {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                                     </svg>
                                     <span>Champions</span>
+                                </Link>
+
+                                <Link
+                                    href="/challenges"
+                                    onClick={() => setShowMobileMenu(false)}
+                                    className="flex items-center gap-3 px-4 py-3.5 text-gray-700 hover:bg-green-50 hover:text-green-700 rounded-lg transition-all duration-200 font-medium group"
+                                >
+                                    <svg className="w-5 h-5 text-gray-400 group-hover:text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                    </svg>
+                                    <span>Challenges</span>
                                 </Link>
 
                                 <Link
