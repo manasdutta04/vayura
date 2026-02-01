@@ -13,34 +13,49 @@ const firebaseConfig = {
 };
 
 // Check if we have a valid config
-const isConfigured = !!firebaseConfig.apiKey;
+const isConfigured = !!firebaseConfig.apiKey && !!firebaseConfig.projectId;
 
-// Initialize Firebase (prevent multiple initializations)
-const app = getApps().length === 0 
-    ? (isConfigured ? initializeApp(firebaseConfig) : initializeApp({ apiKey: "fake-key", projectId: "fake-project" }))
-    : getApp();
-
-// Auth instance
+// Initialize Firebase only if properly configured
+let app;
 let auth;
-try {
+let storage;
+let db;
+
+if (isConfigured && getApps().length === 0) {
+    try {
+        app = initializeApp(firebaseConfig);
+        auth = getAuth(app);
+        storage = getStorage(app);
+        db = getFirestore(app);
+        console.log('Firebase initialized successfully');
+    } catch (error) {
+        console.warn('Firebase initialization failed:', error);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        auth = null as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        storage = null as any;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        db = null as any;
+    }
+} else if (isConfigured) {
+    app = getApp();
     auth = getAuth(app);
-} catch {
-    console.warn('Firebase Auth: Configuration not found - auth features disabled');
-    // Create a mock auth object to prevent crashes
+    storage = getStorage(app);
+    db = getFirestore(app);
+} else {
+    console.warn('Firebase configuration not found - Firebase features disabled');
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     auth = null as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    storage = null as any;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    db = null as any;
 }
 
-export { auth };
+export { auth, isConfigured, storage, db };
 
-// Storage instance
-export const storage = getStorage(app);
-
-// Firestore database instance
-export const db = getFirestore(app);
-
-// Auth providers
-export const googleProvider = new GoogleAuthProvider();
-export const emailProvider = new EmailAuthProvider();
+// Auth providers (only create if Firebase is configured)
+export const googleProvider = isConfigured ? new GoogleAuthProvider() : null;
+export const emailProvider = isConfigured ? new EmailAuthProvider() : null;
 
 export default app;

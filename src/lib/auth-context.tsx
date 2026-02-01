@@ -50,8 +50,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const signInWithGoogle = async () => {
-        if (!authAvailable) {
-            throw new Error('Firebase Auth is not available. Please enable Firebase Authentication in your Google Cloud project.');
+        if (!authAvailable || !auth) {
+            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
             await signInWithPopup(auth, googleProvider);
@@ -62,8 +62,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signInWithEmail = async (email: string, password: string) => {
-        if (!authAvailable) {
-            throw new Error('Firebase Auth is not available. Please enable Firebase Authentication in your Google Cloud project.');
+        if (!authAvailable || !auth) {
+            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
             await signInWithEmailAndPassword(auth, email, password);
@@ -74,8 +74,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signUpWithEmail = async (email: string, password: string) => {
-        if (!authAvailable) {
-            throw new Error('Firebase Auth is not available. Please enable Firebase Authentication in your Google Cloud project.');
+        if (!authAvailable || !auth) {
+            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
             await createUserWithEmailAndPassword(auth, email, password);
@@ -86,8 +86,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signOut = async () => {
-        if (!authAvailable) {
-            throw new Error('Firebase Auth is not available. Please enable Firebase Authentication in your Google Cloud project.');
+        if (!authAvailable || !auth) {
+            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
             await firebaseSignOut(auth);
@@ -98,8 +98,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const resetPassword = async (email: string) => {
-        if (!authAvailable) {
-            throw new Error('Firebase Auth is not available. Please enable Firebase Authentication in your Google Cloud project.');
+        if (!authAvailable || !auth) {
+            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
             await sendPasswordResetEmail(auth, email);
