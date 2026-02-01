@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 
 import { updateContributorProfile } from '@/lib/services/champions';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export const dynamic = 'force-dynamic';
 
@@ -54,7 +55,7 @@ Task:
 1. Identify the tree species from the image (verify against provided name: ${formData.treeName})
 2. Estimate tree age/health if visible
 3. Calculate O2 production potential:
-   - Standard: 110 kg O2/year per mature tree
+   - Standard: ${ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg O2/year per mature tree
    - Adjust based on species, age, and health if visible
    - Estimate lifespan (typically 30-100 years depending on species)
 4. Calculate total O2 production over estimated lifespan
@@ -226,26 +227,19 @@ export async function POST(request: Request) {
         );
 
         // Species Reference Data (O2 in kg/year, Lifespan in years)
-        const SPECIES_DATA: Record<string, { o2: number, lifespan: number }> = {
-            'mango': { o2: 140, lifespan: 80 }, // Mangifera indica
-            'neem': { o2: 260, lifespan: 200 }, // Azadirachta indica
-            'peepal': { o2: 380, lifespan: 1000 }, // Ficus religiosa (High O2)
-            'banyan': { o2: 400, lifespan: 250 }, // Ficus benghalensis
-            'arjun': { o2: 240, lifespan: 150 }, // Terminalia arjuna
-            'amla': { o2: 125, lifespan: 60 }, // Phyllanthus emblica
-            'jamun': { o2: 130, lifespan: 100 }, // Syzygium cumini
-            'guava': { o2: 80, lifespan: 40 }, // Psidium guajava
-            'teak': { o2: 180, lifespan: 80 }, // Tectona grandis
-            'bamboo': { o2: 300, lifespan: 10 }, // High sequestration rate
-            'ashoka': { o2: 150, lifespan: 60 }, // Saraca asoca
-        };
+        const SPECIES_DATA = ENVIRONMENTAL_CONSTANTS.TREES.SPECIES_DATA;
 
         function getSpeciesEstimates(name: string) {
-            if (!name) return { o2: 110, lifespan: 50 };
+            const defaults = {
+                o2: ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR,
+                lifespan: ENVIRONMENTAL_CONSTANTS.TREES.DEFAULT_LIFESPAN_YEARS
+            };
+
+            if (!name) return defaults;
             const normalized = name.toLowerCase().trim();
             // Check partial matches (e.g. "Mango Tree" -> matches "mango")
             const match = Object.keys(SPECIES_DATA).find(species => normalized.includes(species));
-            return match ? SPECIES_DATA[match] : { o2: 110, lifespan: 50 };
+            return match ? SPECIES_DATA[match] : defaults;
         }
 
         if (!analysisMatrix) {
@@ -277,7 +271,7 @@ export async function POST(request: Request) {
                 treeName: analysisMatrix.treeName || treeName,
                 treeQuantity: analysisMatrix.treeQuantity || treeQuantity,
                 totalLifespanO2: analysisMatrix.totalLifespanO2,
-                o2ProductionPerYear: analysisMatrix.o2ProductionPerYear || 110,
+                o2ProductionPerYear: analysisMatrix.o2ProductionPerYear || ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR,
                 estimatedLifespan: analysisMatrix.estimatedLifespan || 50,
                 speciesConfidence: analysisMatrix.speciesConfidence || 'medium',
                 status: 'VERIFIED', // Auto-verified since analyzed by AI
