@@ -23,6 +23,8 @@ export function Header() {
                             alt="Vayura"
                             width={40}
                             height={40}
+                            loading="eager"
+                            priority
                             className="h-10 w-auto"
                         />
                         <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
