@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { TreeContribution, Donation } from '@/lib/types';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export const dynamic = 'force-dynamic';
 
@@ -135,14 +136,14 @@ export async function GET(request: Request) {
         // Calculate O2 impact (only for plantations + verified donations)
         let totalO2Impact = verifiedPlantations.reduce((sum: number, c: TreeContribution) => {
             if (c.totalLifespanO2) return sum + c.totalLifespanO2;
-            return sum + ((c.treeQuantity || 1) * 110 * 50);
+            return sum + ((c.treeQuantity || 1) * ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * ENVIRONMENTAL_CONSTANTS.TREES.DEFAULT_LIFESPAN_YEARS);
         }, 0);
 
         // Also add O2 from donation verifications if they have it (since they are tree_contributions originally)
         const verifiedDonationVerifications = donationVerifications.filter((c: TreeContribution) => c.status === 'VERIFIED');
         totalO2Impact += verifiedDonationVerifications.reduce((sum: number, c: TreeContribution) => {
             if (c.totalLifespanO2) return sum + c.totalLifespanO2;
-            return sum + ((c.treeQuantity || 1) * 110 * 50);
+            return sum + ((c.treeQuantity || 1) * ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * ENVIRONMENTAL_CONSTANTS.TREES.DEFAULT_LIFESPAN_YEARS);
         }, 0);
 
         return NextResponse.json({

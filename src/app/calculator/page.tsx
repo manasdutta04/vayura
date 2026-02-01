@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/header';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function CalculatorPage() {
     const [trees, setTrees] = useState(100);
@@ -10,14 +11,17 @@ export default function CalculatorPage() {
     const [animatedFlights, setAnimatedFlights] = useState(0);
 
     // Scientific constants
-    const CO2_PER_TREE_KG_YEAR = 21; // Average CO2 absorbed per tree per year (kg)
-    const CO2_PER_CAR_KG_YEAR = 4600; // Average car emissions per year (kg)
-    const CO2_PER_FLIGHT_KG = 90; // Short-haul flight per person (kg)
+    const { CO2, OXYGEN } = ENVIRONMENTAL_CONSTANTS;
 
     // Calculate values
-    const totalCO2 = trees * CO2_PER_TREE_KG_YEAR;
-    const carsOffset = totalCO2 / CO2_PER_CAR_KG_YEAR;
-    const flightsOffset = totalCO2 / CO2_PER_FLIGHT_KG;
+    const totalCO2 = trees * CO2.ABSORPTION_PER_TREE_KG_YEAR;
+    const carsOffset = totalCO2 / CO2.EMISSIONS_PER_CAR_KG_YEAR;
+    const flightsOffset = totalCO2 / CO2.EMISSIONS_PER_FLIGHT_KG;
+
+    // Oxygen calculations (aligned with Methodology)
+    const oxygenProduced = trees * OXYGEN.PRODUCTION_PER_TREE_KG_YEAR;
+    const humanOxygenDemand = OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY * OXYGEN.DAYS_PER_YEAR * OXYGEN.LITERS_TO_KG_CONVERSION;
+    const peopleSupported = oxygenProduced / humanOxygenDemand;
 
     // Animate numbers
     useEffect(() => {
@@ -221,19 +225,19 @@ export default function CalculatorPage() {
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Produces <strong>{(trees * 118).toLocaleString()} kg</strong> of oxygen annually
+                                            Produces <strong>{oxygenProduced.toLocaleString()} kg</strong> of oxygen annually
                                         </span>
                                     </div>
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Enough oxygen for <strong>{Math.floor(trees * 118 / 730)}</strong> people per year
+                                            Enough oxygen for <strong>{Math.floor(peopleSupported)}</strong> people per year
                                         </span>
                                     </div>
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Equal to <strong>{(totalCO2 / 907).toFixed(1)}</strong> tonnes of waste recycled
+                                            Equal to <strong>{(totalCO2 / CO2.SAVED_PER_TONNE_WASTE_RECYCLED_KG).toFixed(1)}</strong> tonnes of waste recycled
                                         </span>
                                     </div>
                                 </div>
@@ -268,10 +272,10 @@ export default function CalculatorPage() {
                     <div className="mt-8 p-5 bg-gray-50 rounded-lg border border-gray-200">
                         <h3 className="font-semibold text-gray-900 mb-3 text-base">How We Calculate</h3>
                         <div className="space-y-2 text-sm text-gray-700">
-                            <p>• Each mature tree absorbs approximately <strong>21 kg of CO₂</strong> per year</p>
-                            <p>• Average car emits <strong>4,600 kg of CO₂</strong> annually</p>
-                            <p>• Short-haul flight produces ~<strong>90 kg of CO₂</strong> per passenger</p>
-                            <p>• Each tree produces ~<strong>118 kg of oxygen</strong> per year</p>
+                            <p>• Each mature tree absorbs approximately <strong>{CO2.ABSORPTION_PER_TREE_KG_YEAR} kg of CO₂</strong> per year</p>
+                            <p>• Average car emits <strong>{CO2.EMISSIONS_PER_CAR_KG_YEAR.toLocaleString()} kg of CO₂</strong> annually</p>
+                            <p>• Short-haul flight produces ~<strong>{CO2.EMISSIONS_PER_FLIGHT_KG} kg of CO₂</strong> per passenger</p>
+                            <p>• Each tree produces ~<strong>{OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg of oxygen</strong> per year</p>
                             <p className="text-gray-500 italic pt-2">Source: USDA Forest Service, EPA, IPCC</p>
                         </div>
                     </div>

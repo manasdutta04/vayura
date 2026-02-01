@@ -2,6 +2,7 @@
 
 import { BookOpen, Calculator, Database, AlertTriangle, GitBranch, Calendar } from 'lucide-react';
 import { Header } from '@/components/ui/header';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function MethodologyPage() {
     return (
@@ -69,15 +70,15 @@ export default function MethodologyPage() {
                             <ul className="space-y-2 mb-6">
                                 <li className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700">Human O₂ consumption</span>
-                                    <span className="font-mono font-semibold text-gray-900">550 L/day/person</span>
+                                    <span className="font-mono font-semibold text-gray-900">{ENVIRONMENTAL_CONSTANTS.OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY} L/day/person</span>
                                 </li>
                                 <li className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700">Liters to kg conversion</span>
-                                    <span className="font-mono font-semibold text-gray-900">1.429 kg / 1000 L</span>
+                                    <span className="font-mono font-semibold text-gray-900">{(ENVIRONMENTAL_CONSTANTS.OXYGEN.LITERS_TO_KG_CONVERSION * 1000).toFixed(3)} kg / 1000 L</span>
                                 </li>
                                 <li className="flex justify-between items-center py-2">
                                     <span className="text-gray-700">Days per year</span>
-                                    <span className="font-mono font-semibold text-gray-900">365</span>
+                                    <span className="font-mono font-semibold text-gray-900">{ENVIRONMENTAL_CONSTANTS.OXYGEN.DAYS_PER_YEAR}</span>
                                 </li>
                             </ul>
 
@@ -193,11 +194,11 @@ export default function MethodologyPage() {
                             <ul className="space-y-2 mb-6">
                                 <li className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700">Base tree O₂ production</span>
-                                    <span className="font-mono font-semibold text-gray-900">110 kg/year</span>
+                                    <span className="font-mono font-semibold text-gray-900">{ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg/year</span>
                                 </li>
                                 <li className="flex justify-between items-center py-2 border-b border-gray-100">
                                     <span className="text-gray-700">Average tree lifespan (estimated)</span>
-                                    <span className="font-mono font-semibold text-gray-900">50 years</span>
+                                    <span className="font-mono font-semibold text-gray-900">{ENVIRONMENTAL_CONSTANTS.TREES.DEFAULT_LIFESPAN_YEARS} years</span>
                                 </li>
                                 <li className="flex justify-between items-center py-2">
                                     <span className="text-gray-700">Soil quality adjustment range</span>
