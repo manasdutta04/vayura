@@ -44,12 +44,3 @@ export const googleProvider = new GoogleAuthProvider();
 export const emailProvider = new EmailAuthProvider();
 
 export default app;
-
-// Firestore database instance
-export const db = getFirestore(app);
-
-// Auth providers
-export const googleProvider = new GoogleAuthProvider();
-export const emailProvider = new EmailAuthProvider();
-
-export default app;
