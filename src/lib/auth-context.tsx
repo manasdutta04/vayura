@@ -27,30 +27,26 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [authAvailable, setAuthAvailable] = useState(true);
+    const [loading, setLoading] = useState(!!auth); // Start as loading only if auth is available
+    const [authAvailable] = useState(!!auth);
 
     useEffect(() => {
         // Check if auth is available
         if (!auth) {
             console.warn('Firebase Auth not configured - running in limited mode');
-            setAuthAvailable(false);
-            setLoading(false);
             return;
         }
 
-        try {
-            const unsubscribe = onAuthStateChanged(auth, (user) => {
-                setUser(user);
-                setLoading(false);
-            });
-
-            return () => unsubscribe();
-        } catch (error) {
-            console.warn('Firebase Auth error - running in limited mode:', error);
-            setAuthAvailable(false);
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
             setLoading(false);
-        }
+        }, (error) => {
+            // Error callback for onAuthStateChanged
+            console.warn('Firebase Auth error - running in limited mode:', error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     const signInWithGoogle = async () => {

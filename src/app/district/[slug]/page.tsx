@@ -1,8 +1,3 @@
-import { notFound } from 'next/navigation';
-import { Header } from '@/components/ui/header';
-import { Footer } from '@/components/ui/footer';
-import { DistrictDetail } from '@/lib/types';
-import { DistrictClientPage } from '@/components/district-client-page';
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -98,40 +93,23 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
     }
     
     // Fetch initial data on the server for SEO and initial render
-    const initialData = await getDistrictDetail(slug);
+    const data = await getDistrictDetail(slug);
     
     // For server-side rendering, we still want to show 404 if data is not found
-    // But the client component will handle offline scenarios
-    if (!initialData) notFound();
-  const { slug } = await params;
-
-  if (!slug) {
-    notFound();
-  }
-
-  const data = await getDistrictDetail(slug);
-
-  if (!data) {
-    return (
+    if (!data) {
+      return (
         <>
-            <Header />
-            <DistrictClientPage slug={slug} initialData={initialData} />
-            <Footer />
+          <Header />
+          <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
+            <EmptyState
+              title="District data not available yet"
+              subtitle="Try searching for another district or adjusting your filters"
+            />
+          </main>
+          <Footer />
         </>
-    );
-}
-      <>
-        <Header />
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
-          <EmptyState
-            title="District data not available yet"
-            subtitle="Try searching for another district or adjusting your filters"
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
+      );
+    }
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;

@@ -141,9 +141,8 @@ export default function DonatePage() {
             }, 2000);
 
         } catch (err: unknown) {
-            setError((err as Error).message || 'Failed to submit verification');
-        } catch (err: any) {
-            toast.error(err.message || 'Failed to submit verification', {
+            const error = err as Error;
+            toast.error(error.message || 'Failed to submit verification', {
                 id: toastId
             });
         } finally {

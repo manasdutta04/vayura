@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRouter } from 'next/navigation';

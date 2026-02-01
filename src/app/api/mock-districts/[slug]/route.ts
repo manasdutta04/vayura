@@ -5,46 +5,33 @@ import { NextResponse } from 'next/server';
  * This endpoint provides test data without requiring Firebase
  */
 
-const mockDistricts = [
-    {
-        id: '1',
-        name: 'Mumbai',
-        slug: 'mumbai',
-        state: 'Maharashtra',
-        population: 12442373,
-        latitude: 19.076,
-        longitude: 72.8777,
-    },
-    {
-        id: '2',
-        name: 'Delhi',
-        slug: 'delhi',
-        state: 'Delhi',
-        population: 16787941,
-        latitude: 28.7041,
-        longitude: 77.1025,
-    },
-    {
-        id: '3',
-        name: 'Bangalore Urban',
-        slug: 'bangalore-urban',
-        state: 'Karnataka',
-        population: 12765000,
-        latitude: 12.9716,
-        longitude: 77.5946,
-    },
-    {
-        id: '4',
-        name: 'Kolkata',
-        slug: 'kolkata',
-        state: 'West Bengal',
-        population: 14681589,
-        latitude: 22.5726,
-        longitude: 88.3639,
-    },
-];
+interface MockDistrictDetails {
+    id: string;
+    name: string;
+    slug: string;
+    state: string;
+    population: number;
+    latitude: number;
+    longitude: number;
+    environmentalData: {
+        aqi: number;
+        pm25: number;
+        soilQuality: number;
+        disasterFrequency: number;
+        historicalForestCover: number;
+        forestDegradation: number;
+        urbanExpansion: number;
+    };
+    recommendedTrees: Array<{
+        name: string;
+        scientificName: string;
+        oxygenProduction: string;
+        growthRate: string;
+        soilSuitability: string[];
+    }>;
+}
 
-const mockDistrictDetails: Record<string, any> = {
+const mockDistrictDetails: Record<string, MockDistrictDetails> = {
     'mumbai': {
         id: '1',
         name: 'Mumbai',

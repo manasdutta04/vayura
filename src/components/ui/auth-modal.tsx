@@ -39,9 +39,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 });
             }
         } catch (err: unknown) {
-            setError((err as Error).message || 'An error occurred');
-        } catch (err: any) {
-            toast.error(err.message || 'Authentication failed');
+            const error = err as Error;
+            toast.error(error.message || 'Authentication failed');
         } finally {
             setLoading(false);
         }
@@ -54,9 +53,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             toast.success('Signed in with Google');
             onClose();
         } catch (err: unknown) {
-            setError((err as Error).message || 'Google sign-in failed');
-        } catch (err: any) {
-            toast.error(err.message || 'Google sign-in failed');
+            const error = err as Error;
+            toast.error(error.message || 'Google sign-in failed');
         } finally {
             setLoading(false);
         }

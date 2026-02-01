@@ -26,11 +26,12 @@ export async function GET() {
             totalTrees: data?.totalTrees || 0,
             totalOxygen: data?.totalOxygen || 0,
         });
-    } catch (error: any) {
+    } catch (error: unknown) {
         // Check if it's a Firestore API disabled error
-        if (error?.code === 7 || error?.reason === 'SERVICE_DISABLED' ||
-            error?.message?.includes('Cloud Firestore API has not been used') ||
-            error?.message?.includes('SERVICE_DISABLED')) {
+        const errorObj = error as { code?: number; reason?: string; message?: string };
+        if (errorObj?.code === 7 || errorObj?.reason === 'SERVICE_DISABLED' ||
+            errorObj?.message?.includes('Cloud Firestore API has not been used') ||
+            errorObj?.message?.includes('SERVICE_DISABLED')) {
             console.warn('Firestore API not enabled - returning demo stats for development');
             return NextResponse.json({
                 totalDistricts: 4, // Mock data for testing

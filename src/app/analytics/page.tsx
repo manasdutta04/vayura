@@ -5,17 +5,16 @@ import { AdminGuard } from '@/components/admin-guard';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { 
-    LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
-    BarChart, Bar, Cell, PieChart, Pie, Sector,
-    Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis,
+    XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer,
+    BarChart, Bar,
     AreaChart, Area, Treemap
 } from 'recharts';
 import { 
-    TrendingUp, Users, TreeDeciduous, Wind, Map, 
-    Download, Filter, Calendar, ChevronDown, RefreshCw,
+    TrendingUp, TreeDeciduous, Wind, Map, 
+    Download, RefreshCw,
     ArrowUpRight, ArrowDownRight, Info
 } from 'lucide-react';
-import { AnalyticsData, MetricSnapshot, RegionalAnalytics } from '@/lib/types/analytics';
+import { AnalyticsData } from '@/lib/types/analytics';
 
 export default function AnalyticsPage() {
     const [data, setData] = useState<AnalyticsData | null>(null);
@@ -48,8 +47,9 @@ export default function AnalyticsPage() {
             if (!response.ok) throw new Error('Failed to fetch analytics');
             const result = await response.json();
             setData(result);
-        } catch (err: any) {
-            setError(err.message);
+        } catch (err: unknown) {
+            const error = err as Error;
+            setError(error.message);
         } finally {
             setLoading(false);
         }
@@ -336,7 +336,7 @@ export default function AnalyticsPage() {
                                             </span>
                                         </div>
                                         <p className="text-sm text-gray-600 leading-relaxed mb-4 italic">
-                                            "{data.predictive.aiSummary}"
+                                            &ldquo;{data.predictive.aiSummary}&rdquo;
                                         </p>
                                         {data.predictive.recommendations && (
                                             <div className="space-y-2">
@@ -402,7 +402,13 @@ export default function AnalyticsPage() {
     );
 }
 
-function MetricCard({ title, value, icon, trend, trendUp }: any) {
+function MetricCard({ title, value, icon, trend, trendUp }: {
+    title: string;
+    value: string | number;
+    icon: React.ReactNode;
+    trend?: string;
+    trendUp?: boolean;
+}) {
     return (
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
             <div className="flex items-center justify-between mb-4">

@@ -19,6 +19,7 @@ export async function GET() {
         const snapshot = await districtsRef.get();
         console.log('GET /api/map-data: Snapshot received, docs:', snapshot.docs.length);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let districts = snapshot.docs.map((doc: any) => {
             const data = doc.data() as DistrictData;
             return {
@@ -46,6 +47,7 @@ export async function GET() {
         }
 
         return NextResponse.json(districts);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
         console.error('Error fetching map data:', error);
         return NextResponse.json(

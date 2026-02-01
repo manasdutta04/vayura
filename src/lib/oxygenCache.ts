@@ -2,6 +2,7 @@ import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 // 1. Memoization: In-Memory L1 Cache
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const memoizationMap = new Map<string, { value: any; expiry: number }>();
 
 export const oxygenCache = {
@@ -15,6 +16,7 @@ export const oxygenCache = {
   },
 
   // Save to RAM
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setMemoized(key: string, value: any, ttlSeconds: number = 300) {
     memoizationMap.set(key, {
       value,
@@ -55,6 +57,7 @@ export const oxygenCache = {
     return null;
   },
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async set(key: string, result: any) {
     this.setMemoized(key, result); // Write L1
     // Write L2 (Fire & Forget)

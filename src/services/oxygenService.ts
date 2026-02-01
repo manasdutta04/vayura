@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { oxygenCache } from '@/lib/oxygenCache';
 // ✅ REQUIREMENT: Use the real calculator logic instead of simulation
 // If this import fails, ensure the file exists at this path.
