@@ -1,3 +1,6 @@
+// File: src/app/challenges/page.tsx (COMPLETE VERSION)
+// Main challenges listing page with "Create Challenge" button for authenticated users
+
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
@@ -15,6 +18,7 @@ import {
     getChallengeProgress,
     SCOPE_DISPLAY_NAMES,
     STATUS_DISPLAY_INFO,
+    ChallengeParticipant,
 } from '@/lib/types/challenges';
 import {
     Target,
@@ -35,6 +39,7 @@ import {
     Calendar,
     TrendingUp,
     Zap,
+    Plus,
 } from 'lucide-react';
 
 // Countdown Timer Component
@@ -406,7 +411,6 @@ function ChallengesPageContent() {
     // Handle join challenge
     const handleJoinChallenge = async (challengeId: string) => {
         if (!user) {
-            // Redirect to homepage with auth prompt
             window.location.href = '/?auth_required=true';
             return;
         }
@@ -428,7 +432,6 @@ function ChallengesPageContent() {
             });
 
             if (res.ok) {
-                // Navigate to challenge detail
                 window.location.href = `/challenges/${challengeId}`;
             } else {
                 console.error('Failed to join challenge');
@@ -450,7 +453,7 @@ function ChallengesPageContent() {
             <Header />
 
             <main className="max-w-7xl mx-auto px-6 py-8">
-                {/* Hero Section */}
+                {/* Hero Section - UPDATED with Create Challenge button */}
                 <div className="text-center mb-10">
                     <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-green-500 to-emerald-600 text-white mb-4 shadow-lg shadow-green-200">
                         <Target className="w-8 h-8" />
@@ -458,10 +461,21 @@ function ChallengesPageContent() {
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
                         Community Challenges
                     </h1>
-                    <p className="text-gray-600 max-w-2xl mx-auto">
+                    <p className="text-gray-600 max-w-2xl mx-auto mb-6">
                         Join collective, time-bound environmental goals. Collaborate with individuals
                         and NGOs to achieve large-scale tree plantation targets across India.
                     </p>
+                    
+                    {/* NEW: Create Challenge Button - Only visible to authenticated users */}
+                    {user && (
+                        <Link
+                            href="/challenges/create"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-xl hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg shadow-green-200 hover:shadow-xl hover:shadow-green-300"
+                        >
+                            <Plus className="w-5 h-5" />
+                            Create New Challenge
+                        </Link>
+                    )}
                 </div>
 
                 {/* Stats Summary */}
@@ -553,18 +567,29 @@ function ChallengesPageContent() {
                             </h3>
                             <p className="text-gray-500 mb-6 max-w-sm mx-auto">
                                 {statusFilter === 'active'
-                                    ? 'There are no active challenges at the moment. Check back soon!'
-                                    : 'No challenges match your current filters. Try adjusting the filters.'}
+                                    ? 'There are no active challenges at the moment.'
+                                    : 'No challenges match your current filters.'}
                             </p>
-                            <button
-                                onClick={() => {
-                                    setScopeFilter('all');
-                                    setStatusFilter('all');
-                                }}
-                                className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                            >
-                                Clear Filters
-                            </button>
+                            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                                {user && (
+                                    <Link
+                                        href="/challenges/create"
+                                        className="px-6 py-3 bg-gradient-to-r from-green-600 to-emerald-600 text-white font-semibold rounded-lg hover:from-green-700 hover:to-emerald-700 transition-all shadow-md flex items-center gap-2"
+                                    >
+                                        <Plus className="w-5 h-5" />
+                                        Create a Challenge
+                                    </Link>
+                                )}
+                                <button
+                                    onClick={() => {
+                                        setScopeFilter('all');
+                                        setStatusFilter('all');
+                                    }}
+                                    className="px-4 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                                >
+                                    Clear Filters
+                                </button>
+                            </div>
                         </div>
                     )}
 
@@ -584,24 +609,46 @@ function ChallengesPageContent() {
                     </div>
                     <h3 className="text-2xl font-bold mb-3">Ready to Make an Impact?</h3>
                     <p className="text-green-100 mb-6 max-w-lg mx-auto">
-                        Join a challenge today and contribute to collective environmental goals.
-                        Every tree you plant brings us closer to a greener India!
+                        {user 
+                            ? 'Join existing challenges or create your own to mobilize your community!'
+                            : 'Join a challenge today and contribute to collective environmental goals.'}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <Link
-                            href="/plant"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
-                        >
-                            <TreeDeciduous className="w-5 h-5" />
-                            Plant a Tree
-                        </Link>
-                        <Link
-                            href="/donate"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 text-white border border-white/30 rounded-lg font-semibold hover:bg-green-500/30 transition-colors"
-                        >
-                            <Trophy className="w-5 h-5" />
-                            Donate Trees
-                        </Link>
+                        {user ? (
+                            <>
+                                <Link
+                                    href="/challenges/create"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
+                                >
+                                    <Plus className="w-5 h-5" />
+                                    Create Challenge
+                                </Link>
+                                <Link
+                                    href="/plant"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 text-white border border-white/30 rounded-lg font-semibold hover:bg-green-500/30 transition-colors"
+                                >
+                                    <TreeDeciduous className="w-5 h-5" />
+                                    Plant a Tree
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <Link
+                                    href="/plant"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
+                                >
+                                    <TreeDeciduous className="w-5 h-5" />
+                                    Plant a Tree
+                                </Link>
+                                <Link
+                                    href="/donate"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 text-white border border-white/30 rounded-lg font-semibold hover:bg-green-500/30 transition-colors"
+                                >
+                                    <Trophy className="w-5 h-5" />
+                                    Donate Trees
+                                </Link>
+                            </>
+                        )}
                     </div>
                 </div>
             </main>
