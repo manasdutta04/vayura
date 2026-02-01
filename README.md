@@ -1,4 +1,7 @@
 # Vayura
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## Why Vayura?
 
 India lacks district-level visibility into environmental oxygen demand.
@@ -400,6 +403,20 @@ Always verify critical information with official sources and domain experts.
 ## Contributors
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://amankumar.site"><img src="https://avatars.githubusercontent.com/u/148977902?v=4?s=100" width="100px;" alt="Aman Kumar "/><br /><sub><b>Aman Kumar </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Amanc77" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
