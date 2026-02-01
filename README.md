@@ -1,6 +1,6 @@
 # Vayura
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## Why Vayura?
 
@@ -410,6 +410,7 @@ Always verify critical information with official sources and domain experts.
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://amankumar.site"><img src="https://avatars.githubusercontent.com/u/148977902?v=4?s=100" width="100px;" alt="Aman Kumar "/><br /><sub><b>Aman Kumar </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Amanc77" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/VITianYash42"><img src="https://avatars.githubusercontent.com/u/175908232?v=4?s=100" width="100px;" alt="Yash Singhal"/><br /><sub><b>Yash Singhal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=VITianYash42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Diksha78-bot"><img src="https://avatars.githubusercontent.com/u/184750994?v=4?s=100" width="100px;" alt="Diksha Dhanaji Dabhole"/><br /><sub><b>Diksha Dhanaji Dabhole</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Diksha78-bot" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
