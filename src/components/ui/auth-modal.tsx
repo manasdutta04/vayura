@@ -154,14 +154,17 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {/* Email/Password Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="auth-email" className="block text-sm font-medium text-gray-700 mb-1">
                             Email
                         </label>
                         <input
+                            id="auth-email"
+                            name="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nature-500 focus:border-transparent outline-none"
                             placeholder="you@example.com"
                         />
@@ -169,14 +172,17 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                     {mode !== 'reset' && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="auth-password" className="block text-sm font-medium text-gray-700 mb-1">
                                 Password
                             </label>
                             <input
+                                id="auth-password"
+                                name="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                                 minLength={6}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nature-500 focus:border-transparent outline-none"
                                 placeholder="••••••••"

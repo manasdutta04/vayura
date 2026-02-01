@@ -66,15 +66,18 @@ export default function CalculatorPage() {
                         <div className="p-8 bg-gray-50/30 border-b border-gray-100">
                             {/* Value Display */}
                             <div className="flex flex-col items-center mb-8">
-                                <label className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
+                                <label htmlFor="calc-trees" className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
                                     Trees Planted
                                 </label>
                                 <div className="flex items-baseline gap-2 justify-center">
                                     <input
+                                        id="calc-trees"
+                                        name="trees"
                                         type="number"
                                         min="1"
                                         max="10000"
                                         value={trees}
+                                        autoComplete="off"
                                         onChange={(e) => {
                                             const val = e.target.value;
                                             // Allow empty string purely for typing experience, but otherwise parse
@@ -115,6 +118,8 @@ export default function CalculatorPage() {
 
                                     <div className="flex-1">
                                         <input
+                                            id="calc-trees-range"
+                                            name="treesRange"
                                             type="range"
                                             min="1"
                                             max="10000"

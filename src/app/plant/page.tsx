@@ -307,26 +307,32 @@ function PlantPageContent() {
                                 {/* Tree Name & Quantity Row */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                        <label htmlFor="plant-species" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                             Species
                                         </label>
                                         <input
+                                            id="plant-species"
+                                            name="species"
                                             type="text"
                                             value={treeName}
                                             onChange={(e) => setTreeName(e.target.value)}
+                                            autoComplete="off"
                                             className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                             placeholder="e.g. Neem"
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                        <label htmlFor="plant-quantity" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                             Quantity
                                         </label>
                                         <input
+                                            id="plant-quantity"
+                                            name="quantity"
                                             type="number"
                                             min="1"
                                             value={treeQuantity}
                                             onChange={(e) => setTreeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                            autoComplete="off"
                                             className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                             placeholder="Qty"
                                         />
@@ -351,6 +357,8 @@ function PlantPageContent() {
                                     >
                                         <input
                                             ref={fileInputRef}
+                                            id="plant-photo"
+                                            name="photo"
                                             type="file"
                                             accept="image/jpeg,image/png,image/webp"
                                             onChange={handleImageChange}

@@ -114,13 +114,16 @@ function PlantContributionForm() {
                         className="bg-white rounded-2xl shadow px-6 py-6 border border-gray-100 space-y-5"
                     >
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="contribute-district" className="block text-sm font-medium text-gray-700 mb-1">
                                 District
                             </label>
                             <input
+                                id="contribute-district"
+                                name="district"
                                 type="text"
                                 value={districtName || districtId}
                                 readOnly
+                                autoComplete="off"
                                 className="w-full px-4 py-3 rounded-lg border border-gray-200 bg-gray-50 text-gray-700 text-sm"
                             />
                             {!districtId && (
@@ -132,10 +135,12 @@ function PlantContributionForm() {
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                            <label htmlFor="contribute-photo" className="block text-sm font-medium text-gray-700 mb-2">
                                 Tree photo (JPEG/PNG)
                             </label>
                             <input
+                                id="contribute-photo"
+                                name="photo"
                                 type="file"
                                 accept="image/jpeg,image/png,image/webp"
                                 onChange={handleImageChange}

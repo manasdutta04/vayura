@@ -323,26 +323,32 @@ export default function DonatePage() {
                                         {/* Tree Name & Quantity Row */}
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                <label htmlFor="donate-plant-name" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                                     Plant Name
                                                 </label>
                                                 <input
+                                                    id="donate-plant-name"
+                                                    name="plantName"
                                                     type="text"
                                                     value={treeName}
                                                     onChange={(e) => setTreeName(e.target.value)}
+                                                    autoComplete="off"
                                                     className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                                     placeholder="e.g. Mango"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                <label htmlFor="donate-quantity" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                                     Quantity
                                                 </label>
                                                 <input
+                                                    id="donate-quantity"
+                                                    name="quantity"
                                                     type="number"
                                                     min="1"
                                                     value={treeQuantity}
                                                     onChange={(e) => setTreeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                                    autoComplete="off"
                                                     className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                                     placeholder="Qty"
                                                 />
@@ -367,6 +373,8 @@ export default function DonatePage() {
                                             >
                                                 <input
                                                     ref={fileInputRef}
+                                                    id="donate-receipt"
+                                                    name="receipt"
                                                     type="file"
                                                     accept="image/jpeg,image/png,image/webp"
                                                     onChange={handleImageChange}
