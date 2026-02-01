@@ -6,7 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { Button } from '@/components/ui/button';
-import { updateUserProfileFields } from '@/lib/utils/user-profile';
+import { updateUserProfileFields, getUserProfile } from '@/lib/utils/user-profile';
 import { uploadProfileImage } from '@/lib/utils/storage';
 import { UserProfile } from '@/lib/types/firestore';
 import { User, Mail, Camera, Save, ArrowLeft, Upload, X } from 'lucide-react';
@@ -33,17 +33,52 @@ export default function EditProfilePage() {
 
   // Initialize profile state with user data
   useEffect(() => {
-    if (user) {
-      setProfile({
-        name: user.displayName || user.email?.split('@')[0],
-        email: user.email || '',
-        photoURL: user.photoURL || '',
-      });
-      setPreviewImage(user.photoURL || '');
-      // Don't set selectedFile here since we're not dealing with a new file
-      setSelectedFile(null);
-      setLoadingProfile(false);
+    async function loadProfile() {
+      if (user) {
+        try {
+          // First, try to get the profile from Firestore
+          const userProfile = await getUserProfile(user.uid);
+          
+          if (userProfile) {
+            // Use the Firestore profile data
+            setProfile({
+              name: userProfile.name || user.displayName || user.email?.split('@')[0],
+              email: user.email || '',
+              photoURL: userProfile.photoURL || user.photoURL || '',
+              bio: userProfile.bio || '',
+            });
+            setPreviewImage(userProfile.photoURL || user.photoURL || '');
+          } else {
+            // Fallback to basic user data if no profile exists
+            setProfile({
+              name: user.displayName || user.email?.split('@')[0],
+              email: user.email || '',
+              photoURL: user.photoURL || '',
+              bio: '',
+            });
+            setPreviewImage(user.photoURL || '');
+          }
+          
+          // Don't set selectedFile here since we're not dealing with a new file
+          setSelectedFile(null);
+          setLoadingProfile(false);
+        } catch (error) {
+          console.error('Error loading profile:', error);
+          // Fallback to basic user data
+          setProfile({
+            name: user.displayName || user.email?.split('@')[0],
+            email: user.email || '',
+            photoURL: user.photoURL || '',
+            bio: '',
+          });
+          setPreviewImage(user.photoURL || '');
+          setSelectedFile(null);
+          setLoadingProfile(false);
+        }
+      }
     }
+    
+    loadProfile();
   }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,10 +182,12 @@ export default function EditProfilePage() {
         }
       }
       
-      console.log('Update data:', updateData); // Debug log
-      
+      console.log("Update data:", updateData); // Debug log
+      console.log("User ID:", user.uid); // Debug log
+            
       // Update Firestore profile
       const success = await updateUserProfileFields(user.uid, updateData);
+      console.log("Update result:", success); // Debug log
 
       if (success) {
         // Also update Firebase Auth profile

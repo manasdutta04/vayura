@@ -68,12 +68,15 @@ export async function updateUserProfileFields(
   >
 ): Promise<boolean> {
   try {
+    console.log("updateUserProfileFields called with:", { userId, fields }); // Debug log
+    
     if (!userId) {
       console.error("User ID missing");
       return false;
     }
 
     const userRef = doc(db, Collections.USERS, userId);
+    console.log("User document reference:", userRef.path); // Debug log
 
     // Remove empty / undefined fields
     const updateData: Record<string, any> = {};
@@ -83,6 +86,8 @@ export async function updateUserProfileFields(
       }
     });
 
+    console.log("Update data to be saved:", updateData); // Debug log
+
     if (Object.keys(updateData).length === 0) {
       console.warn("No valid fields to update");
       return true;
@@ -91,7 +96,9 @@ export async function updateUserProfileFields(
     updateData.updatedAt = serverTimestamp();
 
     // 🔑 SAFE UPDATE (creates doc if missing)
+    console.log("About to update document..."); // Debug log
     await setDoc(userRef, updateData, { merge: true });
+    console.log("Document updated successfully!"); // Debug log
 
     return true;
   } catch (error) {
