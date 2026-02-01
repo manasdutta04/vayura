@@ -10,7 +10,7 @@ import {
     onAuthStateChanged,
     sendPasswordResetEmail,
 } from 'firebase/auth';
-import { auth, googleProvider } from '@/lib/firebase';
+import { auth, googleProvider, isConfigured } from '@/lib/firebase';
 
 interface AuthContextType {
     user: User | null;
@@ -27,12 +27,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(!!auth); // Start as loading only if auth is available
-    const [authAvailable] = useState(!!auth);
+    const [loading, setLoading] = useState(isConfigured && !!auth);
+    const [authAvailable] = useState(isConfigured && !!auth && !!googleProvider);
 
     useEffect(() => {
         // Check if auth is available
-        if (!auth) {
+        if (!auth || !isConfigured) {
             console.warn('Firebase Auth not configured - running in limited mode');
             return;
         }
@@ -50,9 +50,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const signInWithGoogle = async () => {
-        if (!authAvailable || !auth || !googleProvider) {
-            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
+        // Prevent any Firebase calls if not properly configured
+        if (!isConfigured || !authAvailable || !auth || !googleProvider) {
+            console.warn('Sign-in blocked: Firebase not configured');
+            throw new Error('Authentication is not available. Please configure Firebase credentials.');
         }
+        
         try {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
@@ -79,8 +82,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signInWithEmail = async (email: string, password: string) => {
-        if (!authAvailable || !auth) {
-            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
+        if (!isConfigured || !authAvailable || !auth) {
+            console.warn('Sign-in blocked: Firebase not configured');
+            throw new Error('Authentication is not available. Please configure Firebase credentials.');
         }
         try {
             await signInWithEmailAndPassword(auth, email, password);
@@ -98,8 +102,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signUpWithEmail = async (email: string, password: string) => {
-        if (!authAvailable || !auth) {
-            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
+        if (!isConfigured || !authAvailable || !auth) {
+            console.warn('Sign-up blocked: Firebase not configured');
+            throw new Error('Authentication is not available. Please configure Firebase credentials.');
         }
         try {
             await createUserWithEmailAndPassword(auth, email, password);
@@ -117,8 +122,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const signOut = async () => {
-        if (!authAvailable || !auth) {
-            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
+        if (!isConfigured || !authAvailable || !auth) {
+            console.warn('Sign-out blocked: Firebase not configured');
+            throw new Error('Authentication is not available. Please configure Firebase credentials.');
         }
         try {
             await firebaseSignOut(auth);
@@ -129,8 +135,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     const resetPassword = async (email: string) => {
-        if (!authAvailable || !auth) {
-            throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
+        if (!isConfigured || !authAvailable || !auth) {
+            console.warn('Password reset blocked: Firebase not configured');
+            throw new Error('Authentication is not available. Please configure Firebase credentials.');
         }
         try {
             await sendPasswordResetEmail(auth, email);

@@ -23,6 +23,13 @@ const isConfigured =
     firebaseConfig.projectId !== 'fake-project' &&
     firebaseConfig.apiKey.length > 20; // Real Firebase API keys are longer
 
+console.log('Firebase Configuration Check:', {
+    hasApiKey: !!firebaseConfig.apiKey,
+    apiKeyLength: firebaseConfig.apiKey?.length || 0,
+    hasProjectId: !!firebaseConfig.projectId,
+    isConfigured
+});
+
 // Initialize Firebase only if properly configured
 let app;
 let auth;
