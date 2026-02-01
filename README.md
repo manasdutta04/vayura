@@ -1,6 +1,6 @@
 # Vayura
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## Why Vayura?
 
@@ -421,6 +421,7 @@ Always verify critical information with official sources and domain experts.
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/ParthG2209"><img src="https://avatars.githubusercontent.com/u/206025730?v=4?s=100" width="100px;" alt="Parth Gupta"/><br /><sub><b>Parth Gupta</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ParthG2209" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/Nitya-003"><img src="https://avatars.githubusercontent.com/u/181471078?v=4?s=100" width="100px;" alt="Nitya Gosain"/><br /><sub><b>Nitya Gosain</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Nitya-003" title="Documentation">📖</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/rishabh0510rishabh"><img src="https://avatars.githubusercontent.com/u/85429535?v=4?s=100" width="100px;" alt="Rishabh Mishra"/><br /><sub><b>Rishabh Mishra</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=rishabh0510rishabh" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://harsh-works.vercel.app/"><img src="https://avatars.githubusercontent.com/u/193507759?v=4?s=100" width="100px;" alt="Harsh "/><br /><sub><b>Harsh </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=harshrana14-fi" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
