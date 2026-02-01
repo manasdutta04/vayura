@@ -79,9 +79,18 @@ export async function fetchDistrictWithCache(
   if (isOnline) {
     try {
       const queryParams = forceRefresh ? '?fresh=true' : '';
-      const response = await fetch(`/api/districts/${slug}${queryParams}`, {
+      
+      // Try mock API first for testing, fallback to real API
+      let response = await fetch(`/api/mock-districts/${slug}${queryParams}`, {
         cache: 'no-store',
       });
+      
+      // If mock API fails, try real API
+      if (!response.ok) {
+        response = await fetch(`/api/districts/${slug}${queryParams}`, {
+          cache: 'no-store',
+        });
+      }
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

@@ -15,6 +15,7 @@ const hasValidKey = privateKey && privateKey.includes('-----BEGIN PRIVATE KEY---
 const isConfigured = !!(projectId && clientEmail && hasValidKey);
 
 if (!getApps().length) {
+<<<<<<< HEAD
     if (isConfigured) {
         try {
             adminApp = initializeApp({
@@ -22,10 +23,33 @@ if (!getApps().length) {
                     projectId: projectId!,
                     clientEmail: clientEmail!,
                     privateKey: privateKey!,
+=======
+    const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+    const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
+    const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n');
+
+    if (!projectId || !clientEmail || !privateKey) {
+        console.warn('Firebase Admin SDK: Missing required environment variables - running in limited mode');
+        console.warn('Some server-side features may not work. Required: FIREBASE_ADMIN_PROJECT_ID, FIREBASE_ADMIN_CLIENT_EMAIL, FIREBASE_ADMIN_PRIVATE_KEY');
+        
+        // Initialize with minimal config for development/testing
+        adminApp = initializeApp({
+            projectId: projectId || 'demo-project',
+            storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+        });
+    } else {
+        try {
+            adminApp = initializeApp({
+                credential: cert({
+                    projectId,
+                    clientEmail,
+                    privateKey,
+>>>>>>> 16e4a19 (Add offline mode with Firebase error handling)
                 }),
                 storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
             });
         } catch (error) {
+<<<<<<< HEAD
             console.error('Failed to initialize Firebase Admin with provided credentials:', error);
             // Fallback to mock app if initialization fails
             adminApp = { name: '[DEFAULT]' } as App;
@@ -33,6 +57,17 @@ if (!getApps().length) {
     } else {
         // Mock app for build process or missing config
         adminApp = { name: '[DEFAULT]' } as App;
+=======
+            console.error('Firebase Admin SDK: Failed to initialize with credentials:', error instanceof Error ? error.message : 'Unknown error');
+            console.warn('Falling back to limited mode without authentication');
+            
+            // Fallback initialization without credentials
+            adminApp = initializeApp({
+                projectId: projectId || 'demo-project',
+                storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+            });
+        }
+>>>>>>> 16e4a19 (Add offline mode with Firebase error handling)
     }
 } else {
     adminApp = getApps()[0];
