@@ -20,13 +20,15 @@ const isConfigured =
     firebaseConfig.apiKey !== 'fake-key' &&
     !firebaseConfig.apiKey.startsWith('NEXT_PUBLIC_') &&
     firebaseConfig.projectId !== 'your-project-id' &&
-    firebaseConfig.projectId !== 'fake-project';
+    firebaseConfig.projectId !== 'fake-project' &&
+    firebaseConfig.apiKey.length > 20; // Real Firebase API keys are longer
 
 // Initialize Firebase only if properly configured
 let app;
 let auth;
 let storage;
 let db;
+let authConfigError = false;
 
 if (isConfigured) {
     try {
@@ -35,9 +37,17 @@ if (isConfigured) {
         
         // Try to initialize each service separately with error handling
         try {
-            auth = getAuth(app);
+            const authInstance = getAuth(app);
+            // Test if auth config is valid by checking tenantId access
+            // If Firebase project doesn't have auth enabled, this will work but operations will fail
+            // We'll mark it as potentially problematic
+            if (authInstance) {
+                auth = authInstance;
+                console.log('Firebase Auth initialized');
+            }
         } catch (authError) {
             console.warn('Firebase Auth initialization failed:', authError);
+            authConfigError = true;
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             auth = null as any;
         }
@@ -59,10 +69,11 @@ if (isConfigured) {
         }
         
         if (auth) {
-            console.log('Firebase initialized successfully');
+            console.log('Firebase services initialized');
         }
     } catch (error) {
         console.warn('Firebase initialization failed:', error);
+        authConfigError = true;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         auth = null as any;
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -71,7 +82,8 @@ if (isConfigured) {
         db = null as any;
     }
 } else {
-    console.warn('Firebase configuration not found - Firebase features disabled');
+    console.warn('Firebase configuration not found or invalid - Firebase features disabled');
+    authConfigError = true;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     auth = null as any;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any

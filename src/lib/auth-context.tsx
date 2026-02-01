@@ -56,12 +56,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await signInWithPopup(auth, googleProvider);
         } catch (error) {
-            console.error('Google sign-in error:', error);
-            // Provide user-friendly error message
+            // Suppress and convert Firebase configuration errors to user-friendly messages
             const err = error as { code?: string; message?: string };
-            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/invalid-api-key') {
-                throw new Error('Firebase authentication is not properly configured. Please contact the administrator.');
+            
+            if (err.code === 'auth/configuration-not-found') {
+                console.warn('Firebase Auth configuration error caught and suppressed:', err);
+                throw new Error('Authentication service is not properly configured. Please contact support.');
             }
+            
+            if (err.code === 'auth/invalid-api-key') {
+                console.warn('Firebase Auth invalid API key caught and suppressed:', err);
+                throw new Error('Authentication service is not properly configured. Please contact support.');
+            }
+            
+            if (err.code === 'auth/network-request-failed') {
+                throw new Error('Network error. Please check your internet connection and try again.');
+            }
+            
+            console.error('Google sign-in error:', error);
             throw error;
         }
     };
@@ -73,6 +85,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await signInWithEmailAndPassword(auth, email, password);
         } catch (error) {
+            const err = error as { code?: string; message?: string };
+            
+            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/invalid-api-key') {
+                console.warn('Firebase Auth configuration error caught and suppressed:', err);
+                throw new Error('Authentication service is not properly configured. Please contact support.');
+            }
+            
             console.error('Email sign-in error:', error);
             throw error;
         }
@@ -85,6 +104,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
         } catch (error) {
+            const err = error as { code?: string; message?: string };
+            
+            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/invalid-api-key') {
+                console.warn('Firebase Auth configuration error caught and suppressed:', err);
+                throw new Error('Authentication service is not properly configured. Please contact support.');
+            }
+            
             console.error('Email sign-up error:', error);
             throw error;
         }
@@ -109,6 +135,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         try {
             await sendPasswordResetEmail(auth, email);
         } catch (error) {
+            const err = error as { code?: string; message?: string };
+            
+            if (err.code === 'auth/configuration-not-found' || err.code === 'auth/invalid-api-key') {
+                console.warn('Firebase Auth configuration error caught and suppressed:', err);
+                throw new Error('Authentication service is not properly configured. Please contact support.');
+            }
+            
             console.error('Password reset error:', error);
             throw error;
         }
