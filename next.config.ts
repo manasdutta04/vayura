@@ -6,13 +6,8 @@ const nextConfig: NextConfig = {
   images: {
     qualities: [75, 100],
   },
-  // Suppress webpack warnings and logs
-  webpack: (config, { isServer }) => {
-    config.infrastructureLogging = {
-      level: 'error',
-    };
-    return config;
-  },
+  // Empty turbopack config to silence webpack warning
+  turbopack: {},
   // Suppress dev overlay errors
   devIndicators: {
     buildActivity: false,
