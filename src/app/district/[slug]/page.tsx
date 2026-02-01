@@ -5,8 +5,10 @@ import { DistrictDetail } from '@/lib/types';
 import { DistrictClientPage } from '@/components/district-client-page';
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Metadata } from "next";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
+import { ShareButtons } from "@/components/ui/share-buttons";
 import { DistrictDetail } from "@/lib/types";
 import {
   formatCompactNumber,
@@ -14,11 +16,10 @@ import {
   getAQICategory,
 } from "@/lib/utils/helpers";
 import EmptyState from "@/components/ui/EmptyState";
+import { ExportButtons } from "@/components/district/ExportButtons";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   try {
-    // For server components, use absolute URL with environment variable or fallback
-    // In production, this should be set to the actual domain
     const baseUrl =
       process.env.NEXT_PUBLIC_BASE_URL ||
       (process.env.VERCEL_URL
@@ -39,6 +40,54 @@ async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
 
 interface DistrictPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export async function generateMetadata({
+  params,
+}: DistrictPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const data = await getDistrictDetail(slug);
+
+  if (!data) {
+    return {
+      title: "District Not Found | Vayura",
+    };
+  }
+
+  const treesNeeded = formatCompactNumber(
+    Math.round(data.oxygenCalculation.trees_required),
+  );
+  const title = `${data.name} Oxygen Report | Vayura`;
+  const description = `${data.name} needs ${treesNeeded} trees to meet its oxygen demand. View detailed environmental health statistics for ${data.name}, ${data.state}.`;
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://vayura.com";
+  const url = `${baseUrl}/district/${slug}`;
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: "Vayura",
+      locale: "en_IN",
+      type: "website",
+      images: [
+        {
+          url: `${baseUrl}/logo.png`,
+          width: 800,
+          height: 600,
+          alt: "Vayura Logo",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [`${baseUrl}/logo.png`],
+    },
+  };
 }
 
 export default async function DistrictPage({ params }: DistrictPageProps) {
@@ -106,6 +155,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
               </p>
             </div>
             <div className="flex gap-3">
+              <ExportButtons data={data} slug={slug} />
               <Link
                 href="/plant"
                 className="px-5 py-3 rounded-full bg-nature-600 text-white font-semibold hover:bg-nature-700 transition"
@@ -256,6 +306,12 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
               </div>
             </div>
           </div>
+
+          <ShareButtons
+            districtName={data.name}
+            treesNeeded={formatCompactNumber(Math.round(calc.trees_required))}
+            url={`${process.env.NEXT_PUBLIC_BASE_URL || "https://vayura.com"}/district/${slug}`}
+          />
         </section>
       </main>
       <Footer />

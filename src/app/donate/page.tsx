@@ -12,6 +12,7 @@ import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictSearchResult } from '@/lib/types';
 import Link from 'next/link';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 export default function DonatePage() {
     const ngos = getAllNgos();
@@ -27,8 +28,6 @@ export default function DonatePage() {
     const [treeQuantity, setTreeQuantity] = useState<number>(1);
     const [treeName, setTreeName] = useState('');
     const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [success, setSuccess] = useState<string | null>(null);
     const [submitting, setSubmitting] = useState(false);
 
     // Cleanup preview on unmount
@@ -43,14 +42,12 @@ export default function DonatePage() {
     const handleImageFile = (file: File) => {
         const validation = validateImageFile(file);
         if (!validation.valid) {
-            setError(validation.error || 'Invalid image file');
+            toast.error(validation.error || 'Invalid image file');
             return;
         }
         if (previewUrl) revokeImagePreview(previewUrl);
         setImage(file);
         setPreviewUrl(createImagePreview(file));
-        setError(null);
-        setSuccess(null);
     };
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,28 +74,28 @@ export default function DonatePage() {
 
     const handleSubmitVerification = async (event: React.FormEvent) => {
         event.preventDefault();
-        setError(null);
-        setSuccess(null);
-
+        
         if (!user) {
-            setError('Please sign in to verify your donation');
+            toast.error('Please sign in to verify your donation');
             return;
         }
 
         if (!selectedDistrict) {
-            setError('Please select the district where trees were donated');
+            toast.error('Please select the district where trees were donated');
             return;
         }
 
         if (!image) {
-            setError('Please upload your donation receipt or certificate');
+            toast.error('Please upload your donation receipt or certificate');
             return;
         }
 
         if (!treeName.trim()) {
-            setError('Please enter the plant/tree name');
+            toast.error('Please enter the plant/tree name');
             return;
         }
+
+        const toastId = toast.loading("Verifying your donation...");
 
         try {
             setSubmitting(true);
@@ -127,7 +124,11 @@ export default function DonatePage() {
                 throw new Error(json.error || 'Failed to submit verification');
             }
 
-            setSuccess('Donation verified successfully! Added to your contributions.');
+            toast.success('Donation verified successfully!', {
+                id: toastId,
+                description: 'Added to your contributions.'
+            });
+
             setImage(null);
             if (previewUrl) revokeImagePreview(previewUrl);
             setPreviewUrl(null);
@@ -141,6 +142,10 @@ export default function DonatePage() {
 
         } catch (err: unknown) {
             setError((err as Error).message || 'Failed to submit verification');
+        } catch (err: any) {
+            toast.error(err.message || 'Failed to submit verification', {
+                id: toastId
+            });
         } finally {
             setSubmitting(false);
         }
@@ -251,6 +256,11 @@ export default function DonatePage() {
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 className="w-full flex items-center justify-center gap-2 bg-gray-900 text-white py-2.5 px-4 rounded-lg hover:bg-gray-800 transition-colors font-medium text-sm"
+                                                onClick={() => {
+                                                    toast.info("Opening donation page...", {
+                                                        description: "Thank you for supporting this NGO!"
+                                                    });
+                                                }}
                                             >
                                                 Donate
                                                 <ExternalLink className="w-3 h-3" />
@@ -302,7 +312,6 @@ export default function DonatePage() {
                                             <DistrictSearch
                                                 onDistrictSelect={(district) => {
                                                     setSelectedDistrict(district);
-                                                    setError(null);
                                                 }}
                                             />
                                             {selectedDistrict && (
@@ -386,18 +395,6 @@ export default function DonatePage() {
                                                 )}
                                             </div>
                                         </div>
-
-                                        {error && (
-                                            <div className="rounded-md border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
-                                                {error}
-                                            </div>
-                                        )}
-
-                                        {success && (
-                                            <div className="rounded-md border border-green-200 bg-green-50 px-3 py-2 text-xs text-green-700">
-                                                {success}
-                                            </div>
-                                        )}
 
                                         <button
                                             type="submit"
