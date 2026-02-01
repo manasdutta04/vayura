@@ -61,7 +61,6 @@ export function DistrictSearch({
 
     const fetchResults = async () => {
       setLoading(true);
-      setError(null);
       try {
         const data = await apiClient<DistrictSearchResult[]>(
           `/api/districts?q=${encodeURIComponent(debouncedQuery)}`
