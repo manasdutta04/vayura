@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
+import Image from 'next/image';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
@@ -135,9 +136,11 @@ function LeaderboardEntryRow({
             {/* User Avatar */}
             <div className="relative">
                 {entry.photoURL ? (
-                    <img
+                    <Image
                         src={entry.photoURL}
                         alt={entry.userName}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
                     />
                 ) : (
