@@ -285,6 +285,10 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
             </div>
           </div>
 
+          {data.recommendations && data.recommendations.length > 0 && (
+            <PlantationRecommendations recommendations={data.recommendations} />
+          )}
+
           <ShareButtons
             districtName={data.name}
             treesNeeded={formatCompactNumber(Math.round(calc.trees_required))}
