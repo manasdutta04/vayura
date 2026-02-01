@@ -106,9 +106,10 @@ export default function Dashboard() {
                 <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
                   Welcome back, <span className="text-gray-600">{user?.displayName || user?.email?.split('@')[0]}</span>
                 </h1>
-                <p className="text-gray-500">
+                <p className="text-gray-500 mb-4">
                   Track your environmental impact and explore district data
                 </p>
+
               </div>
               <div className="text-right hidden md:block">
                 <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Current Impact</p>
