@@ -34,7 +34,7 @@ if (typeof globalThis !== 'undefined') {
       event.stopImmediatePropagation();
     }, true);
     
-    // Suppress all errors
+    // Suppress all errors including React error boundaries
     window.addEventListener('error', (event) => {
       event.preventDefault();
       event.stopImmediatePropagation();
@@ -55,6 +55,14 @@ if (typeof globalThis !== 'undefined') {
         });
       }
     } as any;
+
+    // Suppress React DevTools overlay errors
+    if (typeof (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__ !== 'undefined') {
+      const devtools = (window as any).__REACT_DEVTOOLS_GLOBAL_HOOK__;
+      if (devtools.onErrorOrWarning) {
+        devtools.onErrorOrWarning = noop;
+      }
+    }
   }
 }
 
