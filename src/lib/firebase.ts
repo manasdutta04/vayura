@@ -3,6 +3,21 @@ import { getAuth, GoogleAuthProvider, EmailAuthProvider } from 'firebase/auth';
 import { getStorage } from 'firebase/storage';
 import { getFirestore } from 'firebase/firestore';
 
+// Suppress Firebase configuration errors globally
+if (typeof window !== 'undefined') {
+    const originalConsoleError = console.error;
+    console.error = (...args: unknown[]) => {
+        // Suppress Firebase configuration-not-found errors
+        const message = String(args[0] || '');
+        if (message.includes('auth/configuration-not-found') || 
+            message.includes('CONFIGURATION_NOT_FOUND')) {
+            // Silently ignore these errors
+            return;
+        }
+        originalConsoleError.apply(console, args);
+    };
+}
+
 const firebaseConfig = {
     apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
     authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,

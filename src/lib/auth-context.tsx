@@ -57,13 +57,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         
         try {
-            await signInWithPopup(auth, googleProvider);
+            // Wrap in additional error boundary to catch configuration errors immediately
+            const result = await Promise.race([
+                signInWithPopup(auth, googleProvider),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Authentication timeout')), 10000)
+                )
+            ]);
+            return result;
         } catch (error) {
             // Suppress and convert Firebase configuration errors to user-friendly messages
             const err = error as { code?: string; message?: string };
             
-            if (err.code === 'auth/configuration-not-found') {
-                console.warn('Firebase Auth configuration error caught and suppressed:', err);
+            if (err.code === 'auth/configuration-not-found' || 
+                err.message?.includes('CONFIGURATION_NOT_FOUND')) {
+                // Silently suppress - user already sees modal message
                 throw new Error('Authentication service is not properly configured. Please contact support.');
             }
             
