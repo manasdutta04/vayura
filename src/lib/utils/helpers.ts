@@ -127,7 +127,7 @@ export async function apiClient<T>(
 
         return response.json();
     } catch (error) {
-        console.error('API Error:', error);
+        // Silently handle API errors
         throw error;
     }
 }
