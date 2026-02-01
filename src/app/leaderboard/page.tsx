@@ -244,7 +244,7 @@ export default function LeaderboardPage() {
                             </Link>
                         </div>
                         <ul className="text-xs text-gray-600 space-y-1 ml-4 list-disc">
-                            <li><span className="text-red-600 font-semibold">O₂ Needed</span> = State's total oxygen demand based on population, AQI, soil quality, and disasters</li>
+                            <li><span className="text-red-600 font-semibold">O₂ Needed</span> = State&apos;s total oxygen demand based on population, AQI, soil quality, and disasters</li>
                             <li><span className="text-green-600 font-semibold">O₂ Supply</span> = Oxygen produced by trees planted and donated (110 kg/year per tree)</li>
                             <li><span className="font-semibold">2050 Target + Resilience</span> = Trees needed for 2050 + climate resilience buffer (25% extra for disasters, mortality, climate change)</li>
                             <li><strong>For Deficit States:</strong> Base deficit + 25% resilience buffer</li>
@@ -267,7 +267,7 @@ export default function LeaderboardPage() {
                     {showDataSources && (
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDataSources(false)}>
                             <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-                                <div className="sticky top-0 bg-gradient-to-r from-nature-500 to-sky-500 px-6 py-4 flex items-center justify-between">
+                                <div className="sticky top-0 bg-linear-to-r from-nature-500 to-sky-500 px-6 py-4 flex items-center justify-between">
                                     <h2 className="text-2xl font-bold text-white">Data Sources</h2>
                                     <button
                                         onClick={() => setShowDataSources(false)}

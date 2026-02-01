@@ -23,6 +23,7 @@
     "@google-cloud/firestore": "^8.2.0",
     "@google-cloud/storage": "^7.18.0",
     "@google/generative-ai": "^0.24.1",
+    "@prisma/client": "^7.3.0",
     "@protobufjs/pool": "^1.1.0",
     "@protobufjs/utf8": "^1.1.0",
     "@solana/web3.js": "^1.98.4",

@@ -7,12 +7,17 @@ import { useAuth } from '@/lib/auth-context';
 const PUBLIC_PATHS = ['/', '/terms', '/privacy', '/data-policy', '/map', '/district', '/leaderboard', '/champions'];
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-    const { user, loading } = useAuth();
+    const { user, loading, authAvailable } = useAuth();
     const pathname = usePathname();
     const router = useRouter();
 
     useEffect(() => {
         if (!loading) {
+            // If auth is not available, allow all routes
+            if (!authAvailable) {
+                return;
+            }
+
             const isPublicPath = PUBLIC_PATHS.some(path =>
                 pathname === path || pathname.startsWith(`${path}/`)
             );
@@ -21,7 +26,7 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
                 router.replace('/?action=login');
             }
         }
-    }, [user, loading, pathname, router]);
+    }, [user, loading, authAvailable, pathname, router]);
 
     // Show loading state or nothing while checking checking auth
     if (loading) {
@@ -32,15 +37,12 @@ export function AuthGuard({ children }: { children: React.ReactNode }) {
         );
     }
 
-    // Allow rendering if user is authenticated or path is public
-    // We render children even during redirect to avoid hydration mismatch, 
-    // but effectively the user will be moved away quickly.
-    // However, for security, we should return null if protecting.
+    // Allow rendering if user is authenticated, path is public, or auth is not available
     const isPublicPath = PUBLIC_PATHS.some(path =>
         pathname === path || pathname.startsWith(`${path}/`)
     );
 
-    if (!user && !isPublicPath) {
+    if (!authAvailable || (!user && !isPublicPath)) {
         return null;
     }
 

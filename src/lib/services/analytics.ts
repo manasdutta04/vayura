@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { adminDb } from '@/lib/firebase-admin';
 import { AnalyticsData, MetricSnapshot, RegionalAnalytics, PredictiveInsights, ComparativeAnalytics } from '@/lib/types/analytics';
 import { Collections } from '@/lib/types/firestore';

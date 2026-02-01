@@ -10,7 +10,6 @@ const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
 const privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY?.replace(/\\n/g, '\n');
 
 // Check if we have the absolute minimum for a valid PEM private key
-// A valid private key starts with -----BEGIN PRIVATE KEY-----
 const hasValidKey = privateKey && privateKey.includes('-----BEGIN PRIVATE KEY-----');
 const isConfigured = !!(projectId && clientEmail && hasValidKey);
 
@@ -32,6 +31,7 @@ if (!getApps().length) {
         }
     } else {
         // Mock app for build process or missing config
+        console.warn('Firebase Admin SDK: Missing required environment variables - running in limited mode');
         adminApp = { name: '[DEFAULT]' } as App;
     }
 } else {
@@ -55,13 +55,11 @@ const createProxy = (name: string) => {
 
     return new Proxy(mockObj, {
         get: (target, prop) => {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             if (prop in target) return (target as any)[prop];
             return () => {
                 const msg = `Firebase Admin ${name}.${String(prop)} was called but SDK is not configured. Check your environment variables.`;
                 if (process.env.NODE_ENV === 'production') {
-                    // In production, we should probably not throw if it's just a data fetch
-                    // but for security-related things it should throw.
-                    // For now, let's just log and return the mock.
                     console.error(msg);
                 } else {
                     console.warn(msg);
@@ -72,8 +70,11 @@ const createProxy = (name: string) => {
     });
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminAuth = isConfigured ? getAuth(adminApp) : createProxy('auth') as any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminStorage = isConfigured ? getStorage(adminApp) : createProxy('storage') as any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminDb = isConfigured ? getFirestore(adminApp) : createProxy('firestore') as any;
 
 export default adminApp;

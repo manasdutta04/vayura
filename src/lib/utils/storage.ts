@@ -9,6 +9,11 @@ export async function uploadImage(
     districtId: string,
     userId?: string
 ): Promise<{ url: string; path: string }> {
+    // Check if storage is available
+    if (!storage) {
+        throw new Error('Firebase Storage is not configured. Please add Firebase credentials to your environment variables.');
+    }
+
     // Validate file
     const validation = validateImageFile(file);
     if (!validation.valid) {

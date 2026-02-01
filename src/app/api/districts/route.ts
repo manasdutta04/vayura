@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { DistrictSearchResult } from '@/lib/types';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
-
-export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request) {
     try {
@@ -14,9 +11,9 @@ export async function GET(request: Request) {
         const districtsRef = adminDb.collection('districts');
         const snapshot = await districtsRef.orderBy('name').limit(100).get();
 
-        const allDistricts = snapshot.docs.map((doc: QueryDocumentSnapshot) => ({
+        const allDistricts = snapshot.docs.map((doc) => ({
             id: doc.id,
-            ...(doc.data() as any),
+            ...(doc.data() as Record<string, unknown>),
         })) as DistrictSearchResult[];
 
         const filtered = allDistricts

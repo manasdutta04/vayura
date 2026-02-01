@@ -1,11 +1,9 @@
 import {
     collection,
     doc,
-    getDoc,
     getDocs,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
     where,
     orderBy,
@@ -14,25 +12,35 @@ import {
     QueryConstraint,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Collections, District, EnvironmentalData, TreeContribution, Donation, LeaderboardEntry } from '@/lib/types/firestore';
+import { Collections, District, EnvironmentalData, TreeContribution, LeaderboardEntry } from '@/lib/types/firestore';
+
+/**
+ * Check if Firestore is available
+ */
+function ensureFirestore() {
+    if (!db) {
+        throw new Error('Firestore is not configured. Please add Firebase credentials to your environment variables.');
+    }
+}
 
 /**
  * Convert Firestore Timestamp to Date
  */
-function timestampToDate(timestamp: any): Date {
+function timestampToDate(timestamp: unknown): Date {
     if (timestamp instanceof Timestamp) {
         return timestamp.toDate();
     }
-    if (timestamp?.toDate) {
+    if (timestamp && typeof timestamp === 'object' && 'toDate' in timestamp && typeof timestamp.toDate === 'function') {
         return timestamp.toDate();
     }
-    return timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return timestamp instanceof Date ? timestamp : new Date(timestamp as string | number);
 }
 
 /**
  * Districts
  */
 export async function getDistrict(slug: string): Promise<District | null> {
+    ensureFirestore();
     const districtsRef = collection(db, Collections.DISTRICTS);
     const q = query(districtsRef, where('slug', '==', slug), limit(1));
     const snapshot = await getDocs(q);
@@ -51,6 +59,7 @@ export async function getDistrict(slug: string): Promise<District | null> {
 }
 
 export async function getAllDistricts(): Promise<District[]> {
+    ensureFirestore();
     const districtsRef = collection(db, Collections.DISTRICTS);
     const snapshot = await getDocs(query(districtsRef, orderBy('name')));
 

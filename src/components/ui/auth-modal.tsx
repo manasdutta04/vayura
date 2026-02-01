@@ -15,12 +15,20 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword } = useAuth();
+    const { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword, authAvailable } = useAuth();
 
     if (!isOpen) return null;
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!authAvailable) {
+            toast.error('Authentication is not available', {
+                description: 'Please contact the administrator to configure authentication.'
+            });
+            return;
+        }
+        
         setLoading(true);
 
         try {
@@ -38,21 +46,30 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     description: 'Please check your inbox.'
                 });
             }
-        } catch (err: any) {
-            toast.error(err.message || 'Authentication failed');
+        } catch (err: unknown) {
+            const error = err as Error;
+            toast.error(error.message || 'Authentication failed');
         } finally {
             setLoading(false);
         }
     };
 
     const handleGoogleSignIn = async () => {
+        if (!authAvailable) {
+            toast.error('Authentication is not available', {
+                description: 'Please contact the administrator to configure authentication.'
+            });
+            return;
+        }
+        
         setLoading(true);
         try {
             await signInWithGoogle();
             toast.success('Signed in with Google');
             onClose();
-        } catch (err: any) {
-            toast.error(err.message || 'Google sign-in failed');
+        } catch (err: unknown) {
+            const error = err as Error;
+            toast.error(error.message || 'Google sign-in failed');
         } finally {
             setLoading(false);
         }
@@ -83,12 +100,21 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     </p>
                 </div>
 
+                {/* Warning when auth is not available */}
+                {!authAvailable && (
+                    <div className="mb-4 p-3 bg-amber-50 border border-amber-200 rounded-lg">
+                        <p className="text-sm text-amber-800">
+                            <strong>Authentication is currently unavailable.</strong> Please contact the site administrator.
+                        </p>
+                    </div>
+                )}
+
                 {/* Google Sign In */}
                 {mode !== 'reset' && (
                     <button
                         onClick={handleGoogleSignIn}
-                        disabled={loading}
-                        className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors mb-4"
+                        disabled={loading || !authAvailable}
+                        className="w-full flex items-center justify-center gap-3 px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors mb-4 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         <svg className="w-5 h-5" viewBox="0 0 24 24">
                             <path
@@ -128,14 +154,17 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 {/* Email/Password Form */}
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label htmlFor="auth-email" className="block text-sm font-medium text-gray-700 mb-1">
                             Email
                         </label>
                         <input
+                            id="auth-email"
+                            name="email"
                             type="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            autoComplete="email"
                             className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nature-500 focus:border-transparent outline-none"
                             placeholder="you@example.com"
                         />
@@ -143,14 +172,17 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
                     {mode !== 'reset' && (
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label htmlFor="auth-password" className="block text-sm font-medium text-gray-700 mb-1">
                                 Password
                             </label>
                             <input
+                                id="auth-password"
+                                name="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
                                 required
+                                autoComplete={mode === 'signin' ? 'current-password' : 'new-password'}
                                 minLength={6}
                                 className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-nature-500 focus:border-transparent outline-none"
                                 placeholder="••••••••"
@@ -204,7 +236,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 Forgot password?
                             </button>
                             <p className="mt-2 text-gray-500">
-                                Don't have an account?{' '}
+                                Don&apos;t have an account?{' '}
                                 <button
                                     onClick={() => setMode('signup')}
                                     className="text-nature-600 font-medium hover:underline"

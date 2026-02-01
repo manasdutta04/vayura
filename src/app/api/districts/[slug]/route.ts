@@ -5,16 +5,15 @@ import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
 import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
-
-export const dynamic = 'force-dynamic';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-function timestampToDate(value: any): Date {
+function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
-    if (typeof value.toDate === 'function') return value.toDate();
-    return value instanceof Date ? value : new Date(value);
+    if (typeof value === 'object' && value !== null && typeof (value as { toDate?: unknown }).toDate === 'function') {
+        return ((value as { toDate: () => Date }).toDate());
+    }
+    return value instanceof Date ? value : new Date(value as string | number);
 }
 
 export async function GET(
@@ -43,7 +42,7 @@ export async function GET(
         }
 
         const districtDoc = districtSnap.docs[0];
-        const district = { id: districtDoc.id, ...(districtDoc.data() as any) };
+        const district = { id: districtDoc.id, ...(districtDoc.data() as Record<string, unknown>) };
 
         // Fetch latest environmental data (cached 24h)
         // Get all env data for this district and sort in memory to avoid index requirement
@@ -57,7 +56,7 @@ export async function GET(
 
         if (!envSnap.empty) {
             // Sort by timestamp in memory (newest first)
-            const sortedDocs = envSnap.docs.sort((a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
+            const sortedDocs = envSnap.docs.sort((a, b) => {
                 const aTime = a.data().timestamp?.toDate?.() || a.data().timestamp || new Date(0);
                 const bTime = b.data().timestamp?.toDate?.() || b.data().timestamp || new Date(0);
                 return new Date(bTime).getTime() - new Date(aTime).getTime();
@@ -172,7 +171,7 @@ export async function GET(
             .where('status', '==', 'VERIFIED')
             .get();
 
-        const totalTreesPlanted = contributionsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
+        const totalTreesPlanted = contributionsSnap.docs.reduce((sum, doc) => {
             const data = doc.data();
             return sum + (data.treeQuantity || 1);
         }, 0);
@@ -183,7 +182,7 @@ export async function GET(
             .where('districtId', '==', district.id)
             .get();
 
-        const totalTreesDonated = donationsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
+        const totalTreesDonated = donationsSnap.docs.reduce((sum, doc) => {
             const data = doc.data();
             return sum + (data.treeCount || 0);
         }, 0);
@@ -206,18 +205,18 @@ export async function GET(
         };
 
         return NextResponse.json(response);
-    } catch (error: any) {
+    } catch (error: unknown) {
         console.error('Error fetching district details:', error);
-        console.error('Error stack:', error?.stack);
-        console.error('Error message:', error?.message);
+        console.error('Error stack:', (error as Error)?.stack);
+        console.error('Error message:', (error as Error)?.message);
 
         // Provide more detailed error information in development
         const errorMessage = process.env.NODE_ENV === 'development'
-            ? error?.message || 'Failed to fetch district details'
+            ? (error as Error)?.message || 'Failed to fetch district details'
             : 'Failed to fetch district details';
 
         return NextResponse.json(
-            { error: errorMessage, details: process.env.NODE_ENV === 'development' ? error?.stack : undefined },
+            { error: errorMessage, details: process.env.NODE_ENV === 'development' ? (error as Error)?.stack : undefined },
             { status: 500 }
         );
     }

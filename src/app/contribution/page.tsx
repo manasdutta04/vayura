@@ -8,7 +8,7 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { formatCompactNumber } from '@/lib/utils/helpers';
 import { TreeContribution, Donation } from '@/lib/types';
-import { ContributorProfile, BADGE_DEFINITIONS } from '@/lib/types/champions';
+import { ContributorProfile } from '@/lib/types/champions';
 import { BadgeShowcase, NextBadgeProgress } from '@/components/ui/badge-display';
 import { TreeDeciduous, Heart, Wind, Calendar, MapPin, CheckCircle, Clock, XCircle, Trophy, Medal, Award, Sparkles, Sprout, Star } from 'lucide-react';
 

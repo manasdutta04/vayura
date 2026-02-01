@@ -11,6 +11,7 @@ import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib
 import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictSearchResult } from '@/lib/types';
 import Link from 'next/link';
+import Image from 'next/image';
 import { toast } from 'sonner';
 
 export default function DonatePage() {
@@ -139,8 +140,9 @@ export default function DonatePage() {
                 router.push('/contribution');
             }, 2000);
 
-        } catch (err: any) {
-            toast.error(err.message || 'Failed to submit verification', {
+        } catch (err: unknown) {
+            const error = err as Error;
+            toast.error(error.message || 'Failed to submit verification', {
                 id: toastId
             });
         } finally {
@@ -321,26 +323,32 @@ export default function DonatePage() {
                                         {/* Tree Name & Quantity Row */}
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                <label htmlFor="donate-plant-name" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                                     Plant Name
                                                 </label>
                                                 <input
+                                                    id="donate-plant-name"
+                                                    name="plantName"
                                                     type="text"
                                                     value={treeName}
                                                     onChange={(e) => setTreeName(e.target.value)}
+                                                    autoComplete="off"
                                                     className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                                     placeholder="e.g. Mango"
                                                 />
                                             </div>
                                             <div>
-                                                <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
+                                                <label htmlFor="donate-quantity" className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                                     Quantity
                                                 </label>
                                                 <input
+                                                    id="donate-quantity"
+                                                    name="quantity"
                                                     type="number"
                                                     min="1"
                                                     value={treeQuantity}
                                                     onChange={(e) => setTreeQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                                                    autoComplete="off"
                                                     className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-1 focus:ring-gray-900 focus:border-gray-900 outline-none text-sm text-gray-900 bg-white"
                                                     placeholder="Qty"
                                                 />
@@ -365,6 +373,8 @@ export default function DonatePage() {
                                             >
                                                 <input
                                                     ref={fileInputRef}
+                                                    id="donate-receipt"
+                                                    name="receipt"
                                                     type="file"
                                                     accept="image/jpeg,image/png,image/webp"
                                                     onChange={handleImageChange}
@@ -372,9 +382,11 @@ export default function DonatePage() {
                                                 />
                                                 {previewUrl ? (
                                                     <div className="space-y-2">
-                                                        <img
+                                                        <Image
                                                             src={previewUrl}
                                                             alt="Receipt preview"
+                                                            width={200}
+                                                            height={128}
                                                             className="mx-auto rounded-lg max-h-32 object-contain"
                                                             draggable={false}
                                                         />
@@ -410,7 +422,7 @@ export default function DonatePage() {
     );
 }
 
-function TransparencyItem({ label, active, icon }: { label: string, active: boolean, icon: any }) {
+function TransparencyItem({ label, active, icon }: { label: string, active: boolean, icon: React.ReactNode }) {
     return (
         <div className="flex items-center justify-between text-xs">
             <div className="flex items-center gap-1.5 text-gray-600">

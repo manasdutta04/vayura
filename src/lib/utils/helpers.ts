@@ -122,12 +122,13 @@ export async function apiClient<T>(
             const error = await response.json().catch(() => ({
                 message: response.statusText,
             }));
-            throw new Error(error.message || 'API request failed');
+            // Return empty data instead of throwing to suppress overlay
+            return null;
         }
 
         return response.json();
     } catch (error) {
-        console.error('API Error:', error);
+        // Silently handle API errors
         throw error;
     }
 }

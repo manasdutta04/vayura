@@ -86,28 +86,30 @@ export async function generateMetadata({
 }
 
 export default async function DistrictPage({ params }: DistrictPageProps) {
-  const { slug } = await params;
-
-  if (!slug) {
-    notFound();
-  }
-
-  const data = await getDistrictDetail(slug);
-
-  if (!data) {
-    return (
-      <>
-        <Header />
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
-          <EmptyState
-            title="District data not available yet"
-            subtitle="Try searching for another district or adjusting your filters"
-          />
-        </main>
-        <Footer />
-      </>
-    );
-  }
+    const { slug } = await params;
+    
+    if (!slug) {
+        notFound();
+    }
+    
+    // Fetch initial data on the server for SEO and initial render
+    const data = await getDistrictDetail(slug);
+    
+    // For server-side rendering, we still want to show 404 if data is not found
+    if (!data) {
+      return (
+        <>
+          <Header />
+          <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
+            <EmptyState
+              title="District data not available yet"
+              subtitle="Try searching for another district or adjusting your filters"
+            />
+          </main>
+          <Footer />
+        </>
+      );
+    }
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;

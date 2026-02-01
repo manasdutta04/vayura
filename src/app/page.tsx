@@ -10,13 +10,19 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
 import { DistrictSearch } from '@/components/ui/district-search'; // IMPORT ADDED
-import { ArrowRight, Leaf, Wind, Activity, BarChart3, TreeDeciduous, ShieldCheck, Globe, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
+import { ArrowRight, Activity, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
 
 function HomeContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  
+  // Derive auth modal state from URL params
+  const shouldShowAuthModal = 
+    (searchParams.get('action') === 'login' && !user) ||
+    searchParams?.get('auth_required') === 'true';
+  
+  const [showAuthModal, setShowAuthModal] = useState(shouldShowAuthModal);
   const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
 
   // Redirect authenticated users to dashboard
@@ -26,19 +32,17 @@ function HomeContent() {
     }
   }, [user, loading, router]);
 
-  // Open AuthModal if query param exists
+  // Update auth modal state when URL params change
   useEffect(() => {
-    if (searchParams.get('action') === 'login' && !user) {
-      setShowAuthModal(true);
+    const shouldShow = 
+      (searchParams.get('action') === 'login' && !user) ||
+      searchParams?.get('auth_required') === 'true';
+    
+    if (shouldShow && !showAuthModal) {
+      // Use a microtask to avoid synchronous state update
+      Promise.resolve().then(() => setShowAuthModal(true));
     }
-  }, [searchParams, user]);
-
-  // Show auth modal if auth_required param is present
-  useEffect(() => {
-    if (searchParams?.get('auth_required') === 'true') {
-      setShowAuthModal(true);
-    }
-  }, [searchParams]);
+  }, [searchParams, user, showAuthModal]);
 
   // Fetch stats
   useEffect(() => {
@@ -56,7 +60,7 @@ function HomeContent() {
     fetchStats();
   }, []);
 
-  const handleDistrictSelect = (district: any) => {
+  const handleDistrictSelect = (district: { slug: string }) => {
     // Navigate to the specific district page
     router.push(`/district/${district.slug}`);
   };
@@ -103,7 +107,7 @@ function HomeContent() {
             </h1>
 
             <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
-              Discover your district's environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.
+              Discover your district&apos;s environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.
             </p>
             
             {/* NEW SEARCH COMPONENT PLACED HERE */}

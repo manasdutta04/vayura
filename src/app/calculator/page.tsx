@@ -66,15 +66,18 @@ export default function CalculatorPage() {
                         <div className="p-8 bg-gray-50/30 border-b border-gray-100">
                             {/* Value Display */}
                             <div className="flex flex-col items-center mb-8">
-                                <label className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
+                                <label htmlFor="calc-trees" className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
                                     Trees Planted
                                 </label>
                                 <div className="flex items-baseline gap-2 justify-center">
                                     <input
+                                        id="calc-trees"
+                                        name="trees"
                                         type="number"
                                         min="1"
                                         max="10000"
                                         value={trees}
+                                        autoComplete="off"
                                         onChange={(e) => {
                                             const val = e.target.value;
                                             // Allow empty string purely for typing experience, but otherwise parse
@@ -105,7 +108,7 @@ export default function CalculatorPage() {
                                 <div className="flex items-center gap-6 mb-8">
                                     <button
                                         onClick={() => setTrees(Math.max(1, trees - 10))}
-                                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
                                         aria-label="Decrease"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -115,6 +118,8 @@ export default function CalculatorPage() {
 
                                     <div className="flex-1">
                                         <input
+                                            id="calc-trees-range"
+                                            name="treesRange"
                                             type="range"
                                             min="1"
                                             max="10000"
@@ -126,7 +131,7 @@ export default function CalculatorPage() {
 
                                     <button
                                         onClick={() => setTrees(Math.min(10000, trees + 10))}
-                                        className="w-10 h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-10 h-10 shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
                                         aria-label="Increase"
                                     >
                                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -166,7 +171,7 @@ export default function CalculatorPage() {
                                     kg CO₂ per year
                                 </div>
                                 <div className="text-sm text-green-600 mt-2">
-                                    That's {(animatedCO2 / 1000).toFixed(2)} tonnes of carbon dioxide!
+                                    That&apos;s {(animatedCO2 / 1000).toFixed(2)} tonnes of carbon dioxide!
                                 </div>
                             </div>
 

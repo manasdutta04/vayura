@@ -1,14 +1,13 @@
 import { NextResponse } from 'next/server';
 import { adminDb, adminStorage } from '@/lib/firebase-admin';
 import { TreeContribution } from '@/lib/types';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
-export const dynamic = 'force-dynamic';
-
-function timestampToDate(value: any): Date {
+function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
-    if (typeof value.toDate === 'function') return value.toDate();
-    return value instanceof Date ? value : new Date(value);
+    if (typeof value === 'object' && value !== null && typeof (value as { toDate?: unknown }).toDate === 'function') {
+        return ((value as { toDate: () => Date }).toDate());
+    }
+    return value instanceof Date ? value : new Date(value as string | number);
 }
 
 export async function POST(request: Request) {
@@ -129,7 +128,7 @@ export async function GET(request: Request) {
 
         const snapshot = await queryRef.get();
 
-        const contributions: TreeContribution[] = snapshot.docs.map((docSnap: QueryDocumentSnapshot) => {
+        const contributions: TreeContribution[] = snapshot.docs.map((docSnap) => {
             const data = docSnap.data();
             return {
                 id: docSnap.id,

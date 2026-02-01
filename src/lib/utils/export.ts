@@ -19,23 +19,23 @@ function generateTimestampedFilename(slug: string, format: 'csv' | 'json'): stri
  * Format a value for CSV export
  * Handles null, undefined, arrays, dates, and numbers
  */
-function formatValueForCSV(value: any): string {
+function formatValueForCSV(value: unknown): string {
   if (value === null || value === undefined) {
     return '';
   }
-  
+
   if (Array.isArray(value)) {
     return value.join('; ');
   }
-  
+
   if (value instanceof Date) {
     return value.toISOString().split('T')[0];
   }
-  
+
   if (typeof value === 'number') {
     return value.toString();
   }
-  
+
   return String(value);
 }
 
@@ -159,7 +159,7 @@ function generateDistrictCSV(data: DistrictDetail): string {
  * Preserves hierarchy while organizing data logically
  * Handles missing oxygenCalculation data gracefully
  */
-function createDistrictJSONExport(data: DistrictDetail): Record<string, any> {
+function createDistrictJSONExport(data: DistrictDetail): Record<string, unknown> {
   const calc = data.oxygenCalculation;
   
   return {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
+import Image from 'next/image';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
@@ -136,9 +136,11 @@ function LeaderboardEntryRow({
             {/* User Avatar */}
             <div className="relative">
                 {entry.photoURL ? (
-                    <img
+                    <Image
                         src={entry.photoURL}
                         alt={entry.userName}
+                        width={48}
+                        height={48}
                         className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
                     />
                 ) : (
@@ -290,7 +292,6 @@ function ScopeSelector({
 // Main Content Component
 function ChampionsPageContent() {
     const { user } = useAuth();
-    const searchParams = useSearchParams();
     const [scope, setScope] = useState<LeaderboardScope>('national');
     const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
     const [selectedState, setSelectedState] = useState<string | null>(null);
@@ -306,8 +307,8 @@ function ChampionsPageContent() {
                 if (res.ok) {
                     const data = await res.json();
                     const stateList = data
-                        .map((entry: any) => entry.state)
-                        .filter((s: string) => s && s.trim().length > 0)
+                        .map((entry: { state?: string }) => entry.state)
+                        .filter((s: string | undefined) => s && s.trim().length > 0)
                         .sort();
                     setStates([...new Set(stateList)] as string[]);
                 }
@@ -370,7 +371,7 @@ function ChampionsPageContent() {
                         District Champions
                     </h1>
                     <p className="text-gray-600 max-w-lg mx-auto">
-                        Celebrating the top contributors making a real impact on India's environment.
+                        Celebrating the top contributors making a real impact on India&apos;s environment.
                         Plant trees, earn badges, and climb the leaderboard!
                     </p>
                 </div>

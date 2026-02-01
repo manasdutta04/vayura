@@ -8,7 +8,7 @@
  * Free tier: 1000 calls/day
  * Sign up: https://openweathermap.org/api
  */
-export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<any> {
+export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<{ aqi: number; pm25: number; pm10: number; source: string } | null> {
     const apiKey = process.env.OPENWEATHER_API_KEY;
     if (!apiKey) return null;
 
