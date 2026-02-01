@@ -1,13 +1,13 @@
 import { oxygenCache } from '@/lib/oxygenCache';
 // ✅ REQUIREMENT: Use the real calculator logic instead of simulation
 // If this import fails, ensure the file exists at this path.
-import { calculateTreeOxygenProduction } from '@/lib/utils/oxygen-calculator';
+import { calculateOxygenRequirements } from '../lib/utils/oxygen-calculator';
+import { allIndianDistricts } from '../lib/data/all-indian-districts';
 
-// Circuit Breaker State
 let failureCount = 0;
-let lastFailureTime = 0;
 const FAILURE_THRESHOLD = 5;
-const RESET_TIMEOUT = 30000; // 30 seconds
+const RESET_TIMEOUT = 60000; // 1 minute
+let lastFailureTime = 0;
 
 class OxygenService {
   private pendingRequests = new Map<string, Promise<any>>();
@@ -37,7 +37,18 @@ class OxygenService {
         const start = performance.now();
 
         // ✅ REQUIREMENT: Real Calculator Integration
-        const result = calculateTreeOxygenProduction(trees, age);
+        // Find district data for population and other metrics
+        const districtData = allIndianDistricts.find(d => d.slug === districtId || d.name === districtId);
+        
+        const calculationInput = {
+          district_name: districtData?.name || districtId,
+          population: districtData?.population || 1000000, // Default if not found
+          aqi: 150, // Default average AQI
+          soil_quality: 70, // Default soil quality
+          disaster_frequency: 2 // Default frequency
+        };
+
+        const result = calculateOxygenRequirements(calculationInput);
         
         const duration = performance.now() - start;
 

@@ -1,4 +1,7 @@
 # Vayura
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-11-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
 ## Why Vayura?
 
 India lacks district-level visibility into environmental oxygen demand.
@@ -392,6 +395,44 @@ Always verify critical information with official sources and domain experts.
 - **GitHub Repository**: [https://github.com/manasdutta04/vayura](https://github.com/manasdutta04/vayura)
 - **Issues**: [GitHub Issues](https://github.com/manasdutta04/vayura/issues)
 - **Contributions**: [See CONTRIBUTING.md](./CONTRIBUTING.md)
+
+##  Creators
+
+- Developed by [Manas Dutta](https://github.com/manasdutta04)
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://amankumar.site"><img src="https://avatars.githubusercontent.com/u/148977902?v=4?s=100" width="100px;" alt="Aman Kumar "/><br /><sub><b>Aman Kumar </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Amanc77" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/VITianYash42"><img src="https://avatars.githubusercontent.com/u/175908232?v=4?s=100" width="100px;" alt="Yash Singhal"/><br /><sub><b>Yash Singhal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=VITianYash42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Diksha78-bot"><img src="https://avatars.githubusercontent.com/u/184750994?v=4?s=100" width="100px;" alt="Diksha Dhanaji Dabhole"/><br /><sub><b>Diksha Dhanaji Dabhole</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Diksha78-bot" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sarojit049"><img src="https://avatars.githubusercontent.com/u/173495732?v=4?s=100" width="100px;" alt="Saroj Kumar"/><br /><sub><b>Saroj Kumar</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=sarojit049" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/aagmanpal"><img src="https://avatars.githubusercontent.com/u/126964489?v=4?s=100" width="100px;" alt="Aagman Pal"/><br /><sub><b>Aagman Pal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=aagmanpal" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://shaikhwarsi.xyz"><img src="https://avatars.githubusercontent.com/u/86195374?v=4?s=100" width="100px;" alt="ShaikhWarsi"/><br /><sub><b>ShaikhWarsi</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ShaikhWarsi" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/anshiky73-svg"><img src="https://avatars.githubusercontent.com/u/230556644?v=4?s=100" width="100px;" alt="@nshik"/><br /><sub><b>@nshik</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=anshiky73-svg" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Shalini828"><img src="https://avatars.githubusercontent.com/u/221092454?v=4?s=100" width="100px;" alt="Shalini Kumari"/><br /><sub><b>Shalini Kumari</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Shalini828" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ParthG2209"><img src="https://avatars.githubusercontent.com/u/206025730?v=4?s=100" width="100px;" alt="Parth Gupta"/><br /><sub><b>Parth Gupta</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ParthG2209" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Nitya-003"><img src="https://avatars.githubusercontent.com/u/181471078?v=4?s=100" width="100px;" alt="Nitya Gosain"/><br /><sub><b>Nitya Gosain</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Nitya-003" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rishabh0510rishabh"><img src="https://avatars.githubusercontent.com/u/85429535?v=4?s=100" width="100px;" alt="Rishabh Mishra"/><br /><sub><b>Rishabh Mishra</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=rishabh0510rishabh" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Thanks to these amazing people <3
 
 ---
 
