@@ -15,6 +15,15 @@ import { db } from '@/lib/firebase';
 import { Collections, District, EnvironmentalData, TreeContribution, LeaderboardEntry } from '@/lib/types/firestore';
 
 /**
+ * Check if Firestore is available
+ */
+function ensureFirestore() {
+    if (!db) {
+        throw new Error('Firestore is not configured. Please add Firebase credentials to your environment variables.');
+    }
+}
+
+/**
  * Convert Firestore Timestamp to Date
  */
 function timestampToDate(timestamp: unknown): Date {
@@ -31,6 +40,7 @@ function timestampToDate(timestamp: unknown): Date {
  * Districts
  */
 export async function getDistrict(slug: string): Promise<District | null> {
+    ensureFirestore();
     const districtsRef = collection(db, Collections.DISTRICTS);
     const q = query(districtsRef, where('slug', '==', slug), limit(1));
     const snapshot = await getDocs(q);
@@ -49,6 +59,7 @@ export async function getDistrict(slug: string): Promise<District | null> {
 }
 
 export async function getAllDistricts(): Promise<District[]> {
+    ensureFirestore();
     const districtsRef = collection(db, Collections.DISTRICTS);
     const snapshot = await getDocs(query(districtsRef, orderBy('name')));
 

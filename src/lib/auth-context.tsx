@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, []);
 
     const signInWithGoogle = async () => {
-        if (!authAvailable || !auth) {
+        if (!authAvailable || !auth || !googleProvider) {
             throw new Error('Authentication is not available. Please configure Firebase credentials in your environment variables.');
         }
         try {
