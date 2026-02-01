@@ -42,6 +42,7 @@ export interface TreeContribution {
     speciesConfidence?: 'high' | 'medium' | 'low'; // Confidence in species identification
     analysisNotes?: string; // Notes from AI analysis
     userId?: string; // Firebase Auth UID
+    challengeId?: string;
     type?: 'plantation' | 'donation';
     status: ContributionStatus;
     userName?: string;
