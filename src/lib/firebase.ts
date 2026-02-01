@@ -94,8 +94,8 @@ if (isConfigured) {
 
 export { auth, isConfigured, storage, db };
 
-// Auth providers (only create if Firebase is configured)
-export const googleProvider = isConfigured ? new GoogleAuthProvider() : null;
-export const emailProvider = isConfigured ? new EmailAuthProvider() : null;
+// Auth providers (only create if Firebase AND auth are properly configured)
+export const googleProvider = (isConfigured && auth && !authConfigError) ? new GoogleAuthProvider() : null;
+export const emailProvider = (isConfigured && auth && !authConfigError) ? new EmailAuthProvider() : null;
 
 export default app;
