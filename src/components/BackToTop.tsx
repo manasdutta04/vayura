@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 const scrollToTop = () => {
   const scrollContainer = document.querySelector("main") || window;
+
   scrollContainer.scrollTo({
     top: 0,
     behavior: "smooth",
@@ -12,10 +13,18 @@ const scrollToTop = () => {
 
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setVisible(window.scrollY > 200); // 👈 show only after scrolling
+      const scrollTop = window.scrollY;
+      const docHeight =
+        document.documentElement.scrollHeight -
+        document.documentElement.clientHeight;
+      const scrollPercent = docHeight ? scrollTop / docHeight : 0;
+
+      setVisible(scrollTop > 200); // show button after scrolling 200px
+      setProgress(scrollPercent);
     };
 
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -41,7 +50,13 @@ export default function BackToTop() {
     };
   }, []);
 
-  if (!visible) return null; // 👈 hide completely
+  if (!visible) return null;
+
+  // Circle parameters
+  const radius = 28;
+  const stroke = 4;
+  const circumference = 2 * Math.PI * radius;
+  const offset = circumference - progress * circumference;
 
   return (
     <button
@@ -51,17 +66,42 @@ export default function BackToTop() {
       title="Back to top"
       className="
         fixed bottom-6 right-6 z-50
-        flex h-11 w-11 items-center justify-center rounded-full
+        flex items-center justify-center
+        h-14 w-14
+        rounded-full
         bg-background/80 backdrop-blur
         border border-border
-        text-foreground
         shadow-lg
-        transition-all duration-300
         hover:scale-110 hover:shadow-xl
         active:scale-95
+        transition-all duration-300
       "
     >
-      <span aria-hidden="true" className="text-lg">
+      <svg
+        className="absolute h-full w-full -rotate-90"
+        viewBox="0 0 60 60"
+      >
+        <circle
+          cx="30"
+          cy="30"
+          r={radius}
+          stroke="rgba(0,0,0,0.1)"
+          strokeWidth={stroke}
+          fill="transparent"
+        />
+        <circle
+          cx="30"
+          cy="30"
+          r={radius}
+          stroke="currentColor"
+          strokeWidth={stroke}
+          strokeDasharray={circumference}
+          strokeDashoffset={offset}
+          strokeLinecap="round"
+          fill="transparent"
+        />
+      </svg>
+      <span aria-hidden="true" className="text-lg z-10 relative">
         ↑
       </span>
     </button>
