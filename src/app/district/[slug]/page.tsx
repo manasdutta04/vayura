@@ -12,6 +12,7 @@ import {
 } from "@/lib/utils/helpers";
 import EmptyState from "@/components/ui/EmptyState";
 import { ExportButtons } from "@/components/district/ExportButtons";
+import { PlantationRecommendations } from "@/components/district/PlantationRecommendations";
 import { ENVIRONMENTAL_CONSTANTS } from "@/lib/constants/environmental";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
