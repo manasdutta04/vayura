@@ -1,4 +1,13 @@
 # Vayura
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
+## Why Vayura?
+
+India lacks district-level visibility into environmental oxygen demand.
+Vayura bridges the gap between **data, awareness, and action** by turning
+abstract environmental metrics into real-world tree plantation workflows.
 
 **District-Level Oxygen Intelligence for a Greener India**
 
@@ -9,20 +18,45 @@ Vayura is an open-source web application that estimates district-level oxygen de
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)
 
-## Features
+---
 
-- **All Indian Districts**: Comprehensive coverage of every district across India
-- **District-Level Analysis**: Search any Indian district to see detailed environmental metrics
-- **Oxygen Calculation**: Transparent scientific formulas estimate oxygen demand vs. supply
-- **Tree Requirements**: Clear calculation of trees needed to offset oxygen deficit
-- **Environmental Health Card**: AQI, soil quality, disaster frequency, population data
-- **AI-Powered Data Fetching**: Uses Gemini AI to intelligently aggregate data from multiple government sources
-- **Tree Contribution System**: Upload tree plantation photos analyzed by AI for environmental impact
-- **NGO Donation Hub**: Donate trees through verified NGOs with transparency scores
-- **Contribution Dashboard**: Track your personal impact (planted vs donated trees)
-- **Legal & Privacy**: Dedicated Terms of Service and Privacy Policy for secure usage
-- **State Leaderboard**: Rankings by oxygen self-sufficiency across Indian states
-- **Transparent Methodology**: All formulas and assumptions clearly explained
+## 🚀 Features at a Glance
+
+| 🌍 District Intelligence | 🌳 Impact & Plantation | 🤖 AI & Analytics |
+| :--- | :--- | :--- |
+| **All-India Coverage:** Data for every district across the nation. | **Tree Upload System:** Upload photos of your plantations. | **Gemini AI Aggregation:** Intelligent multi-source data fetching. |
+| **O₂ Demand/Supply:** Real-time estimation vs. natural supply. | **AI Verification:** Machine learning to verify plantation photos. | **Environmental Health Card:** AQI, Soil quality, & Disaster risk. |
+| **State Leaderboards:** Rankings for oxygen self-sufficiency. | **NGO Donation Hub:** Verified links to environmental NGOs. | **Interactive Charts:** Visual insights via Recharts. |
+| **Deficit Indicators:** Clear visual cues for oxygen-starved zones. | **Personal Dashboard:** Track your planted vs. donated trees. | **Transparent Logic:** All scientific formulas shown in-app. |
+
+---
+
+## 🏗️ System Architecture
+
+To help developers understand the "District-Level Oxygen Intelligence" flow, here is how the Next.js App Router, Firebase, and Gemini AI interact:
+
+```mermaid
+graph TD
+    subgraph Client [Next.js Frontend]
+        A[District Search] --> B[Impact Dashboard]
+        B --> C[AI Verification Engine]
+    end
+
+    subgraph Logic [Processing Layer]
+        D{Gemini AI} -- Aggregates --> E[Gov Data Sources]
+        F[FastAPI Microservice] -- Calculates --> G[O2 Demand/Supply]
+    end
+
+    subgraph Storage [Firebase]
+        H[(Firestore)] -- Metadata --> A
+        I[(Cloud Storage)] -- Plantation Photos --> C
+    end
+
+    A <--> D
+    G --> H
+```
+
+---
 
 ## Tech Stack
 
@@ -122,34 +156,37 @@ npm run dev
 
 Visit [http://localhost:3000](http://localhost:3000) to see the application.
 
-## Oxygen Calculation Methodology
+## Development Notes
 
-Vayura uses a transparent, scientifically-based formula:
+- Firebase Admin keys must never be committed
+- Use `.env.local` only
+- Prefer mock data when working on UI
+- Python microservice is optional for frontend contributors
 
-### 1. Base Human O₂ Demand
-```
-Population × 550 L/day × 365 days → kg/year
-```
+---
+
+## 🧪 Oxygen Calculation Methodology
+
+Vayura uses a transparent, scientifically-backed approach. We convert abstract environmental data into precise metrics using the following logic:
+
+### 1. Base Human $O_2$ Demand
+The annual oxygen requirement for a district's population:
+
+$$D_{base} = \text{Population} \times 550L/\text{day} \times 365 \text{ days}$$
 
 ### 2. Penalty Factors
-- **AQI Factor** (1.0 - 1.75×): Higher pollution increases respiratory demand
-- **Soil Degradation** (1.0 - 1.6×): Poor soil = less natural O₂ sources
-- **Disaster Loss** (1.05 - 1.5×): Frequent disasters destroy vegetation
+We adjust demand based on environmental stressors:
+* **AQI Factor ($F_{aqi}$):** Increases demand due to respiratory stress.
+* **Soil Factor ($F_{soil}$):** Adjusts for natural oxygen source degradation.
+* **Disaster Factor ($F_{dis}$):** Accounts for vegetation loss.
 
-### 3. Adjusted Demand
-```
-Base Demand × AQI Factor × Soil Factor × Disaster Factor
-```
+### 3. Final Adjusted Demand
+$$D_{adj} = D_{base} \times F_{aqi} \times F_{soil} \times F_{dis}$$
 
-### 4. Tree O₂ Supply
-- Base: 110 kg/year per mature tree
-- Adjusted by soil quality (healthier soil = healthier trees)
-- Lifespan calculation: 50 years average × 110 kg/year
+### 4. Trees Required to Offset Deficit
+To calculate how many trees are needed to reach a balance:
 
-### 5. Trees Required
-```
-Oxygen Deficit ÷ Adjusted Tree Supply
-```
+$$T_{req} = \frac{\text{Oxygen Deficit}}{\text{Adjusted Annual Tree Supply}}$$
 
 **All assumptions and data sources are displayed in the UI for full transparency.**
 
@@ -163,40 +200,44 @@ Vayura uses a multi-tier data fetching approach:
 
 See [DATA_SOURCES.md](./DATA_SOURCES.md) for complete data source documentation.
 
-## Project Structure
+---
 
-```
+## 📂 Project Structure
+
+Vayura follows the Next.js 16+ `src/app` directory convention for modularity and scalability:
+
+```text
 vayura/
 ├── src/
-│   ├── app/                    # Next.js pages and API routes
-│   │   ├── api/               # Backend API endpoints
-│   │   │   ├── districts/     # District search and details
-│   │   │   ├── plant/         # Tree planting submission
-│   │   │   ├── contribution/  # User contributions
-│   │   │   └── leaderboard/   # State rankings
-│   │   ├── dashboard/         # Main dashboard
-│   │   ├── contribution/       # User contributions page
-│   │   ├── leaderboard/        # Leaderboard page
-│   │   └── plant/              # Plant a tree page
-│   ├── components/            # React components
-│   │   └── ui/                # Reusable UI components
-│   ├── lib/                   # Utility functions and shared code
-│   │   ├── types/             # TypeScript type definitions
-│   │   ├── data-sources/      # Environmental data integrations
-│   │   ├── firebase.ts        # Firebase client config
-│   │   ├── firebase-admin.ts  # Firebase Admin SDK
-│   │   └── utils/             # Helper functions
-│   └── middleware.ts          # Next.js middleware
-├── scripts/                    # Database seeding scripts
-├── services/
-│   └── oxygen-calculator/      # Python FastAPI microservice (optional)
-├── public/                     # Static assets
-│   ├── logo.png               # Application logo
-│   └── favicon/               # Favicon files
-├── firestore.indexes.json     # Firestore index definitions
-├── firestore.rules            # Firestore security rules
-└── package.json
+│   ├── app/                      # 🚀 NEXT.JS APP ROUTER (Pages & APIs)
+│   │   ├── (auth)/               # Auth-related route groups
+│   │   ├── api/                  # Serverless Backend Endpoints
+│   │   │   ├── districts/        # Oxygen & environmental data fetching
+│   │   │   ├── plant/            # AI image verification & uploads
+│   │   │   └── leaderboard/      # State-level ranking logic
+│   │   ├── dashboard/            # User-specific impact analytics
+│   │   ├── districts/            # District-level detail pages
+│   │   └── layout.tsx            # Global providers & root UI
+│   ├── components/               # 🧱 REUSABLE UI COMPONENTS
+│   │   ├── ui/                   # Shadcn/Radix primitive components
+│   │   ├── charts/               # Recharts environmental visualizations
+│   │   └── maps/                 # Interactive Indian district maps
+│   ├── lib/                      # ⚙️ CORE LOGIC & UTILITIES
+│   │   ├── firebase/             # Client & Admin SDK configurations
+│   │   ├── calculations/         # Scientific O2 demand formulas
+│   │   ├── types/                # TypeScript interfaces & enums
+│   │   └── utils/                # Formatting & helper functions
+│   └── middleware.ts             # Auth & Route protection logic
+├── services/                     # 🐍 OPTIONAL MICROSERVICES
+│   └── oxygen-calculator/        # Python FastAPI engine (Advanced logic)
+├── scripts/                      # 🛠️ AUTOMATION
+│   └── seed-data.ts              # Firestore initial seeding scripts
+├── public/                       # 🖼️ STATIC ASSETS (Logos, Icons)
+├── firestore.rules               # 🔥 Database Security Rules
+└── package.json                  # Dependencies & Scripts
 ```
+
+---
 
 ## Contributing
 
@@ -256,6 +297,45 @@ Always verify critical information with official sources and domain experts.
 - **GitHub Repository**: [https://github.com/manasdutta04/vayura](https://github.com/manasdutta04/vayura)
 - **Issues**: [GitHub Issues](https://github.com/manasdutta04/vayura/issues)
 - **Contributions**: [See CONTRIBUTING.md](./CONTRIBUTING.md)
+
+##  Creators
+
+- Developed by [Manas Dutta](https://github.com/manasdutta04)
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://amankumar.site"><img src="https://avatars.githubusercontent.com/u/148977902?v=4?s=100" width="100px;" alt="Aman Kumar "/><br /><sub><b>Aman Kumar </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Amanc77" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/VITianYash42"><img src="https://avatars.githubusercontent.com/u/175908232?v=4?s=100" width="100px;" alt="Yash Singhal"/><br /><sub><b>Yash Singhal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=VITianYash42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Diksha78-bot"><img src="https://avatars.githubusercontent.com/u/184750994?v=4?s=100" width="100px;" alt="Diksha Dhanaji Dabhole"/><br /><sub><b>Diksha Dhanaji Dabhole</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Diksha78-bot" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sarojit049"><img src="https://avatars.githubusercontent.com/u/173495732?v=4?s=100" width="100px;" alt="Saroj Kumar"/><br /><sub><b>Saroj Kumar</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=sarojit049" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/aagmanpal"><img src="https://avatars.githubusercontent.com/u/126964489?v=4?s=100" width="100px;" alt="Aagman Pal"/><br /><sub><b>Aagman Pal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=aagmanpal" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://shaikhwarsi.xyz"><img src="https://avatars.githubusercontent.com/u/86195374?v=4?s=100" width="100px;" alt="ShaikhWarsi"/><br /><sub><b>ShaikhWarsi</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ShaikhWarsi" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/anshiky73-svg"><img src="https://avatars.githubusercontent.com/u/230556644?v=4?s=100" width="100px;" alt="@nshik"/><br /><sub><b>@nshik</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=anshiky73-svg" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Shalini828"><img src="https://avatars.githubusercontent.com/u/221092454?v=4?s=100" width="100px;" alt="Shalini Kumari"/><br /><sub><b>Shalini Kumari</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Shalini828" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ParthG2209"><img src="https://avatars.githubusercontent.com/u/206025730?v=4?s=100" width="100px;" alt="Parth Gupta"/><br /><sub><b>Parth Gupta</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ParthG2209" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Nitya-003"><img src="https://avatars.githubusercontent.com/u/181471078?v=4?s=100" width="100px;" alt="Nitya Gosain"/><br /><sub><b>Nitya Gosain</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Nitya-003" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rishabh0510rishabh"><img src="https://avatars.githubusercontent.com/u/85429535?v=4?s=100" width="100px;" alt="Rishabh Mishra"/><br /><sub><b>Rishabh Mishra</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=rishabh0510rishabh" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://harsh-works.vercel.app/"><img src="https://avatars.githubusercontent.com/u/193507759?v=4?s=100" width="100px;" alt="Harsh "/><br /><sub><b>Harsh </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=harshrana14-fi" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Thanks to these amazing people <3
 
 ---
 
