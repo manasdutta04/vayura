@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/header';
+import { Footer } from '@/components/ui/footer';
 import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function CalculatorPage() {
@@ -310,6 +311,7 @@ export default function CalculatorPage() {
                     margin: 0; 
                 }
             `}</style>
+            <Footer />
         </>
     );
 }

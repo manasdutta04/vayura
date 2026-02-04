@@ -2,6 +2,7 @@
 
 import { BookOpen, Calculator, Database, AlertTriangle, GitBranch, Calendar } from 'lucide-react';
 import { Header } from '@/components/ui/header';
+import { Footer } from '@/components/ui/footer';
 import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function MethodologyPage() {
@@ -346,6 +347,7 @@ export default function MethodologyPage() {
                     </div>
                 </div>
             </div>
+            <Footer />
         </>
     );
 }
