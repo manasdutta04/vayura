@@ -1,42 +1,59 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
-import { DistrictSearchResult } from '@/lib/types';
-import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
-    try {
-        const { searchParams } = new URL(request.url);
-        const q = searchParams.get('q')?.toLowerCase() ?? '';
-        const state = searchParams.get('state');
+/**
+ * GET /api/districts/[id]/previous
+ * Fetches the previous week's data for a specific district to enable trend comparison
+ */
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const districtId = params.id;
 
-        const districtsRef = adminDb.collection('districts');
-        const snapshot = await districtsRef.orderBy('name').limit(100).get();
-
-        const allDistricts = snapshot.docs.map((doc: QueryDocumentSnapshot) => ({
-            id: doc.id,
-            ...(doc.data() as any),
-        })) as DistrictSearchResult[];
-
-        const filtered = allDistricts
-            .filter((district) => {
-                const matchesQuery = q
-                    ? district.name.toLowerCase().includes(q) ||
-                      district.slug.toLowerCase().includes(q) ||
-                      district.state.toLowerCase().includes(q)
-                    : true;
-                const matchesState = state ? district.state === state : true;
-                return matchesQuery && matchesState;
-            })
-            .slice(0, 50);
-
-        return NextResponse.json(filtered);
-    } catch (error) {
-        console.error('Error fetching districts:', error);
-        return NextResponse.json(
-            { error: 'Failed to fetch districts' },
-            { status: 500 }
-        );
+    if (!districtId) {
+      return NextResponse.json(
+        { error: 'District ID is required' },
+        { status: 400 }
+      );
     }
+
+    // Fetch the most recent historical snapshot before the current one
+    const snapshotsRef = adminDb
+      .collection('district_historical_snapshots')
+      .where('districtId', '==', districtId)
+      .orderBy('timestamp', 'desc')
+      .limit(2); // Get current and previous
+
+    const snapshots = await snapshotsRef.get();
+
+    // If we have at least 2 snapshots, return the second one (previous)
+    if (snapshots.docs.length >= 2) {
+      const previousSnapshot = snapshots.docs[1].data();
+      
+      return NextResponse.json({
+        population: previousSnapshot.population,
+        aqi: previousSnapshot.aqi,
+        soilQuality: previousSnapshot.soilQuality,
+        disasterFrequency: previousSnapshot.disasterFrequency,
+        treesRequired: previousSnapshot.treesRequired,
+        oxygenDemand: previousSnapshot.oxygenDemand,
+        oxygenSupply: previousSnapshot.oxygenSupply,
+      });
+    }
+
+    // If only one snapshot exists, no previous data available
+    // Return null so frontend can handle gracefully
+    return NextResponse.json(null);
+
+  } catch (error) {
+    console.error('Error fetching previous district data:', error);
+    return NextResponse.json(
+      { error: 'Failed to fetch previous data' },
+      { status: 500 }
+    );
+  }
 }
