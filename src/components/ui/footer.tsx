@@ -1,25 +1,33 @@
 import Link from 'next/link';
-import { Github, Twitter, Mail, Heart, Sprout, Linkedin } from 'lucide-react';
+import { Github, Heart, Sprout, Linkedin } from 'lucide-react';
+import Image from 'next/image';
+
 
 export function Footer() {
   return (
     <footer className="bg-white border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-8">
 
           {/* Brand Column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">
-              <img
+              <Image
                 src="/logo.png"
                 alt="Vayura"
+                width={32}
+                height={32}
                 className="h-8 w-auto"
               />
-              <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
+              <span className="text-lg font-semibold text-gray-900 tracking-tight">
+                Vayura
+              </span>
             </Link>
+
             <p className="text-sm text-gray-500 leading-relaxed mb-6">
               Empowering India's green future through data-driven oxygen intelligence and community action.
             </p>
+
             <div className="flex gap-4">
               <a
                 href="https://github.com/manasdutta04/vayura"
@@ -30,51 +38,50 @@ export function Footer() {
               >
                 <Github className="w-5 h-5" />
               </a>
+
               <a
                 href="https://www.linkedin.com/in/manasdutta04/"
+                target="_blank"
+                rel="noreferrer"
                 className="text-gray-400 hover:text-gray-900 transition-colors"
-                aria-label="Linkedin"
+                aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
               </a>
             </div>
           </div>
 
-          {/* Product Links */}
+          {/* Platform */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Platform</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              Platform
+            </h3>
             <ul className="space-y-3">
-              <li>
-                <Link href="/dashboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/leaderboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  State Leaderboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/calculator" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  CO₂ Calculator
-                </Link>
-              </li>
-              <li>
-                <Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Methodology
-                </Link>
-              </li>
-              <li>
-                <Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Analytics
-                </Link>
-              </li>
+              <li><Link href="/dashboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Dashboard</Link></li>
+              <li><Link href="/leaderboard" className="text-sm text-gray-500 hover:text-green-600 transition-colors">State Leaderboard</Link></li>
+              <li><Link href="/calculator" className="text-sm text-gray-500 hover:text-green-600 transition-colors">CO₂ Calculator</Link></li>
+              <li><Link href="/methodology" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Methodology</Link></li>
+              <li><Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Analytics</Link></li>
             </ul>
           </div>
 
-          {/* Action Links */}
+          {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Take Action</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              <li><Link href="/" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Home</Link></li>
+              <li><Link href="/about" className="text-sm text-gray-500 hover:text-green-600 transition-colors">About</Link></li>
+              <li><Link href="/contact" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Contact</Link></li>
+            </ul>
+          </div>
+
+          {/* Take Action */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              Take Action
+            </h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/plant" className="text-sm text-gray-500 hover:text-green-600 transition-colors flex items-center gap-2">
@@ -91,27 +98,18 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Legal & Contact */}
+          {/* Legal */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">Legal</h3>
+            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+              Legal
+            </h3>
             <ul className="space-y-3">
-              <li>
-                <Link href="/privacy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/data-policy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Data Sources
-                </Link>
-              </li>
+              <li><Link href="/privacy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Privacy Policy</Link></li>
+              <li><Link href="/terms" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Terms of Service</Link></li>
+              <li><Link href="/data-policy" className="text-sm text-gray-500 hover:text-green-600 transition-colors">Data Sources</Link></li>
             </ul>
           </div>
+
         </div>
 
         {/* Bottom Bar */}
