@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { useAuth } from '@/lib/auth-context';
 import { AuthModal } from './auth-modal';
 import { Sprout } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export function Header() {
     const { user, loading, signOut } = useAuth();
@@ -15,19 +16,19 @@ export function Header() {
     return (
         <>
             <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200/50">
-                <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
+                <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2">
+                    <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                         <img
                             src="/logo.png"
                             alt="Vayura"
-                            className="h-10 w-auto"
+                            className="h-8 sm:h-10 w-auto"
                         />
                         <span className="text-lg font-semibold text-gray-900 tracking-tight">Vayura</span>
                     </Link>
 
                     {/* Desktop Navigation */}
-                    <nav className="hidden md:flex items-center gap-8">
+                    <nav className="hidden md:flex items-center gap-6">
                         <Link
                             href="/map"
                             className="text-sm text-gray-700 hover:text-gray-900 transition-colors font-medium"
@@ -95,12 +96,12 @@ export function Header() {
                     </nav>
 
                     {/* Mobile + Auth */}
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 sm:gap-3">
                         {/* Mobile Hamburger Menu */}
                         <button
                             onClick={() => setShowMobileMenu(!showMobileMenu)}
                             className="md:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
-                            aria-label="Toggle menu"
+                            aria-label={showMobileMenu ? "Close menu" : "Open menu"}
                         >
                             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 {showMobileMenu ? (
@@ -119,7 +120,7 @@ export function Header() {
                                     href="https://github.com/manasdutta04/vayura"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-4 py-2 border border-green-500/50 bg-white text-gray-700 text-sm font-medium rounded-md hover:bg-green-50 hover:text-green-700 hover:border-green-500 transition-all flex items-center gap-2 shadow-[0_0_10px_rgba(34,197,94,0.3)] hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
+                                    className="hidden sm:block px-4 py-2 border border-green-500/50 bg-white text-gray-700 text-sm font-medium rounded-md hover:bg-green-50 hover:text-green-700 hover:border-green-500 transition-all flex items-center gap-2 shadow-[0_0_10px_rgba(34,197,94,0.3)] hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
                                 >
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
@@ -187,7 +188,7 @@ export function Header() {
                                     href="https://github.com/manasdutta04/vayura"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="px-4 py-2 border border-green-500/50 bg-white text-gray-700 text-sm font-medium rounded-md hover:bg-green-50 hover:text-green-700 hover:border-green-500 transition-all flex items-center gap-2 shadow-[0_0_10px_rgba(34,197,94,0.3)] hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
+                                    className="hidden sm:block px-4 py-2 border border-green-500/50 bg-white text-gray-700 text-sm font-medium rounded-md hover:bg-green-50 hover:text-green-700 hover:border-green-500 transition-all flex items-center gap-2 shadow-[0_0_10px_rgba(34,197,94,0.3)] hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
                                 >
                                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                                         <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
@@ -196,7 +197,7 @@ export function Header() {
                                 </a>
                                 <button
                                     onClick={() => setShowAuthModal(true)}
-                                    className="px-5 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
+                                    className="px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-md hover:bg-gray-800 transition-colors"
                                 >
                                     Sign In
                                 </button>
@@ -207,23 +208,53 @@ export function Header() {
             </header>
 
             {/* Mobile Navigation Menu */}
-            {showMobileMenu && (
-                <>
-                    {/* Backdrop */}
-                    <div
-                        className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
-                        onClick={() => setShowMobileMenu(false)}
-                    />
+            <AnimatePresence>
+                {showMobileMenu && (
+                    <>
+                        {/* Backdrop with fade animation */}
+                        <motion.div
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.2 }}
+                            className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 md:hidden"
+                            onClick={() => setShowMobileMenu(false)}
+                        />
 
-                    {/* Menu Drawer */}
-                    <div className="fixed top-16 left-0 right-0 bottom-0 bg-white z-50 md:hidden overflow-y-auto shadow-2xl">
-                        <nav className="flex flex-col p-4 min-h-full">
-                            {/* Menu Header */}
-                            <div className="px-4 py-3 border-b border-gray-100">
-                                <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Navigate</h3>
-                            </div>
+                        {/* Menu Drawer with slide animation */}
+                        <motion.div
+                            initial={{ x: '100%' }}
+                            animate={{ x: 0 }}
+                            exit={{ x: '100%' }}
+                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
+                            className="fixed top-0 left-0 right-0 bottom-0 bg-white z-50 md:hidden overflow-y-auto shadow-2xl"
+                        >
+                            <nav className="flex flex-col p-4 pt-2 min-h-full">
+                                {/* Menu Header with Close Button */}
+                                <motion.div 
+                                    initial={{ opacity: 0, y: -10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: 0.1, duration: 0.3 }}
+                                    className="flex items-center justify-between px-4 py-2 border-b border-gray-100"
+                                >
+                                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider">Navigate</h3>
+                                    <button
+                                        onClick={() => setShowMobileMenu(false)}
+                                        className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-md transition-all duration-200 transform hover:scale-110 active:scale-95"
+                                        aria-label="Close menu"
+                                    >
+                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </motion.div>
 
-                            <div className="mt-2 space-y-1 flex-1">
+                            <motion.div 
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 0.2, duration: 0.4 }}
+                                className="mt-2 space-y-1 flex-1"
+                            >
                                 <Link
                                     href="/map"
                                     onClick={() => setShowMobileMenu(false)}
@@ -331,7 +362,22 @@ export function Header() {
                                     <span>Donate Tree</span>
                                     <span className="ml-auto text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full font-semibold">Action</span>
                                 </Link>
-                            </div>
+                                
+                                {/* Mobile Contribute Button */}
+                                <div className="mt-4 pt-4 border-t border-gray-100">
+                                    <a
+                                        href="https://github.com/manasdutta04/vayura"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-center gap-2 w-full px-4 py-3 bg-white border border-green-500/50 text-gray-700 text-sm font-medium rounded-lg hover:bg-green-50 hover:text-green-700 hover:border-green-500 transition-all shadow-[0_0_10px_rgba(34,197,94,0.3)] hover:shadow-[0_0_15px_rgba(34,197,94,0.5)]"
+                                    >
+                                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <path fillRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clipRule="evenodd" />
+                                        </svg>
+                                        Contribute on GitHub
+                                    </a>
+                                </div>
+                            </motion.div>
 
                             {/* Footer Info */}
                             <div className="pt-6 pb-4 px-4 border-t border-gray-100">
@@ -340,12 +386,13 @@ export function Header() {
                                 </p>
                             </div>
                         </nav>
-                    </div>
+                    </motion.div>
                 </>
             )}
+            </AnimatePresence>
 
             {/* Spacer for fixed header */}
-            <div className="h-16" />
+            <div className="h-16 md:h-16" />
 
             {/* Auth Modal */}
             <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
