@@ -13,6 +13,7 @@ import {
 import EmptyState from "@/components/ui/EmptyState";
 import { ExportButtons } from "@/components/district/ExportButtons";
 import { PlantationRecommendations } from "@/components/district/PlantationRecommendations";
+import { ENVIRONMENTAL_CONSTANTS } from "@/lib/constants/environmental";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   try {
@@ -247,9 +248,10 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
               <div className="space-y-3 text-sm text-gray-700">
                 <div>
                   <p className="font-semibold mb-1">Formulas</p>
+
                   <ul className="list-disc list-inside space-y-1">
                     <li>
-                      Human O₂ demand = population × 550 L/day × 365, converted
+                      Human O₂ demand = population × {ENVIRONMENTAL_CONSTANTS.OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY} L/day × {ENVIRONMENTAL_CONSTANTS.OXYGEN.DAYS_PER_YEAR}, converted
                       to kg/year
                     </li>
                     <li>
@@ -257,7 +259,7 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                       disaster factor
                     </li>
                     <li>
-                      Tree O₂ supply = 110 kg O₂/year per mature tree, adjusted
+                      Tree O₂ supply = {ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg O₂/year per mature tree, adjusted
                       by soil quality
                     </li>
                     <li>

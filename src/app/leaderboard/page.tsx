@@ -8,6 +8,7 @@ import { Footer } from '@/components/ui/footer';
 import { LeaderboardEntry } from '@/lib/types';
 import { formatCompactNumber } from '@/lib/utils/helpers';
 import { VALIDATED_DATA_SOURCES } from '@/lib/data-sources/validation';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 async function getLeaderboard(): Promise<LeaderboardEntry[]> {
     const res = await fetch('/api/leaderboard', {
@@ -137,7 +138,7 @@ export default function LeaderboardPage() {
                                         const o2Deficit2050 = o2Needed2050 - currentO2Supply;
 
                                         // Calculate base trees needed (deficit only)
-                                        const baseTreesNeeded = o2Deficit2050 > 0 ? Math.ceil(o2Deficit2050 / 110) : 0;
+                                        const baseTreesNeeded = o2Deficit2050 > 0 ? Math.ceil(o2Deficit2050 / ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR) : 0;
 
                                         // Add RESILIENCE BUFFER: 25% extra for climate change, disasters, mortality
                                         // Even self-sufficient states need this for forest health and adaptation
@@ -147,7 +148,7 @@ export default function LeaderboardPage() {
                                         // For self-sufficient states: calculate 10% of total 2050 need as maintenance target
                                         const treesWithResilience = baseTreesNeeded > 0
                                             ? Math.ceil(baseTreesNeeded * resilienceMultiplier)
-                                            : Math.ceil(o2Needed2050 / 110 * 0.10); // 10% as climate resilience buffer for self-sufficient states
+                                            : Math.ceil(o2Needed2050 / ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * 0.10); // 10% as climate resilience buffer for self-sufficient states
 
                                         // Color code based on magnitude
                                         const percentageColor = treesWithResilience <= 1000000 ? 'text-green-600' :
@@ -245,7 +246,7 @@ export default function LeaderboardPage() {
                         </div>
                         <ul className="text-xs text-gray-600 space-y-1 ml-4 list-disc">
                             <li><span className="text-red-600 font-semibold">O₂ Needed</span> = State's total oxygen demand based on population, AQI, soil quality, and disasters</li>
-                            <li><span className="text-green-600 font-semibold">O₂ Supply</span> = Oxygen produced by trees planted and donated (110 kg/year per tree)</li>
+                            <li><span className="text-green-600 font-semibold">O₂ Supply</span> = Oxygen produced by trees planted and donated ({ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg/year per tree)</li>
                             <li><span className="font-semibold">2050 Target + Resilience</span> = Trees needed for 2050 + climate resilience buffer (25% extra for disasters, mortality, climate change)</li>
                             <li><strong>For Deficit States:</strong> Base deficit + 25% resilience buffer</li>
                             <li><strong>For Self-Sufficient States:</strong> 10% of 2050 need as climate adaptation/forest health buffer</li>

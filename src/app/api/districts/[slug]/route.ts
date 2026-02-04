@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 import { getAQIData } from '@/lib/data-sources/air-quality';
 import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
@@ -193,7 +194,7 @@ export async function GET(
         }, 0);
 
         const totalTrees = totalTreesPlanted + totalTreesDonated;
-        const oxygenOffset = totalTrees * 110; // 110 kg/year per tree
+        const oxygenOffset = totalTrees * ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR;
 
         const stats = {
             totalTreesPlanted,
