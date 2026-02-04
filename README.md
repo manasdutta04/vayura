@@ -1,4 +1,8 @@
 # Vayura
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-12-orange.svg?style=flat-square)](#contributors-)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 ## Why Vayura?
 
 India lacks district-level visibility into environmental oxygen demand.
@@ -14,140 +18,45 @@ Vayura is an open-source web application that estimates district-level oxygen de
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue)](https://www.typescriptlang.org/)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://www.python.org/)
 
-## Features
+---
 
-- **All Indian Districts**: Comprehensive coverage of every district across India
-- **District-Level Analysis**: Search any Indian district to see detailed environmental metrics
-- **Oxygen Calculation**: Transparent scientific formulas estimate oxygen demand vs. supply
-- **Tree Requirements**: Clear calculation of trees needed to offset oxygen deficit
-- **Environmental Health Card**: AQI, soil quality, disaster frequency, population data
-- **AI-Powered Data Fetching**: Uses Gemini AI to intelligently aggregate data from multiple government sources
-- **Tree Contribution System**: Upload tree plantation photos analyzed by AI for environmental impact
-- **NGO Donation Hub**: Donate trees through verified NGOs with transparency scores
-- **Contribution Dashboard**: Track your personal impact (planted vs donated trees)
-- **Legal & Privacy**: Dedicated Terms of Service and Privacy Policy for secure usage
-- **State Leaderboard**: Rankings by oxygen self-sufficiency across Indian states
-- **Transparent Methodology**: All formulas and assumptions clearly explained
+## 🚀 Features at a Glance
 
-### Website Features
-## District-Level Environmental Intelligence
+| 🌍 District Intelligence | 🌳 Impact & Plantation | 🤖 AI & Analytics |
+| :--- | :--- | :--- |
+| **All-India Coverage:** Data for every district across the nation. | **Tree Upload System:** Upload photos of your plantations. | **Gemini AI Aggregation:** Intelligent multi-source data fetching. |
+| **O₂ Demand/Supply:** Real-time estimation vs. natural supply. | **AI Verification:** Machine learning to verify plantation photos. | **Environmental Health Card:** AQI, Soil quality, & Disaster risk. |
+| **State Leaderboards:** Rankings for oxygen self-sufficiency. | **NGO Donation Hub:** Verified links to environmental NGOs. | **Interactive Charts:** Visual insights via Recharts. |
+| **Deficit Indicators:** Clear visual cues for oxygen-starved zones. | **Personal Dashboard:** Track your planted vs. donated trees. | **Transparent Logic:** All scientific formulas shown in-app. |
 
-- **Search and explore all Indian districts**
+---
 
-- **District-wise oxygen demand vs supply estimation**
+## 🏗️ System Architecture
 
-- **Visual oxygen deficit / surplus indicators**
+To help developers understand the "District-Level Oxygen Intelligence" flow, here is how the Next.js App Router, Firebase, and Gemini AI interact:
 
-- **District environmental health score**
+```mermaid
+graph TD
+    subgraph Client [Next.js Frontend]
+        A[District Search] --> B[Impact Dashboard]
+        B --> C[AI Verification Engine]
+    end
 
-## Oxygen & Tree Impact Calculations
+    subgraph Logic [Processing Layer]
+        D{Gemini AI} -- Aggregates --> E[Gov Data Sources]
+        F[FastAPI Microservice] -- Calculates --> G[O2 Demand/Supply]
+    end
 
-- **Scientifically backed human oxygen demand calculation**
+    subgraph Storage [Firebase]
+        H[(Firestore)] -- Metadata --> A
+        I[(Cloud Storage)] -- Plantation Photos --> C
+    end
 
-- **Dynamic adjustment using AQI, soil quality, and disaster frequency**
+    A <--> D
+    G --> H
+```
 
-- **Automatic calculation of trees required to offset oxygen deficit**
-
-- **Transparent formulas and assumptions shown to users**
-
-## Tree Plantation & Contribution System
-
-- **Upload tree plantation photos**
-
-- **AI-based image verification for plantation authenticity**
-
-- **Auto-calculation of oxygen contribution from planted trees**
-
-- **Track planted trees at district & user level**
-
-## NGO Donation Hub
-
-- **Donate trees via verified environmental NGOs**
-
-- **NGO profiles with transparency & impact scores**
-
-- **Track donated trees separately from planted trees**
-
-- **Clear mapping between donations and districts**
-
-## Personal Contribution Dashboard
-
-- **User-specific dashboard**
-
-- **View total trees planted vs donated**
-
-- **See personal oxygen contribution impact***
-
-- **Contribution history & activity logs**
-
-## Leaderboards & Rankings
-
-- **State-wise oxygen self-sufficiency leaderboard**
-
-- **Rankings based on forest cover and oxygen balance**
-
-- **Public comparison across states and districts**
-
-## Data Visualization & Insights
-
-- **Interactive charts for oxygen demand & supply**
-
-- **Environmental metric graphs (AQI, population, forest cover)**
-
-- **District comparison visuals**
-
-- **Trend-based insights for environmental planning**
-
-## AI-Powered Data Aggregation
-
-- **Intelligent data fetching using Google Gemini AI**
-
-- **Automatic aggregation from multiple government sources**
-
-- **Fallback mechanisms for missing or inconsistent data**
-
-- **Explainable AI outputs for transparency**
-
-## Authentication & Security
-
-- **Secure user authentication (Email / Google)**
-
-- **Role-based access for contributors and admins**
-
-- **Secure image storage for tree uploads**
-
-- **Environment-safe configuration using Firebase**
-
-## Transparency, Legal & Ethics
-
-- **Dedicated Terms of Service and Privacy Policy**
-
-- **Clear disclaimers on estimation accuracy**
-
-- **Responsible AI usage principles**
-
-- **Publicly documented calculation methodology**
-
-## Developer & Open-Source Friendly
-
-- **Modular and scalable architecture**
-
-- **Optional Python microservice for calculations**
-
-- **Firestore-based structured data model**
-
-- **Ready for community contributions**
-
-## Accessibility & Scalability
-
-- **Responsive UI for desktop and mobile**
-
-- **Designed for pan-India scalability**
-
-- **Easily extendable to other countries or regions**
-
-- **Performance-optimized data fetching**
-
+---
 
 ## Tech Stack
 
@@ -254,34 +163,30 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 - Prefer mock data when working on UI
 - Python microservice is optional for frontend contributors
 
-## Oxygen Calculation Methodology
+---
 
-Vayura uses a transparent, scientifically-based formula:
+## 🧪 Oxygen Calculation Methodology
 
-### 1. Base Human O₂ Demand
-```
-Population × 550 L/day × 365 days → kg/year
-```
+Vayura uses a transparent, scientifically-backed approach. We convert abstract environmental data into precise metrics using the following logic:
+
+### 1. Base Human $O_2$ Demand
+The annual oxygen requirement for a district's population:
+
+$$D_{base} = \text{Population} \times 550L/\text{day} \times 365 \text{ days}$$
 
 ### 2. Penalty Factors
-- **AQI Factor** (1.0 - 1.75×): Higher pollution increases respiratory demand
-- **Soil Degradation** (1.0 - 1.6×): Poor soil = less natural O₂ sources
-- **Disaster Loss** (1.05 - 1.5×): Frequent disasters destroy vegetation
+We adjust demand based on environmental stressors:
+* **AQI Factor ($F_{aqi}$):** Increases demand due to respiratory stress.
+* **Soil Factor ($F_{soil}$):** Adjusts for natural oxygen source degradation.
+* **Disaster Factor ($F_{dis}$):** Accounts for vegetation loss.
 
-### 3. Adjusted Demand
-```
-Base Demand × AQI Factor × Soil Factor × Disaster Factor
-```
+### 3. Final Adjusted Demand
+$$D_{adj} = D_{base} \times F_{aqi} \times F_{soil} \times F_{dis}$$
 
-### 4. Tree O₂ Supply
-- Base: 110 kg/year per mature tree
-- Adjusted by soil quality (healthier soil = healthier trees)
-- Lifespan calculation: 50 years average × 110 kg/year
+### 4. Trees Required to Offset Deficit
+To calculate how many trees are needed to reach a balance:
 
-### 5. Trees Required
-```
-Oxygen Deficit ÷ Adjusted Tree Supply
-```
+$$T_{req} = \frac{\text{Oxygen Deficit}}{\text{Adjusted Annual Tree Supply}}$$
 
 **All assumptions and data sources are displayed in the UI for full transparency.**
 
@@ -392,6 +297,45 @@ Always verify critical information with official sources and domain experts.
 - **GitHub Repository**: [https://github.com/manasdutta04/vayura](https://github.com/manasdutta04/vayura)
 - **Issues**: [GitHub Issues](https://github.com/manasdutta04/vayura/issues)
 - **Contributions**: [See CONTRIBUTING.md](./CONTRIBUTING.md)
+
+##  Creators
+
+- Developed by [Manas Dutta](https://github.com/manasdutta04)
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://amankumar.site"><img src="https://avatars.githubusercontent.com/u/148977902?v=4?s=100" width="100px;" alt="Aman Kumar "/><br /><sub><b>Aman Kumar </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Amanc77" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/VITianYash42"><img src="https://avatars.githubusercontent.com/u/175908232?v=4?s=100" width="100px;" alt="Yash Singhal"/><br /><sub><b>Yash Singhal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=VITianYash42" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Diksha78-bot"><img src="https://avatars.githubusercontent.com/u/184750994?v=4?s=100" width="100px;" alt="Diksha Dhanaji Dabhole"/><br /><sub><b>Diksha Dhanaji Dabhole</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Diksha78-bot" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/sarojit049"><img src="https://avatars.githubusercontent.com/u/173495732?v=4?s=100" width="100px;" alt="Saroj Kumar"/><br /><sub><b>Saroj Kumar</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=sarojit049" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/aagmanpal"><img src="https://avatars.githubusercontent.com/u/126964489?v=4?s=100" width="100px;" alt="Aagman Pal"/><br /><sub><b>Aagman Pal</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=aagmanpal" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://shaikhwarsi.xyz"><img src="https://avatars.githubusercontent.com/u/86195374?v=4?s=100" width="100px;" alt="ShaikhWarsi"/><br /><sub><b>ShaikhWarsi</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ShaikhWarsi" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/anshiky73-svg"><img src="https://avatars.githubusercontent.com/u/230556644?v=4?s=100" width="100px;" alt="@nshik"/><br /><sub><b>@nshik</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=anshiky73-svg" title="Documentation">📖</a></td>
+    </tr>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Shalini828"><img src="https://avatars.githubusercontent.com/u/221092454?v=4?s=100" width="100px;" alt="Shalini Kumari"/><br /><sub><b>Shalini Kumari</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Shalini828" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/ParthG2209"><img src="https://avatars.githubusercontent.com/u/206025730?v=4?s=100" width="100px;" alt="Parth Gupta"/><br /><sub><b>Parth Gupta</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=ParthG2209" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Nitya-003"><img src="https://avatars.githubusercontent.com/u/181471078?v=4?s=100" width="100px;" alt="Nitya Gosain"/><br /><sub><b>Nitya Gosain</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Nitya-003" title="Documentation">📖</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/rishabh0510rishabh"><img src="https://avatars.githubusercontent.com/u/85429535?v=4?s=100" width="100px;" alt="Rishabh Mishra"/><br /><sub><b>Rishabh Mishra</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=rishabh0510rishabh" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://harsh-works.vercel.app/"><img src="https://avatars.githubusercontent.com/u/193507759?v=4?s=100" width="100px;" alt="Harsh "/><br /><sub><b>Harsh </b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=harshrana14-fi" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+Thanks to these amazing people <3
 
 ---
 

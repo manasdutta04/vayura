@@ -20,6 +20,7 @@ export interface EnvironmentalData {
     pm25?: number;
     soilQuality: number;
     disasterFrequency: number;
+    recommendations?: TreeRecommendation[];
     dataSource?: string;
     timestamp: Date;
     createdAt: Date;
@@ -42,6 +43,7 @@ export interface TreeContribution {
     speciesConfidence?: 'high' | 'medium' | 'low'; // Confidence in species identification
     analysisNotes?: string; // Notes from AI analysis
     userId?: string; // Firebase Auth UID
+    challengeId?: string;
     type?: 'plantation' | 'donation';
     status: ContributionStatus;
     userName?: string;
@@ -107,10 +109,23 @@ export interface OxygenCalculation {
     data_sources: string[];
 }
 
+export interface TreeRecommendation {
+    speciesName: string;
+    scientificName?: string;
+    suitabilityScore: number; // 0-100
+    survivalProbability: number; // 0-100
+    oxygenEfficiency: 'high' | 'medium' | 'low';
+    soilSuitability: string;
+    climateSuitability: string;
+    nativeStatus: 'native' | 'introduced' | 'endemic';
+    description: string;
+}
+
 export interface DistrictDetail extends District {
     environmentalData: EnvironmentalData;
     oxygenCalculation: OxygenCalculation;
     leaderboard?: LeaderboardEntry;
+    recommendations?: TreeRecommendation[];
     stats?: {
         totalTreesPlanted: number;
         totalTreesDonated: number;

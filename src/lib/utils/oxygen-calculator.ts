@@ -3,12 +3,9 @@
  * Implements the same logic as the Python microservice for fallback when service is unavailable
  */
 
-// Constants based on scientific research
-const HUMAN_O2_CONSUMPTION_LITERS_PER_DAY = 550; // Average adult oxygen consumption
-const LITERS_TO_KG_O2_CONVERSION = 1.429 / 1000; // Oxygen density at STP (kg/L)
-const DAYS_PER_YEAR = 365;
-const BASE_TREE_O2_SUPPLY_KG_PER_YEAR = 110; // Mature tree oxygen production
-const TREES_PER_HECTARE = 400; // Typical plantation density
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
+
+const { OXYGEN, PENALTY_FACTORS } = ENVIRONMENTAL_CONSTANTS;
 
 export interface OxygenCalculationInput {
     district_name: string;
@@ -50,12 +47,13 @@ function calculateAQIPenaltyFactor(aqi: number): number {
      * Calculate oxygen demand penalty based on AQI.
      * Higher AQI = more pollution = more health stress = higher O2 demand
      */
-    if (aqi <= 50) return 1.0;
-    if (aqi <= 100) return 1.05;
-    if (aqi <= 150) return 1.15;
-    if (aqi <= 200) return 1.30;
-    if (aqi <= 300) return 1.50;
-    return 1.75;
+    const { AQI } = PENALTY_FACTORS;
+    if (aqi <= 50) return AQI.GOOD;
+    if (aqi <= 100) return AQI.MODERATE;
+    if (aqi <= 150) return AQI.SENSITIVE;
+    if (aqi <= 200) return AQI.UNHEALTHY;
+    if (aqi <= 300) return AQI.VERY_UNHEALTHY;
+    return AQI.HAZARDOUS;
 }
 
 function calculateSoilDegradationFactor(soilQuality: number): number {
@@ -63,11 +61,12 @@ function calculateSoilDegradationFactor(soilQuality: number): number {
      * Calculate impact of soil degradation on oxygen balance.
      * Poor soil = less vegetation = less natural O2 production = higher effective demand
      */
-    if (soilQuality >= 80) return 1.0;
-    if (soilQuality >= 60) return 1.10;
-    if (soilQuality >= 40) return 1.25;
-    if (soilQuality >= 20) return 1.40;
-    return 1.60;
+    const { SOIL } = PENALTY_FACTORS;
+    if (soilQuality >= 80) return SOIL.EXCELLENT;
+    if (soilQuality >= 60) return SOIL.GOOD;
+    if (soilQuality >= 40) return SOIL.FAIR;
+    if (soilQuality >= 20) return SOIL.POOR;
+    return SOIL.DEGRADED;
 }
 
 function calculateDisasterLossFactor(disasterFrequency: number): number {
@@ -75,10 +74,11 @@ function calculateDisasterLossFactor(disasterFrequency: number): number {
      * Calculate environmental loss due to disasters.
      * Frequent disasters = vegetation loss = reduced oxygen sources
      */
-    if (disasterFrequency <= 2) return 1.05;
-    if (disasterFrequency <= 5) return 1.15;
-    if (disasterFrequency <= 8) return 1.30;
-    return 1.50;
+    const { DISASTER } = PENALTY_FACTORS;
+    if (disasterFrequency <= 2) return DISASTER.LOW;
+    if (disasterFrequency <= 5) return DISASTER.MEDIUM;
+    if (disasterFrequency <= 8) return DISASTER.HIGH;
+    return DISASTER.SEVERE;
 }
 
 function calculateSoilTreeAdjustment(soilQuality: number): number {
@@ -96,27 +96,27 @@ function determineConfidenceLevel(data: OxygenCalculationInput): 'high' | 'mediu
      * Determine confidence level based on data quality and ranges.
      */
     let issues = 0;
-    
+
     // Check for typical population ranges (1000 - 20M for districts)
     if (data.population < 1000 || data.population > 20_000_000) {
         issues += 1;
     }
-    
+
     // Check AQI (typical Indian cities: 50-300)
     if (data.aqi > 400) {
         issues += 1;
     }
-    
+
     // Check soil quality
     if (data.soil_quality < 20) {
         issues += 1;
     }
-    
+
     // Check disaster frequency
     if (data.disaster_frequency > 9) {
         issues += 1;
     }
-    
+
     if (issues === 0) return 'high';
     if (issues <= 2) return 'medium';
     return 'low';
@@ -132,36 +132,36 @@ export function calculateOxygenRequirements(data: OxygenCalculationInput): Oxyge
      * 3. Calculate tree O2 supply (adjusted for soil quality)
      * 4. Determine deficit and trees needed
      */
-    
+
     // Step 1: Calculate base human oxygen demand
-    const humanO2LitersPerDay = data.population * HUMAN_O2_CONSUMPTION_LITERS_PER_DAY;
-    const humanO2LitersPerYear = humanO2LitersPerDay * DAYS_PER_YEAR;
-    const humanO2KgPerYear = humanO2LitersPerYear * LITERS_TO_KG_O2_CONVERSION;
-    
+    const humanO2LitersPerDay = data.population * OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY;
+    const humanO2LitersPerYear = humanO2LitersPerDay * OXYGEN.DAYS_PER_YEAR;
+    const humanO2KgPerYear = humanO2LitersPerYear * OXYGEN.LITERS_TO_KG_CONVERSION;
+
     // Step 2: Calculate penalty factors
     const aqiFactor = calculateAQIPenaltyFactor(data.aqi);
     const soilFactor = calculateSoilDegradationFactor(data.soil_quality);
     const disasterFactor = calculateDisasterLossFactor(data.disaster_frequency);
-    
+
     // Combined penalty (multiplicative)
     const totalPenalty = aqiFactor * soilFactor * disasterFactor;
-    
+
     // Adjusted oxygen demand
     const adjustedO2Demand = humanO2KgPerYear * totalPenalty;
-    
+
     // Step 3: Calculate tree oxygen supply (adjusted for soil)
     const soilAdjustment = calculateSoilTreeAdjustment(data.soil_quality);
-    const adjustedTreeO2Supply = BASE_TREE_O2_SUPPLY_KG_PER_YEAR * soilAdjustment;
-    
+    const adjustedTreeO2Supply = OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * soilAdjustment;
+
     // Step 4: Calculate deficit and trees required
     // Note: We assume zero current tree coverage for conservative estimate
     const oxygenDeficit = adjustedO2Demand;
     const treesRequired = Math.ceil(oxygenDeficit / adjustedTreeO2Supply);
-    const treesRequiredHectares = treesRequired / TREES_PER_HECTARE;
-    
+    const treesRequiredHectares = treesRequired / OXYGEN.TREES_PER_HECTARE;
+
     // Determine confidence level
     const confidenceLevel = determineConfidenceLevel(data);
-    
+
     // Create formula breakdown for transparency
     const formulaBreakdown: FormulaBreakdown = {
         human_o2_demand_liters: humanO2LitersPerYear,
@@ -171,26 +171,26 @@ export function calculateOxygenRequirements(data: OxygenCalculationInput): Oxyge
         disaster_loss_factor: disasterFactor,
         total_penalty: totalPenalty,
         adjusted_o2_demand_kg: adjustedO2Demand,
-        per_tree_o2_supply_kg: BASE_TREE_O2_SUPPLY_KG_PER_YEAR,
+        per_tree_o2_supply_kg: OXYGEN.PRODUCTION_PER_TREE_KG_YEAR,
         soil_adjusted_tree_supply_kg: adjustedTreeO2Supply,
     };
-    
+
     // Build assumptions list
     const assumptions = [
-        `Average human O2 consumption: ${HUMAN_O2_CONSUMPTION_LITERS_PER_DAY} L/day`,
-        `Mature tree O2 production: ${BASE_TREE_O2_SUPPLY_KG_PER_YEAR} kg/year`,
+        `Average human O2 consumption: ${OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY} L/day`,
+        `Mature tree O2 production: ${OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg/year`,
         'Calculations assume no existing tree coverage (conservative estimate)',
-        'Tree plantation density: 400 trees per hectare',
+        `Tree plantation density: ${OXYGEN.TREES_PER_HECTARE} trees per hectare`,
         'O2 demand penalties based on AQI, soil quality, and disaster frequency',
     ];
-    
+
     // Data sources
     const dataSources = [
         'WHO: Human oxygen consumption standards',
         'USDA Forest Service: Tree oxygen production research',
         'EPA: Air Quality Index categories',
     ];
-    
+
     return {
         district_name: data.district_name,
         population: data.population,
@@ -218,7 +218,7 @@ export function calculateOxygenRequirements(data: OxygenCalculationInput): Oxyge
 export function calculateTreeOxygenProduction(trees: number, age: number) {
     // Age factor: trees reach full production capacity at 10+ years
     const ageFactor = Math.min(age / 10, 1);
-    const oxygenPerTree = BASE_TREE_O2_SUPPLY_KG_PER_YEAR * ageFactor;
+    const oxygenPerTree = OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * ageFactor;
     const totalOxygen = trees * oxygenPerTree;
 
     return {
@@ -229,4 +229,3 @@ export function calculateTreeOxygenProduction(trees: number, age: number) {
         age_factor: Math.round(ageFactor * 100) / 100,
     };
 }
-

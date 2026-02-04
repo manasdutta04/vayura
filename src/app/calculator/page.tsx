@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Header } from '@/components/ui/header';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function CalculatorPage() {
     const [trees, setTrees] = useState(100);
@@ -10,14 +11,17 @@ export default function CalculatorPage() {
     const [animatedFlights, setAnimatedFlights] = useState(0);
 
     // Scientific constants
-    const CO2_PER_TREE_KG_YEAR = 21; // Average CO2 absorbed per tree per year (kg)
-    const CO2_PER_CAR_KG_YEAR = 4600; // Average car emissions per year (kg)
-    const CO2_PER_FLIGHT_KG = 90; // Short-haul flight per person (kg)
+    const { CO2, OXYGEN } = ENVIRONMENTAL_CONSTANTS;
 
     // Calculate values
-    const totalCO2 = trees * CO2_PER_TREE_KG_YEAR;
-    const carsOffset = totalCO2 / CO2_PER_CAR_KG_YEAR;
-    const flightsOffset = totalCO2 / CO2_PER_FLIGHT_KG;
+    const totalCO2 = trees * CO2.ABSORPTION_PER_TREE_KG_YEAR;
+    const carsOffset = totalCO2 / CO2.EMISSIONS_PER_CAR_KG_YEAR;
+    const flightsOffset = totalCO2 / CO2.EMISSIONS_PER_FLIGHT_KG;
+
+    // Oxygen calculations (aligned with Methodology)
+    const oxygenProduced = trees * OXYGEN.PRODUCTION_PER_TREE_KG_YEAR;
+    const humanOxygenDemand = OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY * OXYGEN.DAYS_PER_YEAR * OXYGEN.LITERS_TO_KG_CONVERSION;
+    const peopleSupported = oxygenProduced / humanOxygenDemand;
 
     // Animate numbers
     useEffect(() => {
@@ -69,10 +73,33 @@ export default function CalculatorPage() {
                                 <label className="text-gray-400 text-xs font-bold uppercase tracking-widest mb-2">
                                     Trees Planted
                                 </label>
-                                <div className="flex items-baseline gap-2">
-                                    <span className="text-6xl font-bold text-gray-900 tracking-tight">
-                                        {trees.toLocaleString()}
-                                    </span>
+                                <div className="flex items-baseline gap-2 justify-center">
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max="10000"
+                                        value={trees}
+                                        onChange={(e) => {
+                                            const val = e.target.value;
+                                            // Allow empty string purely for typing experience, but otherwise parse
+                                            if (val === '') {
+                                                setTrees(0); // Temporary state for empty input
+                                                return;
+                                            }
+                                            const num = parseInt(val);
+                                            if (!isNaN(num)) {
+                                                setTrees(num);
+                                            }
+                                        }}
+                                        onBlur={() => {
+                                            // Clamp on blur
+                                            let final = Math.max(1, Math.min(10000, trees));
+                                            if (trees === 0) final = 1; // Handle empty/zero case
+                                            setTrees(final);
+                                        }}
+                                        className="text-6xl font-bold text-gray-900 tracking-tight bg-transparent text-center w-48 sm:w-64 border-b-2 border-transparent hover:border-gray-200 focus:border-green-500 focus:outline-none transition-all placeholder-gray-200 appearance-none m-0 p-0 leading-none"
+                                        style={{ MozAppearance: 'textfield' }} // Remove spin buttons Firefox
+                                    />
                                     <span className="text-xl text-gray-500 font-medium">trees</span>
                                 </div>
                             </div>
@@ -118,8 +145,8 @@ export default function CalculatorPage() {
                                             key={preset}
                                             onClick={() => setTrees(preset)}
                                             className={`px-4 py-1.5 rounded-full text-sm font-semibold transition-all border ${trees === preset
-                                                    ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                                                    : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700'
+                                                ? 'bg-green-600 text-white border-green-600 shadow-sm'
+                                                : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700'
                                                 }`}
                                         >
                                             {preset.toLocaleString()}
@@ -198,19 +225,19 @@ export default function CalculatorPage() {
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Produces <strong>{(trees * 118).toLocaleString()} kg</strong> of oxygen annually
+                                            Produces <strong>{oxygenProduced.toLocaleString()} kg</strong> of oxygen annually
                                         </span>
                                     </div>
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Enough oxygen for <strong>{Math.floor(trees * 118 / 730)}</strong> people per year
+                                            Enough oxygen for <strong>{Math.floor(peopleSupported)}</strong> people per year
                                         </span>
                                     </div>
                                     <div className="flex items-start gap-2">
                                         <span className="text-amber-600 font-bold mt-0.5">•</span>
                                         <span className="text-amber-900">
-                                            Equal to <strong>{(totalCO2 / 907).toFixed(1)}</strong> tonnes of waste recycled
+                                            Equal to <strong>{(totalCO2 / CO2.SAVED_PER_TONNE_WASTE_RECYCLED_KG).toFixed(1)}</strong> tonnes of waste recycled
                                         </span>
                                     </div>
                                 </div>
@@ -245,10 +272,10 @@ export default function CalculatorPage() {
                     <div className="mt-8 p-5 bg-gray-50 rounded-lg border border-gray-200">
                         <h3 className="font-semibold text-gray-900 mb-3 text-base">How We Calculate</h3>
                         <div className="space-y-2 text-sm text-gray-700">
-                            <p>• Each mature tree absorbs approximately <strong>21 kg of CO₂</strong> per year</p>
-                            <p>• Average car emits <strong>4,600 kg of CO₂</strong> annually</p>
-                            <p>• Short-haul flight produces ~<strong>90 kg of CO₂</strong> per passenger</p>
-                            <p>• Each tree produces ~<strong>118 kg of oxygen</strong> per year</p>
+                            <p>• Each mature tree absorbs approximately <strong>{CO2.ABSORPTION_PER_TREE_KG_YEAR} kg of CO₂</strong> per year</p>
+                            <p>• Average car emits <strong>{CO2.EMISSIONS_PER_CAR_KG_YEAR.toLocaleString()} kg of CO₂</strong> annually</p>
+                            <p>• Short-haul flight produces ~<strong>{CO2.EMISSIONS_PER_FLIGHT_KG} kg of CO₂</strong> per passenger</p>
+                            <p>• Each tree produces ~<strong>{OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg of oxygen</strong> per year</p>
                             <p className="text-gray-500 italic pt-2">Source: USDA Forest Service, EPA, IPCC</p>
                         </div>
                     </div>
@@ -275,6 +302,12 @@ export default function CalculatorPage() {
                     border-radius: 50%;
                     cursor: pointer;
                     border: none;
+                }
+                /* Remove spinner buttons from number input */
+                input[type=number]::-webkit-inner-spin-button, 
+                input[type=number]::-webkit-outer-spin-button { 
+                    -webkit-appearance: none; 
+                    margin: 0; 
                 }
             `}</style>
         </>

@@ -9,6 +9,7 @@ import {
     signOut as firebaseSignOut,
     onAuthStateChanged,
     sendPasswordResetEmail,
+    updateProfile,
 } from 'firebase/auth';
 import { auth, googleProvider } from '@/lib/firebase';
 
@@ -20,6 +21,7 @@ interface AuthContextType {
     signUpWithEmail: (email: string, password: string) => Promise<void>;
     signOut: () => Promise<void>;
     resetPassword: (email: string) => Promise<void>;
+    updateUserProfile: (displayName: string, photoURL?: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -82,6 +84,30 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
     };
 
+    const updateUserProfile = async (displayName: string, photoURL?: string) => {
+        if (!user) {
+            throw new Error('User not authenticated');
+        }
+        try {
+            const profileUpdates: any = {};
+            if (displayName && displayName.trim() !== '') {
+                profileUpdates.displayName = displayName.trim();
+            }
+            if (photoURL !== undefined && photoURL !== null && photoURL.trim() !== '') {
+                profileUpdates.photoURL = photoURL.trim();
+            }
+            
+            if (Object.keys(profileUpdates).length > 0) {
+                await updateProfile(user, profileUpdates);
+                // Update local state to reflect changes
+                setUser({...user, ...profileUpdates});
+            }
+        } catch (error) {
+            console.error('Error updating profile:', error);
+            throw error;
+        }
+    };
+
     return (
         <AuthContext.Provider
             value={{
@@ -92,6 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
                 signUpWithEmail,
                 signOut,
                 resetPassword,
+                updateUserProfile,
             }}
         >
             {children}

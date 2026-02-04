@@ -42,6 +42,13 @@ service cloud.firestore {
       allow read: if isAuthenticated();
       allow write: if false; // Only via Admin SDK
     }
+    
+    // User Profiles - Users can read/write their own profile
+    match /users/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null && request.auth.uid == userId;
+      allow delete: if false; // Prevent deletion of user profiles
+    }
   }
 }
 
