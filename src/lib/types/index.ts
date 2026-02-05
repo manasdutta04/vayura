@@ -1,6 +1,9 @@
 // Core domain types for the application
 import type { LeaderboardEntry } from './firestore';
 
+//exporting trend types
+export * from './trend-types';
+
 export interface District {
     id: string;
     name: string;

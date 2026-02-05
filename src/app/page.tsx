@@ -9,15 +9,23 @@ import { formatCompactNumber } from '@/lib/utils/helpers';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
-import { DistrictSearch } from '@/components/ui/district-search'; // IMPORT ADDED
-import { ArrowRight, Leaf, Wind, Activity, BarChart3, TreeDeciduous, ShieldCheck, Globe, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
+import { DistrictSearch } from '@/components/ui/district-search';
+import { TrendArrow } from '@/components/ui/TrendIndicator'; // NEW IMPORT
+import { ArrowRight, Leaf, Wind, Activity, BarChart3, TreeDeciduous, ShieldCheck, Globe, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User, TrendingUp } from 'lucide-react';
 
 function HomeContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
+  const [stats, setStats] = useState({ 
+    totalDistricts: 766, 
+    totalTrees: 0, 
+    totalOxygen: 0,
+    // NEW: Previous period stats for trends
+    previousTotalTrees: 0,
+    previousTotalOxygen: 0
+  });
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
@@ -40,14 +48,21 @@ function HomeContent() {
     }
   }, [searchParams]);
 
-  // Fetch stats
+  // Fetch stats with trend data
   useEffect(() => {
     async function fetchStats() {
       try {
         const response = await fetch('/api/stats');
         if (response.ok) {
           const data = await response.json();
-          setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
+          setStats(prev => ({ 
+            totalDistricts: data.totalDistricts || prev.totalDistricts,
+            totalTrees: data.totalTrees || 0,
+            totalOxygen: data.totalOxygen || 0,
+            // NEW: Store previous values for trend calculation
+            previousTotalTrees: data.previousTotalTrees || 0,
+            previousTotalOxygen: data.previousTotalOxygen || 0,
+          }));
         }
       } catch (error) {
         console.error('Error fetching stats:', error);
@@ -95,6 +110,7 @@ function HomeContent() {
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-green-700 text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <Sprout className="w-4 h-4" />
               <span>Monitoring {stats.totalDistricts} Districts Across India</span>
+              <TrendingUp className="w-3 h-3 text-green-600" />
             </div>
 
             <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
@@ -106,7 +122,7 @@ function HomeContent() {
               Discover your district's environmental health with AI-powered analysis. Track oxygen demand, soil quality, and join the movement to restore balance.
             </p>
             
-            {/* NEW SEARCH COMPONENT PLACED HERE */}
+            {/* District Search Component */}
             <div className="w-full max-w-xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300 relative z-20">
                <DistrictSearch onDistrictSelect={handleDistrictSelect} />
             </div>
@@ -128,39 +144,75 @@ function HomeContent() {
               </Link>
             </div>
 
-            {/* Live Stats Ticker */}
+            {/* Live Stats Ticker with Trend Indicators */}
             <div className="max-w-5xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                {/* Districts Card */}
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow">
                   <span className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDistricts}</span>
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Districts</span>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalTrees)}</span>
+
+                {/* Trees Planted Card with Trend */}
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow group">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-3xl font-bold text-gray-900">{formatCompactNumber(stats.totalTrees)}</span>
+                    {stats.previousTotalTrees > 0 && (
+                      <TrendArrow 
+                        currentValue={stats.totalTrees} 
+                        previousValue={stats.previousTotalTrees}
+                        size="sm"
+                      />
+                    )}
+                  </div>
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Trees Planted</span>
+                  {stats.previousTotalTrees > 0 && (
+                    <span className="text-[10px] text-green-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      +{((stats.totalTrees - stats.previousTotalTrees) / stats.previousTotalTrees * 100).toFixed(1)}% this week
+                    </span>
+                  )}
                 </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
+
+                {/* Oxygen Added Card with Trend */}
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center hover:shadow-md transition-shadow group">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="text-3xl font-bold text-gray-900">{formatCompactNumber(stats.totalOxygen)}kg</span>
+                    {stats.previousTotalOxygen > 0 && (
+                      <TrendArrow 
+                        currentValue={stats.totalOxygen} 
+                        previousValue={stats.previousTotalOxygen}
+                        size="sm"
+                      />
+                    )}
+                  </div>
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Oxygen Added</span>
+                  {stats.previousTotalOxygen > 0 && (
+                    <span className="text-[10px] text-green-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                      +{((stats.totalOxygen - stats.previousTotalOxygen) / stats.previousTotalOxygen * 100).toFixed(1)}% this week
+                    </span>
+                  )}
                 </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-green-600 mb-1">Live</span>
-                  <span className="text-xs text-green-600 font-medium uppercase tracking-wider">Monitoring</span>
+
+                {/* Live Monitoring Card */}
+                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center relative overflow-hidden group">
+                  {/* Pulsing animation */}
+                  <div className="absolute inset-0 bg-green-500/5 animate-pulse" />
+                  <div className="relative z-10 flex flex-col items-center">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="text-3xl font-bold text-green-600">Live</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse shadow-lg shadow-green-500/50" />
+                    </div>
+                    <span className="text-xs text-green-600 font-medium uppercase tracking-wider">Monitoring</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Feature Grid & Rest of Page (Unchanged but included for context) */}
+        {/* Feature Grid */}
         <section className="py-24 bg-gray-50/50">
-            {/* ... Rest of your existing page content ... */}
-            {/* To save space, I am keeping the structure above intact. 
-                The important part is the Hero section update above. 
-                The rest of the file stays the same as your upload. 
-                If you copy the entire file above, ensure you include the rest of the sections below `Feature Grid`.
-            */}
-             <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
                 Explore Vayura
@@ -177,7 +229,8 @@ function HomeContent() {
                   color: 'blue',
                   title: 'Live Dashboard',
                   desc: 'Real-time environmental monitoring with AQI, soil health, and disaster alerts for every district.',
-                  link: '/dashboard'
+                  link: '/dashboard',
+                  badge: 'Trending'
                 },
                 {
                   icon: Trophy,
@@ -198,7 +251,8 @@ function HomeContent() {
                   color: 'emerald',
                   title: 'Plant a Tree',
                   desc: 'Take direct action by planting native trees in deforested areas with verified tracking.',
-                  link: '/plant'
+                  link: '/plant',
+                  badge: 'New'
                 },
                 {
                   icon: Heart,
@@ -216,7 +270,14 @@ function HomeContent() {
                 }
               ].map((feature, idx) => (
                 <Link href={feature.link} key={idx} className="group bg-white rounded-2xl p-8 border border-gray-100 hover:border-gray-200 shadow-sm hover:shadow-xl transition-all duration-300 relative overflow-hidden">
-                  <div className={`absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity`}>
+                  {feature.badge && (
+                    <div className="absolute top-4 right-4">
+                      <span className="px-2 py-1 bg-green-100 text-green-700 text-xs font-bold rounded-full">
+                        {feature.badge}
+                      </span>
+                    </div>
+                  )}
+                  <div className={`absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity ${feature.badge ? 'mt-8' : ''}`}>
                     <ArrowRight className={`w-5 h-5 text-${feature.color}-500 -rotate-45 group-hover:rotate-0 transition-transform duration-300`} />
                   </div>
                   <div className={`w-14 h-14 bg-${feature.color}-50 rounded-2xl flex items-center justify-center text-${feature.color}-600 mb-6 group-hover:scale-110 transition-transform`}>
@@ -253,19 +314,19 @@ function HomeContent() {
                     {
                       step: '01',
                       title: 'Select District',
-                      desc: 'Choose any Indian district to view its environmental report card.',
+                      desc: 'Choose any Indian district to view its environmental report card with trend analysis.',
                       color: 'blue'
                     },
                     {
                       step: '02',
                       title: 'Analyze Deficit',
-                      desc: 'Our AI calculates the precise oxygen gap based on population and pollution.',
+                      desc: 'Our AI calculates the precise oxygen gap based on population and pollution with real-time trends.',
                       color: 'purple'
                     },
                     {
                       step: '03',
                       title: 'Plant & Restore',
-                      desc: 'Contribute trees directly or donate to verified local NGOs.',
+                      desc: 'Contribute trees directly or donate to verified local NGOs and track your impact.',
                       color: 'green'
                     },
                   ].map((item, idx) => (
