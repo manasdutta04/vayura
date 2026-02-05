@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { ReactNode } from 'react';
-import { AuthProvider } from '@/lib/auth-context';
-import { AuthGuard } from '@/components/auth-guard';
+import { AuthProvider } from "@/lib/auth-context"
+import { Toaster } from "sonner"
 
-export function Providers({ children }: { children: ReactNode }) {
-    return (
-        <AuthProvider>
-            <AuthGuard>{children}</AuthGuard>
-        </AuthProvider>
-    );
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      {children}
+      <Toaster position="bottom-right" richColors closeButton />
+    </AuthProvider>
+  )
 }

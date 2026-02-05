@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import "leaflet/dist/leaflet.css";
+
 :root {
   --background: #f8faf9;
   --foreground: #0f1419;
@@ -18,7 +20,12 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: 'Outfit', 'Inter', sans-serif;
   font-weight: 700;
   line-height: 1.2;
@@ -29,12 +36,12 @@ html {
   scroll-behavior: smooth;
 }
 
-
 /* Loading animation */
 @keyframes shimmer {
   0% {
     background-position: -1000px 0;
   }
+
   100% {
     background-position: 1000px 0;
   }

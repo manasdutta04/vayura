@@ -41,6 +41,43 @@ export async function uploadImage(
 }
 
 /**
+ * Upload a profile image to Firebase Storage
+ */
+export async function uploadProfileImage(
+    file: File,
+    userId: string
+): Promise<{ url: string; path: string }> {
+    // Validate file
+    const validation = validateImageFile(file);
+    if (!validation.valid) {
+        throw new Error(validation.error);
+    }
+
+    // Generate unique filename
+    const timestamp = Date.now();
+    const extension = file.name.split('.').pop();
+    const filename = `profile-${userId}-${timestamp}.${extension}`;
+    const path = `profile-images/${userId}/${filename}`;
+
+    // Create storage reference
+    const storageRef = ref(storage, path);
+
+    // Upload file
+    const snapshot = await uploadBytes(storageRef, file, {
+        contentType: file.type,
+        customMetadata: {
+            uploadedAt: new Date().toISOString(),
+            userId,
+        },
+    });
+
+    // Get download URL
+    const url = await getDownloadURL(snapshot.ref);
+
+    return { url, path };
+}
+
+/**
  * Validate image file before upload
  */
 export function validateImageFile(file: File): { valid: boolean; error?: string } {

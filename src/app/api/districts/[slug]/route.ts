@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 import { getAQIData } from '@/lib/data-sources/air-quality';
 import { getSoilQualityData } from '@/lib/data-sources/soil-quality';
 import { getDisasterData } from '@/lib/data-sources/disasters';
+import { fetchPlantationRecommendations } from '@/lib/data-sources/gemini-data-fetcher';
 import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+
+export const dynamic = 'force-dynamic';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -54,7 +59,7 @@ export async function GET(
 
         if (!envSnap.empty) {
             // Sort by timestamp in memory (newest first)
-            const sortedDocs = envSnap.docs.sort((a, b) => {
+            const sortedDocs = envSnap.docs.sort((a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
                 const aTime = a.data().timestamp?.toDate?.() || a.data().timestamp || new Date(0);
                 const bTime = b.data().timestamp?.toDate?.() || b.data().timestamp || new Date(0);
                 return new Date(bTime).getTime() - new Date(aTime).getTime();
@@ -76,10 +81,11 @@ export async function GET(
         const isStale = !envData || forceFresh || (now - envData.timestamp.getTime() > ONE_DAY_MS);
 
         if (isStale) {
-            const [aqiData, soilData, disasterData] = await Promise.all([
+            const [aqiData, soilData, disasterData, recommendations] = await Promise.all([
                 getAQIData(district.latitude, district.longitude, district.slug, district.name, district.state),
                 getSoilQualityData(district.slug, district.name, district.state),
                 getDisasterData(district.slug, district.name, district.state),
+                fetchPlantationRecommendations(district.name, district.state),
             ]);
 
             const newEnvRef = adminDb.collection('environmental_data').doc();
@@ -89,7 +95,8 @@ export async function GET(
                 pm25: aqiData.pm25,
                 soilQuality: soilData.soilQuality,
                 disasterFrequency: disasterData.disasterFrequency,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source}`,
+                recommendations: recommendations,
+                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
                 timestamp: new Date(),
                 createdAt: new Date(),
             });
@@ -101,7 +108,8 @@ export async function GET(
                 pm25: aqiData.pm25,
                 soilQuality: soilData.soilQuality,
                 disasterFrequency: disasterData.disasterFrequency,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source}`,
+                recommendations: recommendations,
+                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
                 timestamp: new Date(),
                 createdAt: new Date(),
             };
@@ -169,7 +177,7 @@ export async function GET(
             .where('status', '==', 'VERIFIED')
             .get();
 
-        const totalTreesPlanted = contributionsSnap.docs.reduce((sum, doc) => {
+        const totalTreesPlanted = contributionsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return sum + (data.treeQuantity || 1);
         }, 0);
@@ -180,13 +188,13 @@ export async function GET(
             .where('districtId', '==', district.id)
             .get();
 
-        const totalTreesDonated = donationsSnap.docs.reduce((sum, doc) => {
+        const totalTreesDonated = donationsSnap.docs.reduce((sum: number, doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return sum + (data.treeCount || 0);
         }, 0);
 
         const totalTrees = totalTreesPlanted + totalTreesDonated;
-        const oxygenOffset = totalTrees * 110; // 110 kg/year per tree
+        const oxygenOffset = totalTrees * ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR;
 
         const stats = {
             totalTreesPlanted,
@@ -199,6 +207,7 @@ export async function GET(
             ...district,
             environmentalData: envData,
             oxygenCalculation,
+            recommendations: envData.recommendations,
             stats, // state-level contribution stats
         };
 

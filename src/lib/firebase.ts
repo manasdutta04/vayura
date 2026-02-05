@@ -12,8 +12,14 @@ const firebaseConfig = {
     appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
 };
 
+// Check if we have a valid config
+const isConfigured = !!firebaseConfig.apiKey;
+
 // Initialize Firebase (prevent multiple initializations)
-const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+// In build time or if config is missing, we use a dummy app or handle it gracefully
+const app = getApps().length === 0 
+    ? (isConfigured ? initializeApp(firebaseConfig) : initializeApp({ apiKey: "fake-key", projectId: "fake-project" }))
+    : getApp();
 
 // Auth instance
 export const auth = getAuth(app);

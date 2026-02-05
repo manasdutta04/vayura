@@ -1,36 +1,47 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
+
+export const dynamic = 'force-dynamic';
 
 export const maxDuration = 300; // 5 minutes timeout for Vercel functions
 
-// Oxygen calculation constants
-const HUMAN_O2_CONSUMPTION_LITERS_PER_DAY = 550;
-const LITERS_TO_KG_O2_CONVERSION = 1.429 / 1000;
-const DAYS_PER_YEAR = 365;
-const BASE_TREE_O2_SUPPLY_KG_PER_YEAR = 110;
+const { OXYGEN, PENALTY_FACTORS } = ENVIRONMENTAL_CONSTANTS;
 
 function calculateAQIPenaltyFactor(aqi: number): number {
-    if (aqi <= 50) return 1.0;
-    if (aqi <= 100) return 1.05;
-    if (aqi <= 150) return 1.15;
-    if (aqi <= 200) return 1.30;
-    if (aqi <= 300) return 1.50;
-    return 1.75;
+    const { AQI } = PENALTY_FACTORS;
+    if (aqi <= 50) return AQI.GOOD;
+    if (aqi <= 100) return AQI.MODERATE;
+    if (aqi <= 150) return AQI.SENSITIVE;
+    if (aqi <= 200) return AQI.UNHEALTHY;
+    if (aqi <= 300) return AQI.VERY_UNHEALTHY;
+    return AQI.HAZARDOUS;
 }
 
 function calculateSoilDegradationFactor(soilQuality: number): number {
-    if (soilQuality >= 80) return 1.0;
-    if (soilQuality >= 60) return 1.1;
-    if (soilQuality >= 40) return 1.3;
-    return 1.6;
+    const { SOIL } = PENALTY_FACTORS;
+    if (soilQuality >= 80) return SOIL.EXCELLENT;
+    if (soilQuality >= 60) return SOIL.GOOD;
+    if (soilQuality >= 40) return SOIL.FAIR;
+    if (soilQuality >= 20) return SOIL.POOR;
+    return SOIL.DEGRADED;
 }
 
 function calculateDisasterLossFactor(disasterFreq: number): number {
-    if (disasterFreq === 0) return 1.0;
-    if (disasterFreq <= 2) return 1.05;
-    if (disasterFreq <= 5) return 1.15;
-    if (disasterFreq <= 10) return 1.30;
-    return 1.5;
+    const { DISASTER } = PENALTY_FACTORS;
+    if (disasterFreq === 0) return DISASTER.NONE;
+    if (disasterFreq <= 2) return DISASTER.LOW;
+    if (disasterFreq <= 5) return DISASTER.MEDIUM;
+    if (disasterFreq <= 8) return DISASTER.HIGH; // Updated to match strict 8 cut-off in other file, consistent with constants
+    // Original had <= 10 return 1.30 (HIGH). 
+    // Constants say HIGH is 6-10. So <=10 is correct for 1.30.
+    // My previous file used <=8. 
+    // Let's stick to the constants values mapped to the ranges.
+    // HIGH (1.30) for 6-10.
+    // SEVERE (1.50) for 10+.
+    if (disasterFreq <= 10) return DISASTER.HIGH;
+    return DISASTER.SEVERE;
 }
 
 function calculateSoilTreeAdjustment(soilQuality: number): number {
@@ -63,13 +74,13 @@ export async function GET(request: Request) {
             adminDb.collection('leaderboard').get()
         ]);
 
-        const districts = districtsSnapshot.docs.map(doc => ({
+        const districts = districtsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({
             id: doc.id,
             ...doc.data()
         } as any));
 
         const leaderboardMap = new Map();
-        leaderboardSnapshot.docs.forEach(doc => {
+        leaderboardSnapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             // Map by state name
             if (data.state) {
@@ -130,7 +141,7 @@ export async function GET(request: Request) {
         }
 
         // Merge with leaderboard tree data
-        leaderboardMap.forEach((data, state) => {
+        leaderboardMap.forEach((data: any, state: string) => {
             const current = stateAggregates.get(state);
             if (current) {
                 const existing = data.existingForestTrees || 0;
@@ -152,7 +163,7 @@ export async function GET(request: Request) {
         let globalTotalTrees = 0;
         let globalTotalOxygen = 0;
 
-        stateAggregates.forEach((data, state) => {
+        stateAggregates.forEach((data: any, state: string) => {
             if (data.population === 0) return;
 
             const avgAQI = data.weightedAQI / data.population;
@@ -160,8 +171,8 @@ export async function GET(request: Request) {
             const avgDisasters = data.weightedDisasters / data.population;
 
             // Demand
-            const humanO2LitersPerYear = data.population * HUMAN_O2_CONSUMPTION_LITERS_PER_DAY * DAYS_PER_YEAR;
-            const humanO2KgPerYear = humanO2LitersPerYear * LITERS_TO_KG_O2_CONVERSION;
+            const humanO2LitersPerYear = data.population * OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY * OXYGEN.DAYS_PER_YEAR;
+            const humanO2KgPerYear = humanO2LitersPerYear * OXYGEN.LITERS_TO_KG_CONVERSION;
 
             const aqiFactor = calculateAQIPenaltyFactor(avgAQI);
             const soilFactor = calculateSoilDegradationFactor(avgSoil);
@@ -172,7 +183,7 @@ export async function GET(request: Request) {
 
             // Supply
             const soilAdjustment = calculateSoilTreeAdjustment(avgSoil);
-            const adjustedTreeSupply = BASE_TREE_O2_SUPPLY_KG_PER_YEAR * soilAdjustment;
+            const adjustedTreeSupply = OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * soilAdjustment;
             const o2Supply = data.totalTrees * adjustedTreeSupply;
 
             const existingForestO2 = (data.existingForestTrees || 0) * adjustedTreeSupply;
@@ -205,14 +216,14 @@ export async function GET(request: Request) {
         });
 
         // Sort
-        stateMetrics.sort((a, b) => {
+        stateMetrics.sort((a: any, b: any) => {
             if (b.percentageMet !== a.percentageMet) return b.percentageMet - a.percentageMet;
             if (b.totalTrees !== a.totalTrees) return b.totalTrees - a.totalTrees;
             return a.state.localeCompare(b.state);
         });
 
         // Assign Ranks
-        const rankedUpdates = stateMetrics.map((entry, index) => ({
+        const rankedUpdates = stateMetrics.map((entry: any, index: number) => ({
             ...entry,
             rank: index + 1,
             lastUpdated: new Date()

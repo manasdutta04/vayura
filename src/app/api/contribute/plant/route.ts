@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { adminDb, adminStorage } from '@/lib/firebase-admin';
 import { TreeContribution } from '@/lib/types';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+
+export const dynamic = 'force-dynamic';
 
 function timestampToDate(value: any): Date {
     if (!value) return new Date();
@@ -17,6 +20,7 @@ export async function POST(request: Request) {
         const notes = formData.get('notes') as string | null;
         const image = formData.get('image') as File;
         const userId = formData.get('userId') as string | null;
+        const challengeId = formData.get('challengeId') as string | null;
 
         if (!districtId || !image) {
             return NextResponse.json(
@@ -68,6 +72,7 @@ export async function POST(request: Request) {
             userId: userId || undefined,
             userName: userName || undefined,
             userEmail: userEmail || undefined,
+            challengeId: challengeId || undefined,
             notes: notes || undefined,
             imageUrl: url,
             storagePath: filepath,
@@ -126,7 +131,7 @@ export async function GET(request: Request) {
 
         const snapshot = await queryRef.get();
 
-        const contributions: TreeContribution[] = snapshot.docs.map((docSnap) => {
+        const contributions: TreeContribution[] = snapshot.docs.map((docSnap: QueryDocumentSnapshot) => {
             const data = docSnap.data();
             return {
                 id: docSnap.id,
