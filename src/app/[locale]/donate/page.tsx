@@ -6,14 +6,16 @@ import { Footer } from '@/components/ui/footer';
 import { ExternalLink, CheckCircle, XCircle, Info, ShieldCheck, FileText, Map, Users, UploadCloud } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
 import { useAuth } from '@/lib/auth-context';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictSearchResult } from '@/lib/types';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { toast } from 'sonner';
 
 export default function DonatePage() {
+    const t = useTranslations('donate');
     const ngos = getAllNgos();
     const { user } = useAuth();
     const router = useRouter();
@@ -75,22 +77,22 @@ export default function DonatePage() {
         event.preventDefault();
         
         if (!user) {
-            toast.error('Please sign in to verify your donation');
+            toast.error(t('pleaseSignIn'));
             return;
         }
 
         if (!selectedDistrict) {
-            toast.error('Please select the district where trees were donated');
+            toast.error(t('pleaseSelectDistrict'));
             return;
         }
 
         if (!image) {
-            toast.error('Please upload your donation receipt or certificate');
+            toast.error(t('pleaseUploadReceipt'));
             return;
         }
 
         if (!treeName.trim()) {
-            toast.error('Please enter the plant/tree name');
+            toast.error(t('pleaseEnterPlantName'));
             return;
         }
 
@@ -123,9 +125,9 @@ export default function DonatePage() {
                 throw new Error(json.error || 'Failed to submit verification');
             }
 
-            toast.success('Donation verified successfully!', {
+            toast.success(t('donationVerified'), {
                 id: toastId,
-                description: 'Added to your contributions.'
+                description: t('addedToContributions')
             });
 
             setImage(null);
@@ -157,10 +159,10 @@ export default function DonatePage() {
                 <div className="bg-white border-b border-gray-200">
                     <div className="max-w-7xl mx-auto px-6 py-12">
                         <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                            Donate & Verify
+                            {t('donateAndVerify')}
                         </h1>
                         <p className="text-gray-600 max-w-2xl">
-                            Support trusted NGOs or verify your existing donations to track environmental impact.
+                            {t('donateDescription')}
                         </p>
                         <div className="mt-6 flex flex-wrap gap-3">
                             <a
@@ -170,7 +172,7 @@ export default function DonatePage() {
                                 className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 rounded-full text-sm font-medium text-gray-700 hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm group"
                             >
                                 <Users className="w-4 h-4 text-gray-500 group-hover:text-gray-900 transition-colors" />
-                                <span>Add NGO via PR</span>
+                                <span>{t('addNgoPR')}</span>
                             </a>
                         </div>
                     </div>
@@ -183,8 +185,8 @@ export default function DonatePage() {
                         {/* Left Column: NGOs Listing (Flex-grow to take available space) */}
                         <div className="lg:w-2/3 space-y-8">
                             <div className="mb-6">
-                                <h2 className="text-xl font-bold text-gray-900 mb-1">Trusted Partners</h2>
-                                <p className="text-sm text-gray-600">Select an NGO to support tree planting initiatives.</p>
+                                <h2 className="text-xl font-bold text-gray-900 mb-1">{t('trustedPartners')}</h2>
+                                <p className="text-sm text-gray-600">{t('selectNGO')}</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -214,7 +216,7 @@ export default function DonatePage() {
                                         <div className="p-5 flex-grow">
                                             <div className="mb-4">
                                                 <div className="flex justify-between items-end mb-1">
-                                                    <span className="text-xs font-semibold text-gray-700">Transparency</span>
+                                                    <span className="text-xs font-semibold text-gray-700">{t('transparency')}</span>
                                                     <span className="text-lg font-bold text-nature-600">{ngo.transparency.score}/100</span>
                                                 </div>
                                                 <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
@@ -229,17 +231,17 @@ export default function DonatePage() {
 
                                             <div className="space-y-2">
                                                 <TransparencyItem
-                                                    label="Financial Audits"
+                                                    label={t('financialAudits')}
                                                     active={ngo.transparency.breakdown.financials}
                                                     icon={<FileText className="w-3 h-3" />}
                                                 />
                                                 <TransparencyItem
-                                                    label="Impact (GPS)"
+                                                    label={t('impactGPS')}
                                                     active={ngo.transparency.breakdown.impactTracking}
                                                     icon={<Map className="w-3 h-3" />}
                                                 />
                                                 <TransparencyItem
-                                                    label="Open Data"
+                                                    label={t('openData')}
                                                     active={ngo.transparency.breakdown.openData}
                                                     icon={<DatabaseIcon className="w-3 h-3" />}
                                                 />
@@ -259,7 +261,7 @@ export default function DonatePage() {
                                                     });
                                                 }}
                                             >
-                                                Donate
+                                                {t('donateBtn')}
                                                 <ExternalLink className="w-3 h-3" />
                                             </a>
                                         </div>
@@ -272,10 +274,9 @@ export default function DonatePage() {
                                 <div className="flex gap-3">
                                     <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
                                     <div>
-                                        <h3 className="text-sm font-semibold text-blue-900 mb-1">Transparency Score Methodology</h3>
+                                        <h3 className="text-sm font-semibold text-blue-900 mb-1">{t('transparencyMethodology')}</h3>
                                         <p className="text-xs text-blue-800 leading-relaxed">
-                                            Scores are calculated based on public availability of Audited Financial Reports,
-                                            precision of Impact Tracking (GPS), Open Data access, and third-party verification.
+                                            {t('transparencyMethodologyDesc')}
                                         </p>
                                     </div>
                                 </div>
@@ -286,17 +287,17 @@ export default function DonatePage() {
                         <div className="lg:w-1/3">
                             <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-8">
                                 <div className="mb-6">
-                                    <h2 className="text-xl font-bold text-gray-900 mb-2">Verify Donation</h2>
+                                    <h2 className="text-xl font-bold text-gray-900 mb-2">{t('verifyDonation')}</h2>
                                     <p className="text-sm text-gray-600">
-                                        Already donated? Upload receipt to track impact and oxygen.
+                                        {t('alreadyDonated')}
                                     </p>
                                 </div>
 
                                 {!user ? (
                                     <div className="text-center py-6 bg-gray-50 rounded-lg border border-dashed border-gray-300">
-                                        <p className="text-gray-600 mb-3 text-sm">Sign in to verify your donation.</p>
+                                        <p className="text-gray-600 mb-3 text-sm">{t('signInToVerify')}</p>
                                         <Link href="/signin" className="inline-block bg-gray-900 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-gray-800 transition-colors">
-                                            Sign In
+                                            {t('signInBtn')}
                                         </Link>
                                     </div>
                                 ) : (
@@ -304,7 +305,7 @@ export default function DonatePage() {
                                         {/* District Selection */}
                                         <div>
                                             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                                Location
+                                                {t('location')}
                                             </label>
                                             <DistrictSearch
                                                 onDistrictSelect={(district) => {
@@ -313,7 +314,7 @@ export default function DonatePage() {
                                             />
                                             {selectedDistrict && (
                                                 <p className="mt-1.5 text-xs text-green-600 font-medium truncate">
-                                                    📍 {selectedDistrict.name}, {selectedDistrict.state}
+                                                    {selectedDistrict.name}, {selectedDistrict.state}
                                                 </p>
                                             )}
                                         </div>
@@ -322,7 +323,7 @@ export default function DonatePage() {
                                         <div className="grid grid-cols-2 gap-4">
                                             <div>
                                                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                                    Plant Name
+                                                    {t('plantName')}
                                                 </label>
                                                 <input
                                                     type="text"
@@ -334,7 +335,7 @@ export default function DonatePage() {
                                             </div>
                                             <div>
                                                 <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                                    Quantity
+                                                    {t('quantity')}
                                                 </label>
                                                 <input
                                                     type="number"
@@ -350,7 +351,7 @@ export default function DonatePage() {
                                         {/* Receipt Upload */}
                                         <div>
                                             <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                                Receipt / Certificate
+                                                {t('receiptCertificate')}
                                             </label>
                                             <div
                                                 ref={dropZoneRef}
@@ -378,13 +379,13 @@ export default function DonatePage() {
                                                             className="mx-auto rounded-lg max-h-32 object-contain"
                                                             draggable={false}
                                                         />
-                                                        <p className="text-xs text-gray-500">Click to change</p>
+                                                        <p className="text-xs text-gray-500">{t('clickToChange')}</p>
                                                     </div>
                                                 ) : (
                                                     <div className="py-2">
                                                         <UploadCloud className="mx-auto h-8 w-8 text-gray-400 mb-2" />
                                                         <p className="text-xs text-gray-600">
-                                                            <span className="font-medium underline">Upload</span> or drop
+                                                            {t('uploadOrDrop')}
                                                         </p>
                                                     </div>
                                                 )}
@@ -396,7 +397,7 @@ export default function DonatePage() {
                                             disabled={submitting}
                                             className="w-full px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                         >
-                                            {submitting ? 'Verifying...' : 'Verify Donation'}
+                                            {submitting ? t('verifyingText') : t('verifyDonationBtn')}
                                         </button>
                                     </form>
                                 )}

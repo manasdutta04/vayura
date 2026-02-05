@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState, useRef, Suspense } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { useAuth } from '@/lib/auth-context';
@@ -9,9 +10,10 @@ import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib
 import { DistrictSearchResult } from '@/lib/types';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { Leaf, Camera, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
 
 function PlantPageContent() {
+    const t = useTranslations('plant');
     const router = useRouter();
     const { user, loading: authLoading } = useAuth();
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -82,22 +84,22 @@ function PlantPageContent() {
         setSuccess(null);
 
         if (!selectedDistrict) {
-            setError('Please select a district');
+            setError(t('pleaseSelectDistrict'));
             return;
         }
 
         if (!image) {
-            setError('Please upload a tree photo');
+            setError(t('pleaseUploadPhoto'));
             return;
         }
 
         if (!treeName.trim()) {
-            setError('Please enter the tree name');
+            setError(t('pleaseEnterTreeName'));
             return;
         }
 
         if (treeQuantity < 1) {
-            setError('Please enter a valid number of trees');
+            setError(t('pleaseEnterValidNumber'));
             return;
         }
 
@@ -127,7 +129,7 @@ function PlantPageContent() {
                 throw new Error(json.error || 'Failed to submit contribution');
             }
 
-            setSuccess('Tree contribution submitted successfully!');
+            setSuccess(t('successMessage'));
             setImage(null);
             if (previewUrl) revokeImagePreview(previewUrl);
             setPreviewUrl(null);
@@ -178,10 +180,10 @@ function PlantPageContent() {
             <div className="bg-white border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-6 py-12">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Plant & Earn
+                        {t('plantAndEarn')}
                     </h1>
                     <p className="text-gray-600 max-w-2xl">
-                        Plant trees, upload proof, and track oxygen production to climb the leaderboard.
+                        {t('plantDescription')}
                     </p>
                 </div>
             </div>
@@ -197,7 +199,7 @@ function PlantPageContent() {
                             <div className="p-6 border-b border-gray-100 bg-gray-50/50">
                                 <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                     <Leaf className="w-5 h-5 text-nature-600" />
-                                    How it Works
+                                    {t('howItWorks')}
                                 </h2>
                             </div>
                             <div className="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -205,22 +207,22 @@ function PlantPageContent() {
                                     <div className="bg-green-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-green-600">
                                         <Leaf className="w-6 h-6" />
                                     </div>
-                                    <h3 className="font-semibold text-gray-900 mb-1">1. Plant a Tree</h3>
-                                    <p className="text-sm text-gray-500">Plant a tree in your local area or backyard.</p>
+                                    <h3 className="font-semibold text-gray-900 mb-1">{t('step1Title')}</h3>
+                                    <p className="text-sm text-gray-500">{t('step1Desc')}</p>
                                 </div>
                                 <div className="text-center">
                                     <div className="bg-blue-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-blue-600">
                                         <Camera className="w-6 h-6" />
                                     </div>
-                                    <h3 className="font-semibold text-gray-900 mb-1">2. Upload Proof</h3>
-                                    <p className="text-sm text-gray-500">Take a photo and upload it here for verification.</p>
+                                    <h3 className="font-semibold text-gray-900 mb-1">{t('step2Title')}</h3>
+                                    <p className="text-sm text-gray-500">{t('step2Desc')}</p>
                                 </div>
                                 <div className="text-center">
                                     <div className="bg-amber-50 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-amber-600">
                                         <Award className="w-6 h-6" />
                                     </div>
-                                    <h3 className="font-semibold text-gray-900 mb-1">3. Track Oxygen</h3>
-                                    <p className="text-sm text-gray-500">See how much oxygen your trees produce based on species.</p>
+                                    <h3 className="font-semibold text-gray-900 mb-1">{t('step3Title')}</h3>
+                                    <p className="text-sm text-gray-500">{t('step3Desc')}</p>
                                 </div>
                             </div>
                         </div>
@@ -230,29 +232,29 @@ function PlantPageContent() {
                             <div className="p-6 border-b border-gray-100 bg-gray-50/50">
                                 <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
                                     <CheckCircle className="w-5 h-5 text-nature-600" />
-                                    Submission Guidelines
+                                    {t('submissionGuidelines')}
                                 </h2>
                             </div>
                             <div className="p-6 space-y-4">
                                 <div className="flex gap-3">
                                     <Camera className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
-                                        <h3 className="text-sm font-semibold text-gray-900">Clear Photos Required</h3>
-                                        <p className="text-sm text-gray-500">Ensure the sapling is clearly visible. Avoid blurry or dark images.</p>
+                                        <h3 className="text-sm font-semibold text-gray-900">{t('clearPhotos')}</h3>
+                                        <p className="text-sm text-gray-500">{t('clearPhotosDesc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3">
                                     <MapPin className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
-                                        <h3 className="text-sm font-semibold text-gray-900">Correct Location</h3>
-                                        <p className="text-sm text-gray-500">Select the district where the tree was actually planted.</p>
+                                        <h3 className="text-sm font-semibold text-gray-900">{t('correctLocation')}</h3>
+                                        <p className="text-sm text-gray-500">{t('correctLocationDesc')}</p>
                                     </div>
                                 </div>
                                 <div className="flex gap-3">
                                     <AlertCircle className="w-5 h-5 text-gray-400 flex-shrink-0 mt-0.5" />
                                     <div>
-                                        <h3 className="text-sm font-semibold text-gray-900">No Fakes</h3>
-                                        <p className="text-sm text-gray-500">Stock images or duplicate submissions will be rejected by our AI verification system.</p>
+                                        <h3 className="text-sm font-semibold text-gray-900">{t('noFakes')}</h3>
+                                        <p className="text-sm text-gray-500">{t('noFakesDesc')}</p>
                                     </div>
                                 </div>
                             </div>
@@ -263,9 +265,9 @@ function PlantPageContent() {
                             <div className="flex gap-3">
                                 <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
                                 <div>
-                                    <h3 className="text-sm font-semibold text-blue-900 mb-1">Powered by AI</h3>
+                                    <h3 className="text-sm font-semibold text-blue-900 mb-1">{t('poweredByAI')}</h3>
                                     <p className="text-xs text-blue-800 leading-relaxed">
-                                        Vayura uses Gemini Vision AI to analyze tree species, estimate age, and calculate potential oxygen production.
+                                        {t('aiDescription')}
                                     </p>
                                 </div>
                             </div>
@@ -277,9 +279,9 @@ function PlantPageContent() {
                     <div className="lg:w-1/3">
                         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-8">
                             <div className="mb-6">
-                                <h2 className="text-xl font-bold text-gray-900 mb-2">Submission Form</h2>
+                                <h2 className="text-xl font-bold text-gray-900 mb-2">{t('submissionForm')}</h2>
                                 <p className="text-sm text-gray-600">
-                                    Fill in the details below.
+                                    {t('fillDetails')}
                                 </p>
                             </div>
 
@@ -287,7 +289,7 @@ function PlantPageContent() {
                                 {/* District Selection */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                        District
+                                        {t('district')}
                                     </label>
                                     <DistrictSearch
                                         onDistrictSelect={(district) => {
@@ -300,7 +302,7 @@ function PlantPageContent() {
                                             📍 {selectedDistrict.name}, {selectedDistrict.state}
                                         </p>
                                     ) : (
-                                        <p className="mt-1.5 text-xs text-gray-500">Where was it planted?</p>
+                                        <p className="mt-1.5 text-xs text-gray-500">{t('wherePlanted')}</p>
                                     )}
                                 </div>
 
@@ -308,7 +310,7 @@ function PlantPageContent() {
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                            Species
+                                            {t('species')}
                                         </label>
                                         <input
                                             type="text"
@@ -320,7 +322,7 @@ function PlantPageContent() {
                                     </div>
                                     <div>
                                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                            Quantity
+                                            {t('quantity')}
                                         </label>
                                         <input
                                             type="number"
@@ -336,7 +338,7 @@ function PlantPageContent() {
                                 {/* Image Upload */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
-                                        Photo Evidence
+                                        {t('photoEvidence')}
                                     </label>
                                     <div
                                         ref={dropZoneRef}
@@ -364,13 +366,13 @@ function PlantPageContent() {
                                                     className="mx-auto rounded-lg max-h-32 object-contain"
                                                     draggable={false}
                                                 />
-                                                <p className="text-xs text-gray-500">Click to change</p>
+                                                <p className="text-xs text-gray-500">{t('clickToChange')}</p>
                                             </div>
                                         ) : (
                                             <div className="py-2">
                                                 <UploadCloud className="mx-auto h-8 w-8 text-gray-400 mb-2" />
                                                 <p className="text-xs text-gray-600">
-                                                    <span className="font-medium underline">Upload</span> or drop
+                                                    <span className="font-medium underline">{t('uploadOrDrop').split(' ')[0]}</span> {t('uploadOrDrop').split(' ').slice(1).join(' ')}
                                                 </p>
                                             </div>
                                         )}
@@ -394,11 +396,11 @@ function PlantPageContent() {
                                     disabled={submitting}
                                     className="w-full px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                                 >
-                                    {submitting ? 'Analyzing & Submitting...' : 'Submit Contribution'}
+                                    {submitting ? t('submittingText') : t('submitContribution')}
                                 </button>
 
                                 <p className="text-[10px] text-gray-400 text-center">
-                                    By submitting, you agree to our terms and confirm this photo is authentic.
+                                    {t('termsAgreement')}
                                 </p>
                             </form>
                         </div>

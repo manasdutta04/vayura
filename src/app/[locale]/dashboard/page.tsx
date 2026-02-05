@@ -1,7 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -12,6 +13,7 @@ import { DistrictSearchResult, DistrictDetail } from '@/lib/types';
 import { TreeDeciduous, Heart, Wind, Calculator, BarChart3, Lightbulb, ArrowRight, Sprout, Leaf } from 'lucide-react';
 
 export default function Dashboard() {
+  const t = useTranslations('dashboard');
   const { user, loading } = useAuth();
   const router = useRouter();
   const [userStats, setUserStats] = useState({
@@ -104,18 +106,18 @@ export default function Dashboard() {
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
                 <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-                  Welcome back, <span className="text-gray-600">{user?.displayName || user?.email?.split('@')[0]}</span>
+                  {t('welcomeUser')} <span className="text-gray-600">{user?.displayName || user?.email?.split('@')[0]}</span>
                 </h1>
                 <p className="text-gray-500 mb-4">
-                  Track your environmental impact and explore district data
+                  {t('trackImpact')}
                 </p>
 
               </div>
               <div className="text-right hidden md:block">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">Current Impact</p>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">{t('currentImpact')}</p>
                 <p className="text-green-600 font-medium flex items-center justify-end gap-2">
                   <Sprout className="w-4 h-4" />
-                  Making India Greener
+                  {t('makingIndiaGreener')}
                 </p>
               </div>
             </div>
@@ -131,20 +133,20 @@ export default function Dashboard() {
                     <TreeDeciduous className="w-6 h-6 text-green-600" />
                   </div>
                   <span className="text-xs font-medium text-green-600 bg-green-50 px-2.5 py-1 rounded-full">
-                    Active
+                    {t('active')}
                   </span>
                 </div>
                 <div>
-                  <p className="text-gray-500 text-sm font-medium mb-1">Trees Planted</p>
+                  <p className="text-gray-500 text-sm font-medium mb-1">{t('treesPlanted')}</p>
                   <div className="flex items-baseline gap-2">
                     <h3 className="text-4xl font-bold text-gray-900 tracking-tight">
                       {userStats.totalTreesPlanted}
                     </h3>
-                    <span className="text-sm text-gray-400">trees</span>
+                    <span className="text-sm text-gray-400">{t('trees')}</span>
                   </div>
                   <p className="text-xs text-green-600 mt-3 flex items-center gap-1">
                     <Leaf className="w-3 h-3" />
-                    {userStats.verifiedContributions > 0 ? `${userStats.verifiedContributions} verified` : 'Start your journey today'}
+                    {userStats.verifiedContributions > 0 ? t('nVerified', { count: userStats.verifiedContributions }) : t('startJourney')}
                   </p>
                 </div>
               </div>
@@ -156,19 +158,19 @@ export default function Dashboard() {
                     <Heart className="w-6 h-6 text-amber-600" />
                   </div>
                   <span className="text-xs font-medium text-amber-600 bg-amber-50 px-2.5 py-1 rounded-full">
-                    Supported
+                    {t('supported')}
                   </span>
                 </div>
                 <div>
-                  <p className="text-gray-500 text-sm font-medium mb-1">Trees Donated</p>
+                  <p className="text-gray-500 text-sm font-medium mb-1">{t('treesDonated')}</p>
                   <div className="flex items-baseline gap-2">
                     <h3 className="text-4xl font-bold text-gray-900 tracking-tight">
                       {userStats.totalTreesDonated}
                     </h3>
-                    <span className="text-sm text-gray-400">donated</span>
+                    <span className="text-sm text-gray-400">{t('donated')}</span>
                   </div>
                   <p className="text-xs text-amber-600 mt-3 font-medium">
-                    Through trusted NGOs
+                    {t('throughNGOs')}
                   </p>
                 </div>
               </div>
@@ -180,19 +182,19 @@ export default function Dashboard() {
                     <Wind className="w-6 h-6 text-blue-600" />
                   </div>
                   <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2.5 py-1 rounded-full">
-                    Impact
+                    {t('impact')}
                   </span>
                 </div>
                 <div>
-                  <p className="text-gray-500 text-sm font-medium mb-1">Lifetime Oxygen</p>
+                  <p className="text-gray-500 text-sm font-medium mb-1">{t('lifetimeOxygen')}</p>
                   <div className="flex items-baseline gap-2">
                     <h3 className="text-4xl font-bold text-gray-900 tracking-tight">
                       {formatCompactNumber(userStats.totalO2Impact)}
                     </h3>
-                    <span className="text-sm text-gray-400">kg O₂</span>
+                    <span className="text-sm text-gray-400">{t('kgO2')}</span>
                   </div>
                   <p className="text-xs text-blue-600 mt-3 font-medium">
-                    Estimated lifetime production
+                    {t('estimatedLifetime')}
                   </p>
                 </div>
               </div>
@@ -206,10 +208,10 @@ export default function Dashboard() {
               <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-8">
                 <div className="mb-6">
                   <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                    Search District Intelligence
+                    {t('searchIntelligence')}
                   </h2>
                   <p className="text-gray-500 text-sm">
-                    Access detailed environmental reports, oxygen deficit data, and planting targets for any district in India.
+                    {t('searchDescription')}
                   </p>
                 </div>
 
@@ -276,7 +278,7 @@ export default function Dashboard() {
               {/* Take Action Section */}
               <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                  Take Action
+                  {t('takeAction')}
                   <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
                 </h2>
 
@@ -290,8 +292,8 @@ export default function Dashboard() {
                       <TreeDeciduous className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-green-900 group-hover:text-green-700">Plant a Tree</h3>
-                      <p className="text-xs text-green-700/80">Upload proof & earn badges</p>
+                      <h3 className="font-semibold text-green-900 group-hover:text-green-700">{t('plantTree')}</h3>
+                      <p className="text-xs text-green-700/80">{t('uploadProof')}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-green-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -305,8 +307,8 @@ export default function Dashboard() {
                       <Heart className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-amber-900 group-hover:text-amber-700">Donate Trees</h3>
-                      <p className="text-xs text-amber-700/80">Support local NGOs</p>
+                      <h3 className="font-semibold text-amber-900 group-hover:text-amber-700">{t('donateTrees')}</h3>
+                      <p className="text-xs text-amber-700/80">{t('supportNGOs')}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-amber-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -320,8 +322,8 @@ export default function Dashboard() {
                       <BarChart3 className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-blue-900 group-hover:text-blue-700">Leaderboard</h3>
-                      <p className="text-xs text-blue-700/80">Check state rankings</p>
+                      <h3 className="font-semibold text-blue-900 group-hover:text-blue-700">{t('leaderboard')}</h3>
+                      <p className="text-xs text-blue-700/80">{t('checkRankings')}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-blue-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -350,8 +352,8 @@ export default function Dashboard() {
                       <Calculator className="w-6 h-6" />
                     </div>
                     <div>
-                      <h3 className="font-semibold text-purple-900 group-hover:text-purple-700">Impact Calc</h3>
-                      <p className="text-xs text-purple-700/80">Calculate your offset</p>
+                      <h3 className="font-semibold text-purple-900 group-hover:text-purple-700">{t('impactCalc')}</h3>
+                      <p className="text-xs text-purple-700/80">{t('calculateOffset')}</p>
                     </div>
                     <ArrowRight className="w-4 h-4 text-purple-400 ml-auto group-hover:translate-x-1 transition-transform" />
                   </button>
@@ -366,9 +368,9 @@ export default function Dashboard() {
                     <Lightbulb className="w-5 h-5 fill-yellow-600" />
                   </div>
                   <div>
-                    <h3 className="text-sm font-bold text-yellow-900 mb-1">Did you know?</h3>
+                    <h3 className="text-sm font-bold text-yellow-900 mb-1">{t('didYouKnow')}</h3>
                     <p className="text-sm text-yellow-800/80 leading-relaxed">
-                      A single mature tree can absorb approximately <span className="font-bold text-yellow-900">48 pounds</span> of CO₂ per year and release enough oxygen for two people!
+                      {t('funFact')}
                     </p>
                   </div>
                 </div>

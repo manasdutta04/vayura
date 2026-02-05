@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { Link } from '@/i18n/navigation';
+import { useTranslations } from 'next-intl';
 
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
@@ -19,6 +20,7 @@ async function getLeaderboard(): Promise<LeaderboardEntry[]> {
 }
 
 export default function LeaderboardPage() {
+    const t = useTranslations('leaderboard');
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [showDataSources, setShowDataSources] = useState(false);
@@ -37,10 +39,10 @@ export default function LeaderboardPage() {
                 <section className="max-w-6xl mx-auto px-6 pt-8">
                     <div className="mb-8">
                         <h1 className="text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
-                            State Leaderboard
+                            {t('title')}
                         </h1>
                         <p className="text-sm text-gray-500">
-                            States ranked by oxygen self-sufficiency
+                            {t('rankedBy')}
                         </p>
                     </div>
 
@@ -50,22 +52,22 @@ export default function LeaderboardPage() {
                                 <thead className="bg-gray-50/50">
                                     <tr>
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            Rank
+                                            {t('rank')}
                                         </th>
                                         <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            State
+                                            {t('state')}
                                         </th>
                                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            Trees
+                                            {t('treesCol')}
                                         </th>
                                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            O₂ Supply
+                                            {t('o2Supply')}
                                         </th>
                                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            O₂ Needed
+                                            {t('o2Needed')}
                                         </th>
                                         <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
-                                            2050 Target + Resilience
+                                            {t('target2050')}
                                         </th>
                                     </tr>
                                 </thead>
@@ -108,7 +110,7 @@ export default function LeaderboardPage() {
                                                 colSpan={6}
                                                 className="px-4 py-6 text-center text-sm text-gray-500"
                                             >
-                                                No leaderboard data yet. Start by planting or donating trees.
+                                                {t('noData')}
                                             </td>
                                         </tr>
                                     )}
@@ -173,7 +175,7 @@ export default function LeaderboardPage() {
                                                 <td className="px-4 py-3 text-sm text-gray-900">
                                                     <div className="font-semibold text-base">{entry.state}</div>
                                                     <div className="text-xs text-gray-500">
-                                                        Pop: {formatCompactNumber(entry.population || 0)}
+                                                        {t('pop', { value: formatCompactNumber(entry.population || 0) })}
                                                     </div>
                                                 </td>
                                                 <td className="px-4 py-3 text-sm text-gray-900 text-right">
@@ -183,11 +185,11 @@ export default function LeaderboardPage() {
                                                     {entry.totalTrees > 0 && (
                                                         <div className="text-xs text-gray-500 mt-1 space-y-0.5">
                                                             {entry.existingForestTrees && entry.existingForestTrees > 0 && (
-                                                                <div>Forest: {formatCompactNumber(entry.existingForestTrees)}</div>
+                                                                <div>{t('forest', { value: formatCompactNumber(entry.existingForestTrees) })}</div>
                                                             )}
                                                             {(entry.totalTreesPlanted > 0 || entry.totalTreesDonated > 0) && (
                                                                 <div>
-                                                                    User: {formatCompactNumber(entry.totalTreesPlanted)} planted + {formatCompactNumber(entry.totalTreesDonated)} donated
+                                                                    {t('userContrib', { planted: formatCompactNumber(entry.totalTreesPlanted), donated: formatCompactNumber(entry.totalTreesDonated) })}
                                                                 </div>
                                                             )}
                                                         </div>
@@ -208,19 +210,19 @@ export default function LeaderboardPage() {
                                                         {formatCompactNumber(treesWithResilience)}
                                                     </div>
                                                     <div className="text-xs text-gray-500 mt-1">
-                                                        By 2050 (pop: {formatCompactNumber(Math.round(projectedPopulation2050))})
+                                                        {t('by2050', { pop: formatCompactNumber(Math.round(projectedPopulation2050)) })}
                                                     </div>
                                                     {baseTreesNeeded === 0 ? (
                                                         <div className="text-xs text-green-600 font-medium mt-1">
-                                                            For climate resilience
+                                                            {t('climateResilience')}
                                                         </div>
                                                     ) : cappedPercentMet >= 100 ? (
                                                         <div className="text-xs text-yellow-600 font-medium mt-1">
-                                                            Future need + resilience
+                                                            {t('futureNeed')}
                                                         </div>
                                                     ) : (
                                                         <div className="text-xs text-orange-600 font-medium mt-1">
-                                                            Critical need + buffer
+                                                            {t('criticalNeed')}
                                                         </div>
                                                     )}
                                                 </td>
@@ -234,33 +236,33 @@ export default function LeaderboardPage() {
                     <div className="mt-8 space-y-3 bg-gray-50 p-5 rounded-lg border border-gray-200">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-900">
-                                How Rankings Work
+                                {t('howRankingsWork')}
                             </p>
                             <Link
                                 href="/data-policy"
                                 className="w-5 h-5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center justify-center text-xs font-medium transition-colors"
-                                title="View Data Sources"
+                                title={t('viewDataSources')}
                             >
                                 i
                             </Link>
                         </div>
                         <ul className="text-xs text-gray-600 space-y-1 ml-4 list-disc">
-                            <li><span className="text-red-600 font-semibold">O₂ Needed</span> = State's total oxygen demand based on population, AQI, soil quality, and disasters</li>
-                            <li><span className="text-green-600 font-semibold">O₂ Supply</span> = Oxygen produced by trees planted and donated ({ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR} kg/year per tree)</li>
-                            <li><span className="font-semibold">2050 Target + Resilience</span> = Trees needed for 2050 + climate resilience buffer (25% extra for disasters, mortality, climate change)</li>
-                            <li><strong>For Deficit States:</strong> Base deficit + 25% resilience buffer</li>
-                            <li><strong>For Self-Sufficient States:</strong> 10% of 2050 need as climate adaptation/forest health buffer</li>
-                            <li><strong>Ranking:</strong> States are ranked by current oxygen self-sufficiency (O₂ Supply ÷ O₂ Needed)</li>
+                            <li><span className="text-red-600 font-semibold">{t('o2Needed')}</span> = {t('o2NeededDesc').split('= ')[1]}</li>
+                            <li><span className="text-green-600 font-semibold">{t('o2Supply')}</span> = {t('o2SupplyDesc').split('= ')[1]}</li>
+                            <li><span className="font-semibold">{t('target2050')}</span> = {t('targetDesc').split('= ')[1]}</li>
+                            <li><strong>{t('deficitStates').split(':')[0]}:</strong>{t('deficitStates').split(':')[1]}</li>
+                            <li><strong>{t('selfSufficientStates').split(':')[0]}:</strong>{t('selfSufficientStates').split(':')[1]}</li>
+                            <li><strong>{t('rankingMethod').split(':')[0]}:</strong>{t('rankingMethod').split(':')[1]}</li>
                         </ul>
                         <p className="text-xs text-gray-500 mt-3">
-                            <strong>Color Guide (Planting Targets):</strong>
-                            <span className="text-green-600 ml-2">≤1M trees = Low target</span>
-                            <span className="text-yellow-600 ml-2">1-50M trees = Medium target</span>
-                            <span className="text-orange-600 ml-2">50-100M trees = High target</span>
-                            <span className="text-red-600 ml-2">&gt;100M trees = Critical target</span>
+                            <strong>{t('colorGuide')}</strong>
+                            <span className="text-green-600 ml-2">{t('lowTarget')}</span>
+                            <span className="text-yellow-600 ml-2">{t('mediumTarget')}</span>
+                            <span className="text-orange-600 ml-2">{t('highTarget')}</span>
+                            <span className="text-red-600 ml-2">{t('criticalTarget')}</span>
                         </p>
                         <p className="text-xs text-gray-400 mt-2">
-                            Calculations are based on scientific research (WHO, USDA Forest Service). Data is for educational purposes only.
+                            {t('scienceNote')}
                         </p>
                     </div>
 
@@ -269,7 +271,7 @@ export default function LeaderboardPage() {
                         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDataSources(false)}>
                             <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                                 <div className="sticky top-0 bg-gradient-to-r from-nature-500 to-sky-500 px-6 py-4 flex items-center justify-between">
-                                    <h2 className="text-2xl font-bold text-white">Data Sources</h2>
+                                    <h2 className="text-2xl font-bold text-white">{t('dataSources')}</h2>
                                     <button
                                         onClick={() => setShowDataSources(false)}
                                         className="w-8 h-8 rounded-full bg-white/20 hover:bg-white/30 text-white flex items-center justify-center font-bold transition-colors"
@@ -279,9 +281,9 @@ export default function LeaderboardPage() {
                                 </div>
                                 <div className="p-6 space-y-6">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">Validated Data Sources</h3>
+                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('validatedSources')}</h3>
                                         <p className="text-sm text-gray-600 mb-4">
-                                            All data used in Vayura comes from verified sources. Click on any source to visit the official website.
+                                            {t('validatedSourcesDesc')}
                                         </p>
                                     </div>
 
@@ -289,7 +291,7 @@ export default function LeaderboardPage() {
                                     <div>
                                         <h4 className="text-sm font-semibold text-green-700 mb-3 flex items-center gap-2">
                                             <span className="w-3 h-3 rounded-full bg-green-600"></span>
-                                            High Reliability (Government Data)
+                                            {t('highReliability')}
                                         </h4>
                                         <div className="space-y-3">
                                             {Object.values(VALIDATED_DATA_SOURCES)
@@ -301,7 +303,7 @@ export default function LeaderboardPage() {
                                                                 <h5 className="font-semibold text-gray-900">{source.name}</h5>
                                                                 <p className="text-xs text-gray-600 mt-1">{source.description}</p>
                                                                 {source.lastUpdated && (
-                                                                    <p className="text-xs text-gray-500 mt-1">Last Updated: {source.lastUpdated}</p>
+                                                                    <p className="text-xs text-gray-500 mt-1">{t('lastUpdated', { value: source.lastUpdated })}</p>
                                                                 )}
                                                             </div>
                                                             {source.url && (
@@ -311,12 +313,12 @@ export default function LeaderboardPage() {
                                                                     rel="noopener noreferrer"
                                                                     className="ml-4 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-md hover:bg-gray-800 transition-colors whitespace-nowrap"
                                                                 >
-                                                                    Visit ↗
+                                                                    {t('visit')} ↗
                                                                 </a>
                                                             )}
                                                         </div>
                                                         {source.license && (
-                                                            <p className="text-xs text-gray-500 mt-2">License: {source.license}</p>
+                                                            <p className="text-xs text-gray-500 mt-2">{t('license', { value: source.license })}</p>
                                                         )}
                                                     </div>
                                                 ))}
@@ -327,7 +329,7 @@ export default function LeaderboardPage() {
                                     <div>
                                         <h4 className="text-sm font-semibold text-yellow-700 mb-3 flex items-center gap-2">
                                             <span className="w-3 h-3 rounded-full bg-yellow-600"></span>
-                                            Medium Reliability (AI/API)
+                                            {t('mediumReliability')}
                                         </h4>
                                         <div className="space-y-3">
                                             {Object.values(VALIDATED_DATA_SOURCES)
@@ -346,12 +348,12 @@ export default function LeaderboardPage() {
                                                                     rel="noopener noreferrer"
                                                                     className="ml-4 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-md hover:bg-gray-800 transition-colors whitespace-nowrap"
                                                                 >
-                                                                    Visit ↗
+                                                                    {t('visit')} ↗
                                                                 </a>
                                                             )}
                                                         </div>
                                                         {source.license && (
-                                                            <p className="text-xs text-gray-500 mt-2">License: {source.license}</p>
+                                                            <p className="text-xs text-gray-500 mt-2">{t('license', { value: source.license })}</p>
                                                         )}
                                                     </div>
                                                 ))}
@@ -360,17 +362,17 @@ export default function LeaderboardPage() {
 
                                     {/* Scientific References */}
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-700 mb-3">Scientific References</h4>
+                                        <h4 className="text-sm font-semibold text-gray-700 mb-3">{t('scientificReferences')}</h4>
                                         <ul className="text-xs text-gray-600 space-y-2 ml-4 list-disc">
-                                            <li><strong>Human O₂ Consumption:</strong> WHO Respiratory Health Standards (550 L/day)</li>
-                                            <li><strong>Tree O₂ Production:</strong> USDA Forest Service Research (110 kg/year per mature tree)</li>
-                                            <li><strong>AQI Categories:</strong> EPA Air Quality Index standards</li>
+                                            <li>{t('humanO2Ref')}</li>
+                                            <li>{t('treeO2Ref')}</li>
+                                            <li>{t('aqiRef')}</li>
                                         </ul>
                                     </div>
 
                                     <div className="pt-4 border-t border-gray-200">
                                         <p className="text-xs text-gray-500">
-                                            <strong>Note:</strong> Data sources are validated and attributed. For more details, see{' '}
+                                            <strong>Note:</strong> {t('sourceNote')}{' '}
                                             <a href="/DATA_SOURCES.md" target="_blank" className="text-nature-600 hover:underline">
                                                 DATA_SOURCES.md
                                             </a>

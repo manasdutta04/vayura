@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { Metadata } from "next";
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import { ShareButtons } from "@/components/ui/share-buttons";
@@ -89,6 +90,7 @@ export async function generateMetadata({
 
 export default async function DistrictPage({ params }: DistrictPageProps) {
   const { slug } = await params;
+  const t = await getTranslations('district');
 
   if (!slug) {
     notFound();
@@ -108,6 +110,112 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
         </main>
         <Footer />
       </>
+                        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+                            <h2 className="text-sm font-semibold text-gray-500 mb-2">{t('aqi')}</h2>
+                            <p className="text-2xl font-bold" style={{ color: aqiInfo.color }}>
+                                {Math.round(data.environmentalData.aqi)}
+                            </p>
+                            <p className="text-xs text-gray-500 mt-1">{aqiInfo.label}</p>
+                        </div>
+                        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+                            <h2 className="text-sm font-semibold text-gray-500 mb-2">{t('soilQuality')}</h2>
+                            <p className="text-2xl font-bold text-gray-900">
+                                {Math.round(data.environmentalData.soilQuality)} / 100
+                            </p>
+                        </div>
+                        <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+                            <h2 className="text-sm font-semibold text-gray-500 mb-2">{t('disasterFrequency')}</h2>
+                            <p className="text-2xl font-bold text-gray-900">
+                                {data.environmentalData.disasterFrequency.toFixed(1)}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Oxygen model explanation */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                        <div className="bg-white rounded-2xl p-6 shadow border border-gray-100">
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                                {t('oxygenDemandVsSupply')}
+                            </h2>
+                            <dl className="space-y-3 text-sm text-gray-700">
+                                <div className="flex justify-between">
+                                    <dt>{t('baseHumanO2')}</dt>
+                                    <dd className="font-mono">
+                                        {formatNumber(
+                                            Math.round(calc.formula_breakdown.human_o2_demand_kg)
+                                        )}{' '}
+                                        {t('kgPerYear')}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between">
+                                    <dt>{t('penaltyMultipliers')}</dt>
+                                    <dd className="font-mono">
+                                        {calc.formula_breakdown.aqi_penalty_factor.toFixed(2)} &times;{' '}
+                                        {calc.formula_breakdown.soil_degradation_factor.toFixed(2)} &times;{' '}
+                                        {calc.formula_breakdown.disaster_loss_factor.toFixed(2)}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between">
+                                    <dt>{t('adjustedO2Demand')}</dt>
+                                    <dd className="font-mono">
+                                        {formatNumber(
+                                            Math.round(
+                                                calc.formula_breakdown.adjusted_o2_demand_kg
+                                            )
+                                        )}{' '}
+                                        {t('kgPerYear')}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between">
+                                    <dt>{t('perTreeO2Supply')}</dt>
+                                    <dd className="font-mono">
+                                        {Math.round(
+                                            calc.formula_breakdown.soil_adjusted_tree_supply_kg
+                                        )}{' '}
+                                        {t('kgPerYear')}
+                                    </dd>
+                                </div>
+                                <div className="flex justify-between border-t border-dashed pt-3 mt-3">
+                                    <dt className="font-semibold">{t('treesRequired')}</dt>
+                                    <dd className="font-mono text-lg font-semibold text-nature-700">
+                                        {formatNumber(Math.round(calc.trees_required))} {t('treesUnit')}
+                                    </dd>
+                                </div>
+                            </dl>
+                        </div>
+
+                        <div className="bg-white rounded-2xl p-6 shadow border border-gray-100">
+                            <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                                {t('transparentModel')}
+                            </h2>
+                            <div className="space-y-3 text-sm text-gray-700">
+                                <div>
+                                    <p className="font-semibold mb-1">{t('formulas')}</p>
+                                    <ul className="list-disc list-inside space-y-1">
+                                        <li>{t('formula1')}</li>
+                                        <li>{t('formula2')}</li>
+                                        <li>{t('formula3')}</li>
+                                        <li>{t('formula4')}</li>
+                                    </ul>
+                                </div>
+                                <div>
+                                    <p className="font-semibold mb-1">{t('assumptions')}</p>
+                                    <ul className="list-disc list-inside space-y-1">
+                                        {calc.assumptions.map((item) => (
+                                            <li key={item}>{item}</li>
+                                        ))}
+                                    </ul>
+                                </div>
+                                <p className="text-xs text-gray-500 mt-2">
+                                    {t('confidenceLevel', { level: calc.confidence_level })}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            <Footer />
+        </>
     );
   }
 

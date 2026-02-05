@@ -1,11 +1,14 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
 import { BookOpen, Calculator, Database, AlertTriangle, GitBranch, Calendar } from 'lucide-react';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export default function MethodologyPage() {
+    const t = useTranslations('methodology');
+
     return (
         <>
             <Header />
