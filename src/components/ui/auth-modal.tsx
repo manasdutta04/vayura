@@ -161,7 +161,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full py-3 bg-gradient-to-r from-nature-500 to-nature-600 text-white font-semibold rounded-lg hover:from-nature-600 hover:to-nature-700 transition-all disabled:opacity-50"
+                        className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-all disabled:opacity-50"
                     >
                         {loading ? (
                             <span className="flex items-center justify-center gap-2">
