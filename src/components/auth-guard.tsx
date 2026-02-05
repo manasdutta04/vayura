@@ -6,6 +6,7 @@ import { useAuth } from '@/lib/auth-context';
 
 const PUBLIC_PATHS = ['/', '/terms', '/privacy', '/data-policy', '/map', '/district', '/leaderboard', '/champions'];
 
+
 export function AuthGuard({ children }: { children: React.ReactNode }) {
     const { user, loading } = useAuth();
     const pathname = usePathname();

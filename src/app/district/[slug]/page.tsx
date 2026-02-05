@@ -113,6 +113,12 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+  const lastUpdated =
+  (data as any).lastUpdated ||
+  (data as any).last_updated ||
+  (data as any).updatedAt ||
+  null;
+
 
   return (
     <>
@@ -131,6 +137,9 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                 Estimated population {formatNumber(data.population)}. Data
                 refreshed in the last 24 hours.
               </p>
+              <p className="text-sm text-gray-500 mt-1">
+  Last Updated: {lastUpdated ? new Date(lastUpdated).toLocaleString() : "N/A"}
+</p>
             </div>
             <div className="flex gap-3">
               <ExportButtons data={data} slug={slug} />
