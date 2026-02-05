@@ -5,6 +5,7 @@ import { DistrictSearchResult } from "@/lib/types";
 import { apiClient, cn } from "@/lib/utils/helpers";
 import SkeletonCard from "./skeleton-card";
 import { Search, Loader2, MapPin } from "lucide-react";
+import EmptyState from "@/components/ui/EmptyState";
 
 interface DistrictSearchProps {
   onDistrictSelect?: (district: DistrictSearchResult) => void;
@@ -26,7 +27,7 @@ const HighlightMatch = ({ text, query }: { text: string; query: string }) => {
           </span>
         ) : (
           part
-        )
+        ),
       )}
     </>
   );
@@ -67,7 +68,7 @@ export function DistrictSearch({
       setError(null);
       try {
         const data = await apiClient<DistrictSearchResult[]>(
-          `/api/districts?q=${encodeURIComponent(debouncedQuery)}`
+          `/api/districts?q=${encodeURIComponent(debouncedQuery)}`,
         );
         if (!isCancelled) {
           setResults(data);
@@ -181,21 +182,27 @@ export function DistrictSearch({
                       "w-full text-left px-4 py-3 flex items-center gap-3 transition-colors",
                       index === activeIndex
                         ? "bg-blue-50 text-blue-700"
-                        : "hover:bg-gray-50 text-gray-700"
+                        : "hover:bg-gray-50 text-gray-700",
                     )}
                   >
                     <MapPin
                       className={cn(
                         "w-5 h-5 shrink-0",
-                        index === activeIndex ? "text-blue-600" : "text-gray-400"
+                        index === activeIndex
+                          ? "text-blue-600"
+                          : "text-gray-400",
                       )}
                     />
                     <div className="flex-1 min-w-0">
                       <div className="font-medium truncate">
-                        <HighlightMatch text={district.name} query={debouncedQuery} />
+                        <HighlightMatch
+                          text={district.name}
+                          query={debouncedQuery}
+                        />
                       </div>
                       <div className="text-xs text-gray-500 truncate">
-                        {district.state} • {district.population?.toLocaleString()} people
+                        {district.state} •{" "}
+                        {district.population?.toLocaleString()} people
                       </div>
                     </div>
                   </button>
@@ -207,9 +214,14 @@ export function DistrictSearch({
                 <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gray-100 mb-3">
                   <Search className="w-6 h-6 text-gray-400" />
                 </div>
-                <h3 className="text-gray-900 font-medium mb-1">No districts found</h3>
-                <p className="text-sm text-gray-500 mb-3">
+                <h3 className="text-gray-900 font-medium mb-1">
+                  No districts found
+                </h3>
+                <p className="text-sm text-gray-500 mb-1">
                   We couldn't find "{debouncedQuery}".
+                </p>
+                <p className="text-sm text-gray-400 mb-3">
+                  Try adjusting your search or filters.
                 </p>
                 <a
                   href="https://github.com/manasdutta04/vayura"

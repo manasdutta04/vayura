@@ -8,6 +8,7 @@ import {
   formatNumber,
   getAQICategory,
 } from "@/lib/utils/helpers";
+import EmptyState from "@/components/ui/EmptyState";
 
 async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   try {
@@ -43,15 +44,29 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
   }
 
   const data = await getDistrictDetail(slug);
-  if (!data) notFound();
+
+  if (!data) {
+    return (
+      <>
+        <Header />
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
+          <EmptyState
+            title="District data not available yet"
+            subtitle="Try searching for another district or adjusting your filters"
+          />
+        </main>
+        <Footer />
+      </>
+    );
+  }
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
- const lastUpdated =
-  (data as any).lastUpdated ||
-  (data as any).last_updated ||
-  (data as any).updatedAt ||
-  null;
+  const lastUpdated =
+    (data as any).lastUpdated ||
+    (data as any).last_updated ||
+    (data as any).updatedAt ||
+    null;
 
   return (
     <>
@@ -67,9 +82,9 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                 {data.name}, <span className="text-gray-600">{data.state}</span>
               </h1>
               <p className="mt-2 text-gray-600">
-                Estimated population {formatNumber(data.population)}.
+                Estimated population {formatNumber(data.population)}. Data
+                refreshed in the last 24 hours.
               </p>
-
               <p className="text-sm text-gray-500 mt-1">
                 Last Updated:{" "}
                 {lastUpdated ? new Date(lastUpdated).toLocaleString() : "N/A"}
