@@ -1,6 +1,9 @@
 # Vayura
+
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Why Vayura?
@@ -22,12 +25,12 @@ Vayura is an open-source web application that estimates district-level oxygen de
 
 ## 🚀 Features at a Glance
 
-| 🌍 District Intelligence | 🌳 Impact & Plantation | 🤖 AI & Analytics |
-| :--- | :--- | :--- |
-| **All-India Coverage:** Data for every district across the nation. | **Tree Upload System:** Upload photos of your plantations. | **Gemini AI Aggregation:** Intelligent multi-source data fetching. |
-| **O₂ Demand/Supply:** Real-time estimation vs. natural supply. | **AI Verification:** Machine learning to verify plantation photos. | **Environmental Health Card:** AQI, Soil quality, & Disaster risk. |
-| **State Leaderboards:** Rankings for oxygen self-sufficiency. | **NGO Donation Hub:** Verified links to environmental NGOs. | **Interactive Charts:** Visual insights via Recharts. |
-| **Deficit Indicators:** Clear visual cues for oxygen-starved zones. | **Personal Dashboard:** Track your planted vs. donated trees. | **Transparent Logic:** All scientific formulas shown in-app. |
+| 🌍 District Intelligence                                            | 🌳 Impact & Plantation                                             | 🤖 AI & Analytics                                                  |
+| :------------------------------------------------------------------ | :----------------------------------------------------------------- | :----------------------------------------------------------------- |
+| **All-India Coverage:** Data for every district across the nation.  | **Tree Upload System:** Upload photos of your plantations.         | **Gemini AI Aggregation:** Intelligent multi-source data fetching. |
+| **O₂ Demand/Supply:** Real-time estimation vs. natural supply.      | **AI Verification:** Machine learning to verify plantation photos. | **Environmental Health Card:** AQI, Soil quality, & Disaster risk. |
+| **State Leaderboards:** Rankings for oxygen self-sufficiency.       | **NGO Donation Hub:** Verified links to environmental NGOs.        | **Interactive Charts:** Visual insights via Recharts.              |
+| **Deficit Indicators:** Clear visual cues for oxygen-starved zones. | **Personal Dashboard:** Track your planted vs. donated trees.      | **Transparent Logic:** All scientific formulas shown in-app.       |
 
 ---
 
@@ -61,12 +64,14 @@ graph TD
 ## Tech Stack
 
 ### Frontend
+
 - **Next.js 16+** (App Router)
 - **React 19** with TypeScript
 - **Tailwind CSS** for styling
 - **Recharts** for data visualization
 
 ### Backend
+
 - **Node.js** (Next.js API Routes)
 - **Python FastAPI** microservice for oxygen calculations (optional)
 - **Firebase Firestore** for database
@@ -81,7 +86,28 @@ graph TD
 - **Firebase Project**: For authentication, database, and storage
 - **Google Gemini API Key**: For intelligent data fetching
 
-## Quick Start
+## Quick Start (Docker)
+
+The fastest way to run Vayura (Frontend + Backend) without manual dependencies.
+
+### 1. Start the Application
+
+```bash
+# Create .env from example
+cp .env.example .env
+
+# Start with Docker Compose
+docker-compose up --build
+```
+
+### 2. Access Services
+
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend**: [http://localhost:8000/health](http://localhost:8000/health)
+
+For detailed setup instructions, troubleshooting, or manual setup, see [SETUP.md](./SETUP.md).
+
+## Quick Start (local)
 
 ### 1. Clone the Repository
 
@@ -143,6 +169,7 @@ NEXT_PUBLIC_BASE_URL=http://localhost:3000
    - Copy rules from `firestore.rules` to Firebase Console > Firestore > Rules
 
 3. Seed initial data:
+
 ```bash
 npx tsx scripts/seed-districts.ts
 npx tsx scripts/seed-forest-cover-data.ts
@@ -170,20 +197,25 @@ Visit [http://localhost:3000](http://localhost:3000) to see the application.
 Vayura uses a transparent, scientifically-backed approach. We convert abstract environmental data into precise metrics using the following logic:
 
 ### 1. Base Human $O_2$ Demand
+
 The annual oxygen requirement for a district's population:
 
 $$D_{base} = \text{Population} \times 550L/\text{day} \times 365 \text{ days}$$
 
 ### 2. Penalty Factors
+
 We adjust demand based on environmental stressors:
-* **AQI Factor ($F_{aqi}$):** Increases demand due to respiratory stress.
-* **Soil Factor ($F_{soil}$):** Adjusts for natural oxygen source degradation.
-* **Disaster Factor ($F_{dis}$):** Accounts for vegetation loss.
+
+- **AQI Factor ($F_{aqi}$):** Increases demand due to respiratory stress.
+- **Soil Factor ($F_{soil}$):** Adjusts for natural oxygen source degradation.
+- **Disaster Factor ($F_{dis}$):** Accounts for vegetation loss.
 
 ### 3. Final Adjusted Demand
+
 $$D_{adj} = D_{base} \times F_{aqi} \times F_{soil} \times F_{dis}$$
 
 ### 4. Trees Required to Offset Deficit
+
 To calculate how many trees are needed to reach a balance:
 
 $$T_{req} = \frac{\text{Oxygen Deficit}}{\text{Adjusted Annual Tree Supply}}$$
@@ -298,7 +330,7 @@ Always verify critical information with official sources and domain experts.
 - **Issues**: [GitHub Issues](https://github.com/manasdutta04/vayura/issues)
 - **Contributions**: [See CONTRIBUTING.md](./CONTRIBUTING.md)
 
-##  Creators
+## Creators
 
 - Developed by [Manas Dutta](https://github.com/manasdutta04)
 
@@ -347,4 +379,4 @@ Thanks to these amazing people <3
 
 **Made with care for a greener India**
 
-*"Every tree counts. Every breath matters."*
+_"Every tree counts. Every breath matters."_

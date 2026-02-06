@@ -1,6 +1,41 @@
 # Vayura Setup Guide
 
-Complete setup instructions for running Vayura locally.
+You can run Vayura using **Docker (Recommended)** or set it up manually.
+
+## Option 1: Docker Setup (Recommended)
+
+Run the Next.js Frontend and Python Backend in consistent containers.
+
+### Prerequisites
+
+- **[Docker Desktop](https://www.docker.com/products/docker-desktop/)**: Ensure it is installed and running.
+- **Environment Variables**: Create a `.env` file with your Firebase credentials (refer to the "Set Up Environment Variables" section below).
+
+### Quick Start
+
+1.  **Start the Application**
+
+    ```bash
+    docker-compose up --build
+    ```
+
+2.  **Access Services**
+    - **Frontend Dashboard**: [http://localhost:3000](http://localhost:3000)
+    - **Backend Health Check**: [http://localhost:8000/health](http://localhost:8000/health)
+
+3.  **Stop the Application**
+    - Press `Ctrl + C` to stop the running services.
+    - To remove containers and networks, run:
+      ```bash
+      docker-compose down
+      ```
+
+### Troubleshooting
+
+- **"Error during connect"**: Verify that Docker Desktop is running.
+- **"Firebase Config Missing"**: Docker Compose reads from `.env` by default, not `.env.local`. Ensure your secrets are correctly placed in `.env`.
+
+## Option 2: setup instructions for running Vayura locally.
 
 ## Prerequisites
 
@@ -51,10 +86,12 @@ npm install
 You have two options:
 
 **Option A: Service Account JSON File (Recommended)**
+
 - Place `firebase-service-account.json` in the project root
 - The file will be automatically loaded
 
 **Option B: Environment Variables**
+
 - Extract values from the JSON file:
   - `project_id` → `FIREBASE_PROJECT_ID`
   - `client_email` → `FIREBASE_CLIENT_EMAIL`
@@ -167,4 +204,3 @@ Visit [http://localhost:3000](http://localhost:3000)
 - Open a [GitHub Issue](https://github.com/manasdutta04/vayura/issues)
 - Check existing issues and discussions
 - Read the [README.md](./README.md) for more information
-
