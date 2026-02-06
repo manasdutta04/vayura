@@ -1,6 +1,6 @@
 # Vayura
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-15-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-16-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Why Vayura?
@@ -329,6 +329,7 @@ Always verify critical information with official sources and domain experts.
     </tr>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/vedant7007"><img src="https://avatars.githubusercontent.com/u/170861579?v=4?s=100" width="100px;" alt="Vedant"/><br /><sub><b>Vedant</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=vedant7007" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/yashstack-bot"><img src="https://avatars.githubusercontent.com/u/196862201?v=4?s=100" width="100px;" alt="yashstack-bot"/><br /><sub><b>yashstack-bot</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=yashstack-bot" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
