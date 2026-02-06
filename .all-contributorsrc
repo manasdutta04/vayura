@@ -141,6 +141,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "yashstack-bot",
+      "name": "yashstack-bot",
+      "avatar_url": "https://avatars.githubusercontent.com/u/196862201?v=4",
+      "profile": "https://github.com/yashstack-bot",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
