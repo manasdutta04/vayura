@@ -69,7 +69,7 @@ export async function updateUserProfileFields(
 ): Promise<boolean> {
   try {
     console.log("updateUserProfileFields called with:", { userId, fields }); // Debug log
-    
+
     if (!userId) {
       console.error("User ID missing");
       return false;
@@ -79,7 +79,7 @@ export async function updateUserProfileFields(
     console.log("User document reference:", userRef.path); // Debug log
 
     // Remove empty / undefined fields
-    const updateData: Record<string, any> = {};
+    const updateData: Record<string, string | number | boolean | object> = {};
     Object.entries(fields).forEach(([key, value]) => {
       if (value !== undefined && value !== null && value !== "") {
         updateData[key] = value;
