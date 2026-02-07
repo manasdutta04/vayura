@@ -2,6 +2,7 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
@@ -370,7 +371,7 @@ function ChampionsPageContent() {
                         District Champions
                     </h1>
                     <p className="text-gray-600 max-w-lg mx-auto">
-                        Celebrating the top contributors making a real impact on India's environment.
+                        Celebrating the top contributors making a real impact on India&apos;s environment.
                         Plant trees, earn badges, and climb the leaderboard!
                     </p>
                 </div>
@@ -466,13 +467,13 @@ function ChampionsPageContent() {
                                     : 'Be the first to plant a tree and claim the top spot!'}
                             </p>
                             {(scope === 'national' || selectedDistrict || selectedState) && (
-                                <a
+                                <Link
                                     href="/plant"
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium shadow-lg shadow-green-200 hover:shadow-xl hover:shadow-green-300 transition-all"
                                 >
                                     <TreeDeciduous className="w-5 h-5" />
                                     Plant a Tree Now
-                                </a>
+                                </Link>
                             )}
                         </div>
                     )}
@@ -499,20 +500,20 @@ function ChampionsPageContent() {
                         Start your journey today!
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
-                        <a
+                        <Link
                             href="/plant"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
                         >
                             <TreeDeciduous className="w-5 h-5" />
                             Plant a Tree
-                        </a>
-                        <a
+                        </Link>
+                        <Link
                             href="/donate"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 text-white border border-white/30 rounded-lg font-semibold hover:bg-green-500/30 transition-colors"
                         >
                             <Shield className="w-5 h-5" />
                             Donate Trees
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </main>

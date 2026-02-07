@@ -1,4 +1,5 @@
 // Run with: node scripts/load-test.js
+/* eslint-disable @typescript-eslint/no-require-imports */
 const http = require('http');
 
 const TOTAL_REQUESTS = 500;

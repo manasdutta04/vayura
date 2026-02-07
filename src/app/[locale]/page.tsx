@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState, Suspense } from 'react';
+import { useEffect, useMemo, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
@@ -18,7 +18,7 @@ function HomeContent() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalManuallyOpened, setAuthModalManuallyOpened] = useState(false);
   const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
 
   // Redirect authenticated users to dashboard
@@ -28,19 +28,12 @@ function HomeContent() {
     }
   }, [user, loading, router]);
 
-  // Open AuthModal if query param exists
-  useEffect(() => {
-    if (searchParams.get('action') === 'login' && !user) {
-      setShowAuthModal(true);
-    }
+  const shouldAutoOpenAuthModal = useMemo(() => {
+    if (user) return false;
+    return searchParams.get('action') === 'login' || searchParams.get('auth_required') === 'true';
   }, [searchParams, user]);
 
-  // Show auth modal if auth_required param is present
-  useEffect(() => {
-    if (searchParams?.get('auth_required') === 'true') {
-      setShowAuthModal(true);
-    }
-  }, [searchParams]);
+  const showAuthModal = authModalManuallyOpened || shouldAutoOpenAuthModal;
 
   // Fetch stats
   useEffect(() => {
@@ -185,7 +178,7 @@ function HomeContent() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
               <button
-                onClick={() => setShowAuthModal(true)}
+                onClick={() => setAuthModalManuallyOpened(true)}
                 className="px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-gray-900/20 flex items-center gap-2"
               >
                 {t('home.hero.joinMovement')}
@@ -330,7 +323,7 @@ function HomeContent() {
                 {t('home.cta.subtitle')}
               </p>
               <button
-                onClick={() => setShowAuthModal(true)}
+                onClick={() => setAuthModalManuallyOpened(true)}
                 className="px-8 py-4 bg-white text-gray-900 text-lg font-bold rounded-xl hover:bg-gray-100 transition-colors shadow-lg"
               >
                 {t('home.cta.button')}
@@ -342,7 +335,7 @@ function HomeContent() {
       <Footer />
 
       {/* Auth Modal */}
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <AuthModal isOpen={showAuthModal} onClose={() => setAuthModalManuallyOpened(false)} />
     </>
   );
 }

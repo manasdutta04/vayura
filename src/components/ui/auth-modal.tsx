@@ -206,7 +206,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                                 Forgot password?
                             </button>
                             <p className="mt-2 text-gray-500">
-                                Don't have an account?{' '}
+                                Don&apos;t have an account?{' '}
                                 <button
                                     onClick={() => setMode('signup')}
                                     className="text-nature-600 font-medium hover:underline"

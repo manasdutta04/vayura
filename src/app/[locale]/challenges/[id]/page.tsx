@@ -379,7 +379,7 @@ function ChallengeDetailContent() {
                             <Target className="w-8 h-8 text-red-400" />
                         </div>
                         <h2 className="text-xl font-bold text-gray-900 mb-2">Challenge Not Found</h2>
-                        <p className="text-gray-500 mb-6">This challenge may have been removed or doesn't exist.</p>
+                        <p className="text-gray-500 mb-6">This challenge may have been removed or doesn&apos;t exist.</p>
                         <Link
                             href="/challenges"
                             className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
@@ -557,7 +557,7 @@ function ChallengeDetailContent() {
                                 <CheckCircle className="w-6 h-6" />
                             </div>
                             <div>
-                                <h3 className="font-bold text-lg">You're Participating!</h3>
+                                <h3 className="font-bold text-lg">You&apos;re Participating!</h3>
                                 <p className="text-green-100 text-sm">Keep contributing to climb the leaderboard</p>
                             </div>
                         </div>
