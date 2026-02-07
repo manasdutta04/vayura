@@ -2,7 +2,7 @@ import { doc, getDoc, setDoc, Timestamp } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 
 // 1. Memoization: In-Memory L1 Cache
-const memoizationMap = new Map<string, { value: any; expiry: number }>();
+const memoizationMap = new Map<string, { value: unknown; expiry: number }>();
 
 export const oxygenCache = {
   // Check RAM first (fastest)
@@ -15,12 +15,12 @@ export const oxygenCache = {
   },
 
   // Save to RAM
-  setMemoized(key: string, value: any, ttlSeconds: number = 300) {
+  setMemoized(key: string, value: unknown, ttlSeconds: number = 300) {
     memoizationMap.set(key, {
       value,
       expiry: Date.now() + (ttlSeconds * 1000)
     });
-    
+
     // Safety: Prevent memory leaks
     if (memoizationMap.size > 1000) {
       const firstKey = memoizationMap.keys().next().value;
@@ -43,7 +43,7 @@ export const oxygenCache = {
         // 24h TTL for Firestore
         const now = Date.now();
         const cachedTime = data.timestamp?.toMillis ? data.timestamp.toMillis() : data.timestamp;
-        
+
         if (now - cachedTime < 86400000) {
           this.setMemoized(key, data.result); // Hydrate L1
           return { data: data.result, source: 'firestore' };
@@ -55,7 +55,7 @@ export const oxygenCache = {
     return null;
   },
 
-  async set(key: string, result: any) {
+  async set(key: string, result: unknown) {
     this.setMemoized(key, result); // Write L1
     // Write L2 (Fire & Forget)
     setDoc(doc(db, 'oxygen_cache', key), {
