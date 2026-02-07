@@ -19,12 +19,11 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [stats, setStats] = useState({ 
-    totalDistricts: 766, 
-    totalTrees: 0, 
-    totalOxygen: 0,
-    // NEW: Previous period stats for trends
-    previousTotalTrees: 0,
-    previousTotalOxygen: 0
+  totalDistricts: 766, 
+  totalTrees: 0, 
+  totalOxygen: 0,
+  previousTotalTrees: 0,
+  previousTotalOxygen: 0
   });
 
   // Redirect authenticated users to dashboard
@@ -48,28 +47,27 @@ function HomeContent() {
     }
   }, [searchParams]);
 
-  // Fetch stats with trend data
-  useEffect(() => {
-    async function fetchStats() {
-      try {
-        const response = await fetch('/api/stats');
-        if (response.ok) {
-          const data = await response.json();
-          setStats(prev => ({ 
-            totalDistricts: data.totalDistricts || prev.totalDistricts,
-            totalTrees: data.totalTrees || 0,
-            totalOxygen: data.totalOxygen || 0,
-            // NEW: Store previous values for trend calculation
-            previousTotalTrees: data.previousTotalTrees || 0,
-            previousTotalOxygen: data.previousTotalOxygen || 0,
-          }));
-        }
-      } catch (error) {
-        console.error('Error fetching stats:', error);
+  // Fetch stats
+useEffect(() => {
+  async function fetchStats() {
+    try {
+      const response = await fetch('/api/stats');
+      if (response.ok) {
+        const data = await response.json();
+        setStats(prev => ({ 
+          totalDistricts: data.totalDistricts || prev.totalDistricts,
+          totalTrees: data.totalTrees || 0,
+          totalOxygen: data.totalOxygen || 0,
+          previousTotalTrees: data.previousTotalTrees || 0,
+          previousTotalOxygen: data.previousTotalOxygen || 0,
+        }));
       }
+    } catch (error) {
+      console.error('Error fetching stats:', error);
     }
-    fetchStats();
-  }, []);
+  }
+  fetchStats();
+}, []);
 
   const handleDistrictSelect = (district: any) => {
     // Navigate to the specific district page
@@ -166,11 +164,6 @@ function HomeContent() {
                     )}
                   </div>
                   <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Trees Planted</span>
-                  {stats.previousTotalTrees > 0 && (
-                    <span className="text-[10px] text-green-600 mt-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      +{((stats.totalTrees - stats.previousTotalTrees) / stats.previousTotalTrees * 100).toFixed(1)}% this week
-                    </span>
-                  )}
                 </div>
 
                 {/* Oxygen Added Card with Trend */}

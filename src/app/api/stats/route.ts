@@ -9,8 +9,6 @@ export async function GET() {
         const statsDoc = await adminDb.collection('aggregated_stats').doc('global').get();
         
         if (!statsDoc.exists) {
-            // Fallback: return zeros if aggregated stats not yet created
-            // Stats will be populated on first cron run
             console.warn('Aggregated stats document not found. Run /api/cron/update-stats to initialize.');
             return NextResponse.json({
                 totalDistricts: 0,
