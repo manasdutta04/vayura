@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { LeaderboardEntry } from '@/lib/types';
 
 export const dynamic = 'force-dynamic';
 
@@ -20,9 +21,9 @@ export async function GET(request: Request) {
             .map((doc: QueryDocumentSnapshot) => ({
                 id: doc.id,
                 ...doc.data()
-            } as any))
+            } as LeaderboardEntry))
             // Filter out invalid entries without state names
-            .filter((entry: any) => entry.state && entry.state.trim().length > 0);
+            .filter((entry) => entry.state && entry.state.trim().length > 0);
 
         return NextResponse.json(leaderboard, {
             headers: {
