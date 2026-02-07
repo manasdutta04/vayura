@@ -6,10 +6,12 @@ import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
 
 export const dynamic = 'force-dynamic';
 
-function timestampToDate(value: any): Date {
+function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
-    if (typeof value.toDate === 'function') return value.toDate();
-    return value instanceof Date ? value : new Date(value);
+    if (typeof value === 'object' && value !== null && 'toDate' in value && typeof (value as { toDate: () => Date }).toDate === 'function') {
+        return (value as { toDate: () => Date }).toDate();
+    }
+    return value instanceof Date ? value : new Date(value as string | number);
 }
 
 export async function GET(request: Request) {
@@ -65,7 +67,7 @@ export async function GET(request: Request) {
                 .get();
         } else {
             // If no email, return empty donations
-            donationsSnap = { docs: [], empty: true } as any;
+            donationsSnap = { docs: [] as QueryDocumentSnapshot[], empty: true };
         }
 
         const standardDonations: Donation[] = donationsSnap.docs.map((doc: QueryDocumentSnapshot) => {
@@ -91,9 +93,9 @@ export async function GET(request: Request) {
                 const districtRefs = districtIds.map(id => adminDb.collection('districts').doc(id));
                 const districtDocs = await adminDb.getAll(...districtRefs);
 
-                districtDocs.forEach((doc: any) => {
+                districtDocs.forEach((doc) => {
                     if (doc.exists) {
-                        districtsMap.set(doc.id, doc.data()?.name || 'Unknown');
+                        districtsMap.set(doc.id, (doc.data() as { name?: string })?.name || 'Unknown');
                     } else {
                         districtsMap.set(doc.id, 'Unknown');
                     }
