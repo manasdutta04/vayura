@@ -24,11 +24,16 @@ function getDb() {
 }
 
 // Convert Firestore timestamp to Date
-function toDate(timestamp: any): Date {
+function toDate(timestamp: unknown): Date {
     if (!timestamp) return new Date();
-    if (timestamp.toDate) return timestamp.toDate();
+
+    const ts = timestamp as { toDate?: () => Date } | null | undefined;
+    if (typeof ts?.toDate === 'function') {
+        return ts.toDate();
+    }
+
     if (timestamp instanceof Date) return timestamp;
-    return new Date(timestamp);
+    return new Date(timestamp as string | number);
 }
 
 // Determine challenge status based on dates
@@ -182,7 +187,7 @@ async function getTopContributors(
         .limit(limit)
         .get();
 
-    return snapshot.docs.map((doc: any, index: number) => {
+    return snapshot.docs.map((doc, index: number) => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -492,7 +497,7 @@ export async function getUserChallenges(userId: string): Promise<ChallengeWithLe
         .where('userId', '==', userId)
         .get();
 
-    const challengeIds = participantSnapshot.docs.map((doc: any) => doc.data().challengeId);
+    const challengeIds = participantSnapshot.docs.map((doc) => doc.data().challengeId);
 
     if (challengeIds.length === 0) return [];
 
