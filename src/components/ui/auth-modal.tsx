@@ -38,8 +38,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                     description: 'Please check your inbox.'
                 });
             }
-        } catch (err: any) {
-            toast.error(err.message || 'Authentication failed');
+        } catch (err: unknown) {
+            const error = err as Error;
+            toast.error(error.message || 'Authentication failed');
         } finally {
             setLoading(false);
         }
@@ -51,8 +52,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             await signInWithGoogle();
             toast.success('Signed in with Google');
             onClose();
-        } catch (err: any) {
-            toast.error(err.message || 'Google sign-in failed');
+        } catch (err: unknown) {
+            const error = err as Error;
+            toast.error(error.message || 'Google sign-in failed');
         } finally {
             setLoading(false);
         }
