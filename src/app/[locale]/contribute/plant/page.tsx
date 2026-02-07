@@ -111,8 +111,9 @@ function PlantContributionForm() {
             setPreviewUrl(null);
             setNotes('');
             setSelectedChallengeId('');
-        } catch (err: any) {
-            setError(err.message || 'Failed to submit contribution');
+        } catch (err: unknown) {
+            const error = err as Error;
+            setError(error.message || 'Failed to submit contribution');
         } finally {
             setSubmitting(false);
         }
