@@ -47,7 +47,7 @@ function CreateChallengeContent() {
     const [targetTrees, setTargetTrees] = useState<number>(1000);
     const [startDate, setStartDate] = useState<string>('');
     const [endDate, setEndDate] = useState<string>('');
-    
+
     // UI state
     const [showPreview, setShowPreview] = useState(false);
     const [submitting, setSubmitting] = useState(false);
@@ -72,7 +72,7 @@ function CreateChallengeContent() {
                 if (res.ok) {
                     const data = await res.json();
                     const stateList = data
-                        .map((entry: any) => entry.state)
+                        .map((entry: { state: string }) => entry.state)
                         .filter((s: string) => s && s.trim().length > 0)
                         .sort();
                     setStates([...new Set(stateList)] as string[]);
@@ -90,14 +90,14 @@ function CreateChallengeContent() {
         tomorrow.setDate(tomorrow.getDate() + 1);
         const end = new Date();
         end.setDate(end.getDate() + 31);
-        
+
         setStartDate(tomorrow.toISOString().split('T')[0]);
         setEndDate(end.toISOString().split('T')[0]);
     }, []);
 
     // Calculated values
     const targetO2 = targetTrees * 110;
-    const durationDays = startDate && endDate 
+    const durationDays = startDate && endDate
         ? Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24))
         : 0;
 
@@ -150,8 +150,9 @@ function CreateChallengeContent() {
             setTimeout(() => {
                 router.push(`/challenges/${data.challenge.id}`);
             }, 2000);
-        } catch (err: any) {
-            setError(err.message || 'Failed to create challenge');
+        } catch (err: unknown) {
+            const error = err as Error;
+            setError(error.message || 'Failed to create challenge');
         } finally {
             setSubmitting(false);
         }
@@ -287,11 +288,10 @@ function CreateChallengeContent() {
                                                     key={s}
                                                     type="button"
                                                     onClick={() => setScope(s)}
-                                                    className={`px-4 py-3 rounded-lg font-medium transition-all flex flex-col items-center gap-2 ${
-                                                        scope === s
+                                                    className={`px-4 py-3 rounded-lg font-medium transition-all flex flex-col items-center gap-2 ${scope === s
                                                             ? 'bg-gray-900 text-white shadow-md'
                                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     {s === 'national' && <Globe className="w-5 h-5" />}
                                                     {s === 'state' && <Building2 className="w-5 h-5" />}
@@ -348,11 +348,10 @@ function CreateChallengeContent() {
                                                     key={t}
                                                     type="button"
                                                     onClick={() => setType(t)}
-                                                    className={`px-4 py-3 rounded-lg font-medium transition-all ${
-                                                        type === t
+                                                    className={`px-4 py-3 rounded-lg font-medium transition-all ${type === t
                                                             ? 'bg-green-600 text-white shadow-md'
                                                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                                                    }`}
+                                                        }`}
                                                 >
                                                     <span className="text-sm capitalize">{t}</span>
                                                 </button>
@@ -415,16 +414,14 @@ function CreateChallengeContent() {
                                     </div>
 
                                     {durationDays > 0 && (
-                                        <div className={`rounded-lg p-3 ${
-                                            durationDays < 7 || durationDays > 365
+                                        <div className={`rounded-lg p-3 ${durationDays < 7 || durationDays > 365
                                                 ? 'bg-red-50 border border-red-200'
                                                 : 'bg-green-50 border border-green-200'
-                                        }`}>
-                                            <p className={`text-sm font-medium ${
-                                                durationDays < 7 || durationDays > 365
+                                            }`}>
+                                            <p className={`text-sm font-medium ${durationDays < 7 || durationDays > 365
                                                     ? 'text-red-700'
                                                     : 'text-green-700'
-                                            }`}>
+                                                }`}>
                                                 Duration: {durationDays} days
                                                 {durationDays < 7 && ' (Minimum 7 days required)'}
                                                 {durationDays > 365 && ' (Maximum 365 days allowed)'}
