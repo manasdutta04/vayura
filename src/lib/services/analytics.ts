@@ -1,6 +1,6 @@
 import { adminDb } from '@/lib/firebase-admin';
 import { AnalyticsData, MetricSnapshot, RegionalAnalytics, PredictiveInsights, ComparativeAnalytics } from '@/lib/types/analytics';
-import { Collections } from '@/lib/types/firestore';
+import { District, LeaderboardEntry, TreeContribution, Donation } from '@/lib/types';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 // In-memory cache for analytics data
@@ -23,20 +23,20 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     }
 
     // 1. Fetch all districts for regional data
-    const districtsSnapshot = await adminDb.collection(Collections.DISTRICTS).get();
-    const districts = districtsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as any));
+    const districtsSnapshot = await adminDb.collection('districts').get();
+    const districts = districtsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as District & { avgAQI?: number }));
 
     // 2. Fetch all contributions for time-series
-    const contributionsSnapshot = await adminDb.collection(Collections.TREE_CONTRIBUTIONS).get();
-    const contributions = contributionsSnapshot.docs.map((doc: QueryDocumentSnapshot) => doc.data());
+    const contributionsSnapshot = await adminDb.collection('tree_contributions').get();
+    const contributions = contributionsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as unknown as TreeContribution));
 
     // 3. Fetch all donations
-    const donationsSnapshot = await adminDb.collection(Collections.DONATIONS).get();
-    const donations = donationsSnapshot.docs.map((doc: QueryDocumentSnapshot) => doc.data());
+    const donationsSnapshot = await adminDb.collection('donations').get();
+    const donations = donationsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as unknown as Donation));
 
     // 4. Fetch leaderboard for state-level data
     const leaderboardSnapshot = await adminDb.collection('leaderboard').get();
-    const leaderboard = leaderboardSnapshot.docs.map((doc: QueryDocumentSnapshot) => doc.data());
+    const leaderboard = leaderboardSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({ id: doc.id, ...doc.data() } as LeaderboardEntry));
 
     // 5. Aggregate Global Metrics
     const globalStatsDoc = await adminDb.collection('aggregated_stats').doc('global').get();
@@ -54,7 +54,7 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     // Calculate Average AQI
     let totalAQI = 0;
     let countAQI = 0;
-    districts.forEach((d: any) => {
+    districts.forEach((d) => {
         if (d.avgAQI) {
             totalAQI += d.avgAQI;
             countAQI++;
@@ -66,10 +66,10 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     const timeSeries = generateTimeSeries(contributions, donations);
 
     // 7. Regional Analytics
-    const regionalData: RegionalAnalytics[] = leaderboard.map((state: any) => {
-        const o2Demand = state.o2Needed || (state.population * 550 * 365 * 1.429 / 1000) || 0;
+    const regionalData: RegionalAnalytics[] = leaderboard.map((state: LeaderboardEntry) => {
+        const o2Demand = state.o2Needed || ((state.population ?? 0) * 550 * 365 * 1.429 / 1000) || 0;
         const o2Supply = state.totalO2Supply || 0;
-        
+
         return {
             regionName: state.state,
             regionType: 'state' as const,
@@ -113,14 +113,14 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     // 9. Predictive Insights
     // Calculate growth rate from last 3 months
     const last3Months = timeSeries.slice(-3);
-    const growthRate = last3Months.length >= 2 
-        ? (last3Months[last3Months.length-1].totalTrees - last3Months[0].totalTrees) / (last3Months.length - 1)
+    const growthRate = last3Months.length >= 2
+        ? (last3Months[last3Months.length - 1].totalTrees - last3Months[0].totalTrees) / (last3Months.length - 1)
         : contributions.length / 12;
 
     const totalDemand = regionalData.reduce((sum: number, r: RegionalAnalytics) => sum + r.metrics.oxygenDemand, 0);
     const currentO2 = globalMetrics.totalOxygen;
     const o2PerTree = 110; // kg/year
-    
+
     const treesNeeded = Math.max(0, (totalDemand - currentO2) / o2PerTree);
     const yearsToGoal = growthRate > 0 ? (treesNeeded / (growthRate * 12)) : 99;
 
@@ -160,7 +160,7 @@ export async function getAnalyticsData(): Promise<AnalyticsData> {
     return result;
 }
 
-function generateTimeSeries(contributions: any[], donations: any[]): MetricSnapshot[] {
+function generateTimeSeries(contributions: TreeContribution[], donations: Donation[]): MetricSnapshot[] {
     const months = 6;
     const now = new Date();
     const series: MetricSnapshot[] = [];
@@ -169,18 +169,18 @@ function generateTimeSeries(contributions: any[], donations: any[]): MetricSnaps
         const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const monthEnd = new Date(now.getFullYear(), now.getMonth() - i + 1, 0);
 
-        const monthContribs = contributions.filter((c: any) => {
-            const d = c.plantedAt?.toDate?.() || new Date(c.plantedAt);
+        const monthContribs = contributions.filter((c) => {
+            const d = c.plantedAt instanceof Date ? c.plantedAt : (c.plantedAt as unknown as { toDate: () => Date }).toDate();
             return d <= monthEnd;
         });
 
-        const monthDonations = donations.filter((d: any) => {
-            const date = d.donatedAt?.toDate?.() || new Date(d.donatedAt);
+        const monthDonations = donations.filter((d) => {
+            const date = d.donatedAt instanceof Date ? d.donatedAt : (d.donatedAt as unknown as { toDate: () => Date }).toDate();
             return date <= monthEnd;
         });
 
-        const totalTrees = monthContribs.reduce((sum: number, c: any) => sum + (c.treeQuantity || 0), 0) +
-                           monthDonations.reduce((sum: number, d: any) => sum + (d.treeCount || 0), 0);
+        const totalTrees = monthContribs.reduce((sum, c) => sum + (c.treeQuantity || 0), 0) +
+            monthDonations.reduce((sum, d) => sum + (d.treeCount || 0), 0);
 
         series.push({
             timestamp: date,
@@ -198,7 +198,7 @@ function generateTimeSeries(contributions: any[], donations: any[]): MetricSnaps
 function getMockAnalyticsData(): AnalyticsData {
     const now = new Date();
     const timeSeries: MetricSnapshot[] = [];
-    
+
     for (let i = 5; i >= 0; i--) {
         const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
         const baseTrees = 5000 + (5 - i) * 1200;
@@ -336,11 +336,11 @@ Return ONLY a JSON object with this format:
 
         const result = await response.json();
         const text = result.candidates[0]?.content?.parts[0]?.text;
-        
+
         // Extract JSON from response
         const jsonMatch = text.match(/\{[\s\S]*\}/);
         if (!jsonMatch) throw new Error('No JSON found in response');
-        
+
         return JSON.parse(jsonMatch[0]);
     } catch (error) {
         console.error('Gemini error:', error);
