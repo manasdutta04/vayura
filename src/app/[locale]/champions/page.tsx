@@ -306,7 +306,7 @@ function ChampionsPageContent() {
                 if (res.ok) {
                     const data = await res.json();
                     const stateList = data
-                        .map((entry: any) => entry.state)
+                        .map((entry: { state: string }) => entry.state)
                         .filter((s: string) => s && s.trim().length > 0)
                         .sort();
                     setStates([...new Set(stateList)] as string[]);
