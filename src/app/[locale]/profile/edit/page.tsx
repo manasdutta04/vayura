@@ -37,7 +37,7 @@ export default function EditProfilePage() {
         try {
           // First, try to get the profile from Firestore
           const userProfile = await getUserProfile(user.uid);
-          
+
           if (userProfile) {
             // Use the Firestore profile data
             setProfile({
@@ -57,7 +57,7 @@ export default function EditProfilePage() {
             });
             setPreviewImage(user.photoURL || '');
           }
-          
+
           // Don't set selectedFile here since we're not dealing with a new file
           setSelectedFile(null);
           setLoadingProfile(false);
@@ -76,7 +76,7 @@ export default function EditProfilePage() {
         }
       }
     }
-    
+
     loadProfile();
   }, [user]);
 
@@ -151,14 +151,14 @@ export default function EditProfilePage() {
 
       // Prepare update data, excluding undefined/null values
       // Also exclude phone and address as they should not be stored
-      const updateData: any = {};
+      const updateData: Record<string, unknown> = {};
       if (profile.name !== undefined && profile.name !== null && profile.name.trim() !== '') {
         updateData.name = profile.name.trim();
       }
       if (profile.bio !== undefined && profile.bio !== null && profile.bio.trim() !== '') {
         updateData.bio = profile.bio.trim();
       }
-      
+
       // Handle photoURL - if it's a data URL (local file), upload it to storage first
       if (profile.photoURL !== undefined && profile.photoURL !== null && profile.photoURL.trim() !== '') {
         if (profile.photoURL.startsWith('data:image')) {
@@ -180,10 +180,10 @@ export default function EditProfilePage() {
           updateData.photoURL = profile.photoURL.trim();
         }
       }
-      
+
       console.log("Update data:", updateData); // Debug log
       console.log("User ID:", user.uid); // Debug log
-            
+
       // Update Firestore profile
       const success = await updateUserProfileFields(user.uid, updateData);
       console.log("Update result:", success); // Debug log
@@ -192,11 +192,11 @@ export default function EditProfilePage() {
         // Also update Firebase Auth profile
         if (updateData.name || updateData.photoURL) {
           await updateUserProfile(
-            updateData.name || user.displayName || user.email?.split('@')[0] || 'User', 
-            updateData.photoURL
+            (updateData.name as string) || user.displayName || user.email?.split('@')[0] || 'User',
+            (updateData.photoURL as string)
           );
         }
-        
+
         setSuccess('Profile updated successfully!');
         setTimeout(() => {
           router.push('/profile');
@@ -221,7 +221,7 @@ export default function EditProfilePage() {
             <div className="animate-pulse">
               {/* Back button skeleton */}
               <div className="h-10 w-24 bg-gray-200 rounded mb-8"></div>
-              
+
               {/* Form skeleton */}
               <div className="bg-white rounded-3xl shadow-lg p-8">
                 <div className="space-y-6">
@@ -249,9 +249,9 @@ export default function EditProfilePage() {
       <Header />
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 pb-20">
         <div className="max-w-2xl mx-auto px-6 py-12">
-          
+
           {/* Back Button */}
-          <Link 
+          <Link
             href="/profile"
             className="inline-flex items-center gap-3 text-gray-700 hover:text-green-700 transition-colors mb-8 group px-4 py-2 rounded-lg hover:bg-gray-100 w-fit"
           >
@@ -282,8 +282,8 @@ export default function EditProfilePage() {
                 <div className="relative">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                     {previewImage ? (
-                      <img 
-                        src={previewImage} 
+                      <img
+                        src={previewImage}
                         alt="Profile preview"
                         className="w-full h-full object-cover"
                       />
@@ -301,7 +301,7 @@ export default function EditProfilePage() {
                     </button>
                   )}
                 </div>
-                
+
                 <div className="flex flex-col gap-2">
                   <input
                     type="file"
@@ -405,7 +405,7 @@ export default function EditProfilePage() {
                   </div>
                 )}
               </Button>
-              
+
               <Button
                 type="button"
                 variant="outline"
