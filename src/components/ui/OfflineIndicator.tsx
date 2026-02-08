@@ -1,7 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { WifiOff, Wifi, Database, RefreshCw, Clock, CheckCircle2 } from 'lucide-react';
+import { WifiOff, Wifi, Database, RefreshCw, Clock } from 'lucide-react';
 import { useOffline, type DataSource } from '@/lib/context/OfflineContext';
 import { cn } from '@/lib/utils/helpers';
 
@@ -16,36 +15,16 @@ interface OfflineIndicatorProps {
  */
 export function OfflineIndicator({ className, showAlways = false }: OfflineIndicatorProps) {
     const { isOnline, currentDataSource, stats } = useOffline();
-    const [isVisible, setIsVisible] = useState(false);
-    const [wasOffline, setWasOffline] = useState(false);
-
-    // Show indicator when offline or when coming back online
-    useEffect(() => {
-        if (!isOnline) {
-            setIsVisible(true);
-            setWasOffline(true);
-        } else if (wasOffline) {
-            // Show "back online" message briefly
-            setIsVisible(true);
-            const timer = setTimeout(() => {
-                setIsVisible(false);
-                setWasOffline(false);
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [isOnline, wasOffline]);
+    const isVisible = showAlways || !isOnline || currentDataSource === 'cache' || currentDataSource === 'stale-cache';
 
     // Don't render if online and not showing always
-    if (!showAlways && !isVisible && isOnline) {
+    if (!isVisible && isOnline) {
         return null;
     }
 
     const getStatusIcon = () => {
         if (!isOnline) {
             return <WifiOff className="w-4 h-4" />;
-        }
-        if (wasOffline) {
-            return <CheckCircle2 className="w-4 h-4" />;
         }
         return <Wifi className="w-4 h-4" />;
     };
@@ -54,8 +33,8 @@ export function OfflineIndicator({ className, showAlways = false }: OfflineIndic
         if (!isOnline) {
             return 'You\'re offline';
         }
-        if (wasOffline) {
-            return 'Back online';
+        if (currentDataSource === 'cache' || currentDataSource === 'stale-cache') {
+            return 'Using cached data';
         }
         return 'Online';
     };
@@ -64,8 +43,8 @@ export function OfflineIndicator({ className, showAlways = false }: OfflineIndic
         if (!isOnline) {
             return 'bg-amber-50 border-amber-200 text-amber-800';
         }
-        if (wasOffline) {
-            return 'bg-green-50 border-green-200 text-green-800';
+        if (currentDataSource === 'cache' || currentDataSource === 'stale-cache') {
+            return 'bg-blue-50 border-blue-200 text-blue-800';
         }
         return 'bg-gray-50 border-gray-200 text-gray-700';
     };
@@ -150,17 +129,6 @@ export function DataSourceBadge({
 
     if (!config.label) return null;
 
-    const formatCacheAge = (timestamp: number) => {
-        const diff = Date.now() - timestamp;
-        const hours = Math.floor(diff / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-
-        if (hours > 0) {
-            return `${hours}h ${minutes}m ago`;
-        }
-        return `${minutes}m ago`;
-    };
-
     return (
         <div className={cn('flex items-center gap-2', className)}>
             <div
@@ -172,7 +140,7 @@ export function DataSourceBadge({
                 {config.icon}
                 <span>{config.label}</span>
                 {cachedAt && source !== 'network' && (
-                    <span className="opacity-75">• {formatCacheAge(cachedAt)}</span>
+                    <span className="opacity-75">• {new Date(cachedAt).toLocaleTimeString()}</span>
                 )}
             </div>
 
