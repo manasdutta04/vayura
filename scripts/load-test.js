@@ -37,7 +37,7 @@ async function runLoadTest() {
     }
   }
   
-  const results = await Promise.all(promises); // Finish remaining
+  await Promise.all(promises); // Finish remaining
   const duration = (Date.now() - start) / 1000;
   const reqPerSec = TOTAL_REQUESTS / duration;
   
