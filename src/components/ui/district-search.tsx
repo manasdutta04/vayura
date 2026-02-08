@@ -12,7 +12,6 @@ import {
 } from "@/lib/cache";
 import SkeletonCard from "./skeleton-card";
 import { Search, Loader2, MapPin, WifiOff, Database, Clock } from "lucide-react";
-import EmptyState from "@/components/ui/EmptyState";
 
 interface DistrictSearchProps {
   onDistrictSelect?: (district: DistrictSearchResult) => void;
@@ -46,6 +45,9 @@ export function DistrictSearch({
   notFoundDistrictName,
   loadingDistrict,
 }: DistrictSearchProps) {
+  const getErrorMessage = (err: unknown, fallback: string) =>
+    err instanceof Error ? err.message : fallback;
+
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
@@ -114,10 +116,10 @@ export function DistrictSearch({
               // Cache the results
               await cacheSearchResults(debouncedQuery, data);
             }
-          } catch (err: any) {
+          } catch (err: unknown) {
             // If network fails but we have cache, keep using it
             if (!cached && !isCancelled) {
-              setError(err.message || "Failed to search districts");
+              setError(getErrorMessage(err, "Failed to search districts"));
             }
           }
         } else if (!cached) {
@@ -136,10 +138,9 @@ export function DistrictSearch({
             }
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!isCancelled) {
-          const error = err as Error;
-          setError(error.message || "Failed to search districts");
+          setError(getErrorMessage(err, "Failed to search districts"));
         }
       } finally {
         if (!isCancelled) setLoading(false);
@@ -342,10 +343,12 @@ export function DistrictSearch({
                   {!isOnline ? "You're offline" : "No districts found"}
                 </h3>
                 <p className="text-sm text-gray-500 mb-1">
-                  {!isOnline
-                    ? `No cached data for "${debouncedQuery}".`
-                    : `We couldn't find "${debouncedQuery}".`
-                  }
+                  {error ||
+                    (districtNotFound && notFoundDistrictName
+                      ? `We couldn't find "${notFoundDistrictName}".`
+                      : !isOnline
+                        ? `No cached data for "${debouncedQuery}".`
+                        : `We couldn't find "${debouncedQuery}".`)}
                 </p>
                 <p className="text-sm text-gray-400 mb-3">
                   {!isOnline
