@@ -25,6 +25,9 @@ export interface UseDistrictDataResult {
  * Automatically uses cache when offline
  */
 export function useDistrictData(slug: string | null): UseDistrictDataResult {
+    const getErrorMessage = (err: unknown, fallback: string) =>
+        err instanceof Error ? err.message : fallback;
+
     const isOnline = useIsOnline();
     const [data, setData] = useState<DistrictDetail | null>(null);
     const [loading, setLoading] = useState(true);
@@ -102,7 +105,7 @@ export function useDistrictData(slug: string | null): UseDistrictDataResult {
                         // Cache the fresh data
                         await cacheDistrictDetail(slug, networkData);
                     }
-                } catch (networkError: any) {
+                } catch (networkError: unknown) {
                     // If network fails and we have cached data, use it
                     if (cached) {
                         setData(cached.data);
@@ -118,8 +121,8 @@ export function useDistrictData(slug: string | null): UseDistrictDataResult {
                 setError('No cached data available. Please connect to the internet.');
                 setSource('cache');
             }
-        } catch (err: any) {
-            setError(err.message || 'Failed to load district data');
+        } catch (err: unknown) {
+            setError(getErrorMessage(err, 'Failed to load district data'));
         } finally {
             setLoading(false);
         }
