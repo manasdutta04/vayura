@@ -11,7 +11,7 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { AuthModal } from '@/components/ui/auth-modal';
 import { DistrictSearch } from '@/components/ui/district-search';
-import { ArrowRight, Activity, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User } from 'lucide-react';
+import { ArrowRight, Activity, Sprout, LayoutDashboard, Trophy, Calculator, Heart, User, AlertCircle, RefreshCw } from 'lucide-react';
 
 function HomeContent() {
   const t = useTranslations();
@@ -20,6 +20,8 @@ function HomeContent() {
   const searchParams = useSearchParams();
   const [authModalManuallyOpened, setAuthModalManuallyOpened] = useState(false);
   const [stats, setStats] = useState({ totalDistricts: 766, totalTrees: 0, totalOxygen: 0 });
+  const [statsLoading, setStatsLoading] = useState(true);
+  const [statsError, setStatsError] = useState<string | null>(null);
 
   // Redirect authenticated users to dashboard
   useEffect(() => {
@@ -35,17 +37,23 @@ function HomeContent() {
 
   const showAuthModal = authModalManuallyOpened || shouldAutoOpenAuthModal;
 
-  // Fetch stats
+  // Fetch stats with loading and error states
   useEffect(() => {
     async function fetchStats() {
+      setStatsLoading(true);
+      setStatsError(null);
       try {
         const response = await fetch('/api/stats');
-        if (response.ok) {
-          const data = await response.json();
-          setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
+        if (!response.ok) {
+          throw new Error(`Failed to fetch stats: ${response.status}`);
         }
+        const data = await response.json();
+        setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
       } catch (error) {
         console.error('Error fetching stats:', error);
+        setStatsError(error instanceof Error ? error.message : 'Failed to load stats');
+      } finally {
+        setStatsLoading(false);
       }
     }
     fetchStats();
@@ -194,32 +202,75 @@ function HomeContent() {
 
             {/* Live Stats Ticker */}
             <div className="max-w-5xl mx-auto mb-12 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-500">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDistricts}</span>
-                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
-                    {t('home.stats.districts')}
-                  </span>
+              {statsError ? (
+                <div className="bg-red-50 border border-red-200 rounded-xl p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0" />
+                    <span className="text-sm text-red-700">Failed to load live stats</span>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setStatsError(null);
+                      setStatsLoading(true);
+                      fetch('/api/stats')
+                        .then(res => {
+                          if (!res.ok) throw new Error(`Failed to fetch stats: ${res.status}`);
+                          return res.json();
+                        })
+                        .then(data => {
+                          setStats(prev => ({ ...data, totalDistricts: data.totalDistricts || prev.totalDistricts }));
+                        })
+                        .catch(err => {
+                          setStatsError(err instanceof Error ? err.message : 'Failed to load stats');
+                        })
+                        .finally(() => setStatsLoading(false));
+                    }}
+                    className="text-red-600 hover:text-red-800 text-sm font-medium flex items-center gap-1"
+                  >
+                    <RefreshCw className="w-3 h-3" />
+                    Retry
+                  </button>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalTrees)}</span>
-                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
-                    {t('home.stats.treesPlanted')}
-                  </span>
+              ) : (
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    {statsLoading ? (
+                      <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
+                    ) : (
+                      <span className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDistricts}</span>
+                    )}
+                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                      {t('home.stats.districts')}
+                    </span>
+                  </div>
+                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    {statsLoading ? (
+                      <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
+                    ) : (
+                      <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalTrees)}</span>
+                    )}
+                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                      {t('home.stats.treesPlanted')}
+                    </span>
+                  </div>
+                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    {statsLoading ? (
+                      <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
+                    ) : (
+                      <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
+                    )}
+                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                      {t('home.stats.oxygenAdded')}
+                    </span>
+                  </div>
+                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span className="text-3xl font-bold text-green-600 mb-1">{t('home.stats.live')}</span>
+                    <span className="text-xs text-green-600 font-medium uppercase tracking-wider">
+                      {t('home.stats.monitoring')}
+                    </span>
+                  </div>
                 </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
-                  <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
-                    {t('home.stats.oxygenAdded')}
-                  </span>
-                </div>
-                <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                  <span className="text-3xl font-bold text-green-600 mb-1">{t('home.stats.live')}</span>
-                  <span className="text-xs text-green-600 font-medium uppercase tracking-wider">
-                    {t('home.stats.monitoring')}
-                  </span>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </section>
