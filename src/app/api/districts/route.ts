@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { DistrictSearchResult } from '@/lib/types';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
+import { cacheService } from '@/services/cacheService';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,13 +12,25 @@ export async function GET(request: Request) {
         const q = searchParams.get('q')?.toLowerCase() ?? '';
         const state = searchParams.get('state');
 
-        const districtsRef = adminDb.collection('districts');
-        const snapshot = await districtsRef.orderBy('name').limit(100).get();
+        // Generate cache key for the raw dataset
+        const cacheKey = 'districts:all_raw';
+        let allDistricts = cacheService.get<DistrictSearchResult[]>(cacheKey);
 
-        const allDistricts = snapshot.docs.map((doc: QueryDocumentSnapshot) => ({
-            id: doc.id,
-            ...(doc.data() as Omit<DistrictSearchResult, 'id'>),
-        })) as DistrictSearchResult[];
+        if (!allDistricts) {
+            console.log('Cache Miss - Fetching from DB');
+            const districtsRef = adminDb.collection('districts');
+            const snapshot = await districtsRef.orderBy('name').limit(100).get();
+
+            allDistricts = snapshot.docs.map((doc: QueryDocumentSnapshot) => ({
+                id: doc.id,
+                ...(doc.data() as Omit<DistrictSearchResult, 'id'>),
+            })) as DistrictSearchResult[];
+
+            // Store raw result in cache
+            cacheService.set(cacheKey, allDistricts);
+        } else {
+            console.log('Cache Hit');
+        }
 
         const filtered = allDistricts
             .filter((district) => {
