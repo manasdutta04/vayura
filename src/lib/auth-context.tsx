@@ -89,18 +89,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             throw new Error('User not authenticated');
         }
         try {
-            const profileUpdates: any = {};
+            const profileUpdates: { displayName?: string; photoURL?: string } = {};
             if (displayName && displayName.trim() !== '') {
                 profileUpdates.displayName = displayName.trim();
             }
             if (photoURL !== undefined && photoURL !== null && photoURL.trim() !== '') {
                 profileUpdates.photoURL = photoURL.trim();
             }
-            
+
             if (Object.keys(profileUpdates).length > 0) {
                 await updateProfile(user, profileUpdates);
                 // Update local state to reflect changes
-                setUser({...user, ...profileUpdates});
+                setUser({ ...user, ...profileUpdates });
             }
         } catch (error) {
             console.error('Error updating profile:', error);

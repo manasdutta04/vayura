@@ -10,7 +10,7 @@ const RESET_TIMEOUT = 60000; // 1 minute
 let lastFailureTime = 0;
 
 class OxygenService {
-  private pendingRequests = new Map<string, Promise<any>>();
+  private pendingRequests = new Map<string, Promise<unknown>>();
 
   async calculate(districtId: string, trees: number, age: number) {
     const cacheKey = `calc_${districtId}_${trees}_${age}`;
@@ -39,7 +39,7 @@ class OxygenService {
         // ✅ REQUIREMENT: Real Calculator Integration
         // Find district data for population and other metrics
         const districtData = allIndianDistricts.find(d => d.slug === districtId || d.name === districtId);
-        
+
         const calculationInput = {
           district_name: districtData?.name || districtId,
           population: districtData?.population || 1000000, // Default if not found
@@ -49,7 +49,7 @@ class OxygenService {
         };
 
         const result = calculateOxygenRequirements(calculationInput);
-        
+
         const duration = performance.now() - start;
 
         // ✅ REQUIREMENT: WebAssembly Evaluation Benchmark
@@ -79,7 +79,7 @@ class OxygenService {
   }
 
   // 4. Batch Processing
-  async calculateBatch(requests: Array<{id: string, trees: number, age: number}>) {
+  async calculateBatch(requests: Array<{ id: string, trees: number, age: number }>) {
     return Promise.all(requests.map(req => this.calculate(req.id, req.trees, req.age)));
   }
 }

@@ -16,15 +16,15 @@ export async function GET(request: Request) {
 
         const allDistricts = snapshot.docs.map((doc: QueryDocumentSnapshot) => ({
             id: doc.id,
-            ...(doc.data() as any),
+            ...(doc.data() as Omit<DistrictSearchResult, 'id'>),
         })) as DistrictSearchResult[];
 
         const filtered = allDistricts
             .filter((district) => {
                 const matchesQuery = q
                     ? district.name.toLowerCase().includes(q) ||
-                      district.slug.toLowerCase().includes(q) ||
-                      district.state.toLowerCase().includes(q)
+                    district.slug.toLowerCase().includes(q) ||
+                    district.state.toLowerCase().includes(q)
                     : true;
                 const matchesState = state ? district.state === state : true;
                 return matchesQuery && matchesState;

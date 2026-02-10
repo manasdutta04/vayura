@@ -11,7 +11,7 @@ function generateTimestampedFilename(slug: string, format: 'csv' | 'json'): stri
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
   const timestamp = `${year}-${month}-${day}`;
-  
+
   return `vayura_${slug}_${timestamp}.${format}`;
 }
 
@@ -19,23 +19,25 @@ function generateTimestampedFilename(slug: string, format: 'csv' | 'json'): stri
  * Format a value for CSV export
  * Handles null, undefined, arrays, dates, and numbers
  */
-function formatValueForCSV(value: any): string {
+type CSVValue = string | number | boolean | Date | string[] | null | undefined;
+
+function formatValueForCSV(value: CSVValue): string {
   if (value === null || value === undefined) {
     return '';
   }
-  
+
   if (Array.isArray(value)) {
     return value.join('; ');
   }
-  
+
   if (value instanceof Date) {
     return value.toISOString().split('T')[0];
   }
-  
+
   if (typeof value === 'number') {
     return value.toString();
   }
-  
+
   return String(value);
 }
 
@@ -58,7 +60,7 @@ function escapeCSVField(value: string): string {
  */
 function generateDistrictCSV(data: DistrictDetail): string {
   const calc = data.oxygenCalculation;
-  
+
   // Define headers and corresponding field names in a clear, logical order
   const headers = [
     // Location Information
@@ -68,7 +70,7 @@ function generateDistrictCSV(data: DistrictDetail): string {
     'Population',
     'Latitude',
     'Longitude',
-    
+
     // Environmental Metrics
     'Air Quality Index (AQI)',
     'PM2.5 (µg/m³)',
@@ -76,7 +78,7 @@ function generateDistrictCSV(data: DistrictDetail): string {
     'Disaster Frequency (events/year)',
     'Data Source',
     'Data Last Updated',
-    
+
     // Oxygen Analysis - Main Metrics
     'Base O₂ Demand (kg/year)',
     'AQI Penalty Factor',
@@ -88,13 +90,13 @@ function generateDistrictCSV(data: DistrictDetail): string {
     'O₂ Deficit (kg/year)',
     'Trees Required',
     'Trees Required (hectares)',
-    
+
     // Community Impact
     'Trees Planted (Local)',
     'Trees Donated (NGO)',
     'Total Trees Contributed',
     'Total O₂ Offset (kg/year)',
-    
+
     // Calculation Metadata
     'Confidence Level',
     'Data Sources Used',
@@ -110,7 +112,7 @@ function generateDistrictCSV(data: DistrictDetail): string {
     formatValueForCSV(data.population),
     formatValueForCSV(data.latitude),
     formatValueForCSV(data.longitude),
-    
+
     // Environmental Metrics
     formatValueForCSV(Math.round(data.environmentalData.aqi * 100) / 100),
     formatValueForCSV(data.environmentalData.pm25 ?? 'N/A'),
@@ -118,7 +120,7 @@ function generateDistrictCSV(data: DistrictDetail): string {
     formatValueForCSV(data.environmentalData.disasterFrequency.toFixed(2)),
     formatValueForCSV(data.environmentalData.dataSource || 'N/A'),
     formatValueForCSV(new Date(data.environmentalData.timestamp).toISOString().split('T')[0]),
-    
+
     // Oxygen Analysis - Main Metrics (with fallback if missing)
     calc ? formatValueForCSV(Math.round(calc.formula_breakdown.human_o2_demand_kg)) : 'N/A',
     calc ? formatValueForCSV(calc.formula_breakdown.aqi_penalty_factor.toFixed(3)) : 'N/A',
@@ -130,13 +132,13 @@ function generateDistrictCSV(data: DistrictDetail): string {
     calc ? formatValueForCSV(Math.round(calc.oxygen_deficit_kg_per_year)) : 'N/A',
     calc ? formatValueForCSV(Math.round(calc.trees_required)) : 'N/A',
     calc ? formatValueForCSV(calc.trees_required_hectares.toFixed(2)) : 'N/A',
-    
+
     // Community Impact
     formatValueForCSV(data.stats?.totalTreesPlanted ?? 0),
     formatValueForCSV(data.stats?.totalTreesDonated ?? 0),
     formatValueForCSV(data.stats?.totalTrees ?? 0),
     formatValueForCSV(Math.round(data.stats?.oxygenOffset ?? 0)),
-    
+
     // Calculation Metadata
     calc ? formatValueForCSV(calc.confidence_level) : 'N/A',
     calc ? formatValueForCSV(calc.data_sources.join('; ')) : 'N/A',
@@ -146,11 +148,11 @@ function generateDistrictCSV(data: DistrictDetail): string {
 
   // Escape each field and join with commas
   const escapedValues = values.map((value) => escapeCSVField(value));
-  
+
   // Combine header row and data row
   const headerRow = headers.map((h) => escapeCSVField(h)).join(',');
   const dataRow = escapedValues.join(',');
-  
+
   return `${headerRow}\n${dataRow}`;
 }
 
@@ -159,9 +161,12 @@ function generateDistrictCSV(data: DistrictDetail): string {
  * Preserves hierarchy while organizing data logically
  * Handles missing oxygenCalculation data gracefully
  */
-function createDistrictJSONExport(data: DistrictDetail): Record<string, any> {
+type JSONExportValue = string | number | boolean | null | JSONExportObject | JSONExportValue[];
+interface JSONExportObject { [key: string]: JSONExportValue }
+
+function createDistrictJSONExport(data: DistrictDetail): JSONExportObject {
   const calc = data.oxygenCalculation;
-  
+
   return {
     metadata: {
       export_timestamp: new Date().toISOString(),
@@ -261,21 +266,21 @@ function createDistrictJSONExport(data: DistrictDetail): Record<string, any> {
  */
 function triggerDownload(blob: Blob, filename: string): void {
   const url = URL.createObjectURL(blob);
-  
+
   try {
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
-    
+
     // Append to body (required for some browsers)
     document.body.appendChild(link);
-    
+
     // Trigger click
     link.click();
   } finally {
     // Cleanup: revoke object URL to free memory
     URL.revokeObjectURL(url);
-    
+
     // Remove temporary link (use timeout for browsers that need it)
     setTimeout(() => {
       const linkElement = document.querySelector(`a[href="${url}"]`);
@@ -299,7 +304,7 @@ export function exportDistrictAsCSV(data: DistrictDetail, slug: string): void {
     const csv = generateDistrictCSV(data);
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const filename = generateTimestampedFilename(slug, 'csv');
-    
+
     triggerDownload(blob, filename);
   } catch (error) {
     console.error('Error exporting district as CSV:', error);
@@ -322,7 +327,7 @@ export function exportDistrictAsJSON(data: DistrictDetail, slug: string): void {
     const jsonString = JSON.stringify(jsonData, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json;charset=utf-8;' });
     const filename = generateTimestampedFilename(slug, 'json');
-    
+
     triggerDownload(blob, filename);
   } catch (error) {
     console.error('Error exporting district as JSON:', error);

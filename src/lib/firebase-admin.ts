@@ -50,12 +50,12 @@ const createProxy = (name: string) => {
         set: () => Promise.resolve(),
         update: () => Promise.resolve(),
         delete: () => Promise.resolve(),
-        onSnapshot: () => () => {},
+        onSnapshot: () => () => { },
     };
 
     return new Proxy(mockObj, {
-        get: (target, prop) => {
-            if (prop in target) return (target as any)[prop];
+        get: (target, prop: string | symbol) => {
+            if (typeof prop === 'string' && prop in target) return target[prop as keyof typeof target];
             return () => {
                 const msg = `Firebase Admin ${name}.${String(prop)} was called but SDK is not configured. Check your environment variables.`;
                 if (process.env.NODE_ENV === 'production') {
@@ -72,8 +72,8 @@ const createProxy = (name: string) => {
     });
 };
 
-export const adminAuth = isConfigured ? getAuth(adminApp) : createProxy('auth') as any;
-export const adminStorage = isConfigured ? getStorage(adminApp) : createProxy('storage') as any;
-export const adminDb = isConfigured ? getFirestore(adminApp) : createProxy('firestore') as any;
+export const adminAuth = isConfigured ? getAuth(adminApp) : createProxy('auth') as unknown as ReturnType<typeof getAuth>;
+export const adminStorage = isConfigured ? getStorage(adminApp) : createProxy('storage') as unknown as ReturnType<typeof getStorage>;
+export const adminDb = isConfigured ? getFirestore(adminApp) : createProxy('firestore') as unknown as ReturnType<typeof getFirestore>;
 
 export default adminApp;

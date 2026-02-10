@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { adminDb } from '@/lib/firebase-admin';
 import { allIndianDistricts } from '@/lib/data/all-indian-districts';
+import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 interface DistrictData {
     name: string;
@@ -19,7 +20,7 @@ export async function GET() {
         const snapshot = await districtsRef.get();
         console.log('GET /api/map-data: Snapshot received, docs:', snapshot.docs.length);
 
-        let districts = snapshot.docs.map((doc: any) => {
+        let districts = snapshot.docs.map((doc: QueryDocumentSnapshot) => {
             const data = doc.data() as DistrictData;
             return {
                 id: doc.id,
@@ -46,10 +47,11 @@ export async function GET() {
         }
 
         return NextResponse.json(districts);
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const err = error as Error;
         console.error('Error fetching map data:', error);
         return NextResponse.json(
-            { error: 'Failed to fetch map data', details: error.message },
+            { error: 'Failed to fetch map data', details: err.message },
             { status: 500 }
         );
     }

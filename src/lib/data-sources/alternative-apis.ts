@@ -8,19 +8,26 @@
  * Free tier: 1000 calls/day
  * Sign up: https://openweathermap.org/api
  */
-export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<any> {
+interface AQIData {
+    aqi: number;
+    pm25?: number;
+    pm10?: number;
+    source: string;
+}
+
+export async function getAQIFromOpenWeather(lat: number, lon: number): Promise<AQIData | null> {
     const apiKey = process.env.OPENWEATHER_API_KEY;
     if (!apiKey) return null;
 
     try {
         const url = `http://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lon}&appid=${apiKey}`;
         const response = await fetch(url, { next: { revalidate: 3600 } });
-        
+
         if (!response.ok) return null;
-        
+
         const data = await response.json();
         const aqi = convertOpenWeatherAQI(data.list[0].main.aqi);
-        
+
         return {
             aqi,
             pm25: data.list[0].components.pm2_5,

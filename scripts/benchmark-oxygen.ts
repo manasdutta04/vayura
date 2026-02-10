@@ -1,13 +1,13 @@
 import { performance } from 'perf_hooks';
 
 export async function runBenchmark(
-  testName: string, 
-  fn: () => Promise<any>, 
+  testName: string,
+  fn: () => Promise<unknown>,
   iterations: number = 5
 ) {
   console.log(`\n🚀 Starting Benchmark: ${testName}`);
   console.log('-----------------------------------');
-  
+
   const times: number[] = [];
 
   // Cold Start (First Run)
@@ -34,6 +34,6 @@ export async function runBenchmark(
   console.log(`⚡ Fastest:   ${min.toFixed(2)}ms`);
   console.log(`🐢 Slowest:   ${max.toFixed(2)}ms`);
   console.log('-----------------------------------');
-  
+
   return { cold: coldDuration, avg };
 }

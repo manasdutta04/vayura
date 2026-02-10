@@ -19,14 +19,15 @@ import { Collections, District, EnvironmentalData, TreeContribution, Donation, L
 /**
  * Convert Firestore Timestamp to Date
  */
-function timestampToDate(timestamp: any): Date {
+function timestampToDate(timestamp: unknown): Date {
     if (timestamp instanceof Timestamp) {
         return timestamp.toDate();
     }
-    if (timestamp?.toDate) {
-        return timestamp.toDate();
+    const ts = timestamp as { toDate?: () => Date } | null | undefined;
+    if (typeof ts?.toDate === 'function') {
+        return ts.toDate();
     }
-    return timestamp instanceof Date ? timestamp : new Date(timestamp);
+    return timestamp instanceof Date ? timestamp : new Date(timestamp as string | number);
 }
 
 /**

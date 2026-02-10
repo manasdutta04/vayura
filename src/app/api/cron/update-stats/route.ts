@@ -77,7 +77,7 @@ export async function GET(request: Request) {
         const districts = districtsSnapshot.docs.map((doc: QueryDocumentSnapshot) => ({
             id: doc.id,
             ...doc.data()
-        } as any));
+        } as { id: string; state?: string; population?: number }));
 
         const leaderboardMap = new Map();
         leaderboardSnapshot.docs.forEach((doc: QueryDocumentSnapshot) => {
@@ -141,7 +141,7 @@ export async function GET(request: Request) {
         }
 
         // Merge with leaderboard tree data
-        leaderboardMap.forEach((data: any, state: string) => {
+        leaderboardMap.forEach((data: { state: string; totalTrees?: number; totalTreesPlanted?: number; totalTreesDonated?: number; existingForestTrees?: number; id: string }, state: string) => {
             const current = stateAggregates.get(state);
             if (current) {
                 const existing = data.existingForestTrees || 0;
@@ -159,11 +159,25 @@ export async function GET(request: Request) {
         });
 
         // 3. Calculate Metrics and Ranks
-        const stateMetrics: any[] = [];
+        const stateMetrics: Array<{
+            id: string;
+            state: string;
+            population: number;
+            totalTreesPlanted: number;
+            totalTreesDonated: number;
+            existingForestTrees: number;
+            totalTrees: number;
+            o2Needed: number;
+            o2Supply: number;
+            existingForestO2: number;
+            percentageMet: number;
+            avgAQI: number;
+            avgSoilQuality: number;
+        }> = [];
         let globalTotalTrees = 0;
         let globalTotalOxygen = 0;
 
-        stateAggregates.forEach((data: any, state: string) => {
+        stateAggregates.forEach((data: { population: number; weightedAQI: number; weightedSoil: number; weightedDisasters: number; totalTrees: number; totalTreesPlanted: number; totalTreesDonated: number; existingForestTrees: number }, state: string) => {
             if (data.population === 0) return;
 
             const avgAQI = data.weightedAQI / data.population;
@@ -216,14 +230,14 @@ export async function GET(request: Request) {
         });
 
         // Sort
-        stateMetrics.sort((a: any, b: any) => {
+        stateMetrics.sort((a, b) => {
             if (b.percentageMet !== a.percentageMet) return b.percentageMet - a.percentageMet;
             if (b.totalTrees !== a.totalTrees) return b.totalTrees - a.totalTrees;
             return a.state.localeCompare(b.state);
         });
 
         // Assign Ranks
-        const rankedUpdates = stateMetrics.map((entry: any, index: number) => ({
+        const rankedUpdates = stateMetrics.map((entry, index) => ({
             ...entry,
             rank: index + 1,
             lastUpdated: new Date()
