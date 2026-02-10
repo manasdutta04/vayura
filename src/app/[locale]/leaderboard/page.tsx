@@ -10,26 +10,44 @@ import { LeaderboardEntry } from '@/lib/types';
 import { formatCompactNumber } from '@/lib/utils/helpers';
 import { VALIDATED_DATA_SOURCES } from '@/lib/data-sources/validation';
 import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
+import { AlertCircle, RefreshCw } from 'lucide-react';
 
-async function getLeaderboard(): Promise<LeaderboardEntry[]> {
-    const res = await fetch('/api/leaderboard', {
-        cache: 'no-store',
-    });
-    if (!res.ok) return [];
-    return res.json();
+async function getLeaderboard(): Promise<{ data?: LeaderboardEntry[]; error?: string }> {
+    try {
+        const res = await fetch('/api/leaderboard', {
+            cache: 'no-store',
+        });
+        if (!res.ok) {
+            throw new Error(`Failed to fetch leaderboard: ${res.status}`);
+        }
+        const data = await res.json();
+        return { data };
+    } catch (error) {
+        return { error: error instanceof Error ? error.message : 'Unknown error occurred' };
+    }
 }
 
 export default function LeaderboardPage() {
     const t = useTranslations('leaderboard');
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
     const [showDataSources, setShowDataSources] = useState(false);
 
     useEffect(() => {
-        getLeaderboard().then(data => {
-            setEntries(data);
+        const fetchData = async () => {
+            setLoading(true);
+            setError(null);
+            const result = await getLeaderboard();
+            if (result.error) {
+                setError(result.error);
+                setEntries([]);
+            } else {
+                setEntries(result.data || []);
+            }
             setLoading(false);
-        });
+        };
+        fetchData();
     }, []);
 
     return (
@@ -104,7 +122,42 @@ export default function LeaderboardPage() {
                                             ))}
                                         </>
                                     )}
-                                    {!loading && entries.length === 0 && (
+                                    {!loading && error && (
+                                        <tr>
+                                            <td colSpan={6} className="px-4 py-12">
+                                                <div className="flex flex-col items-center justify-center text-center">
+                                                    <div className="w-16 h-16 rounded-full bg-red-50 flex items-center justify-center mb-4">
+                                                        <AlertCircle className="w-8 h-8 text-red-500" />
+                                                    </div>
+                                                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                                                        Failed to load leaderboard data
+                                                    </h3>
+                                                    <p className="text-sm text-gray-500 mb-4 max-w-md">
+                                                        {error || 'An error occurred while fetching the leaderboard. Please try again later.'}
+                                                    </p>
+                                                    <button
+                                                        onClick={() => {
+                                                            setError(null);
+                                                            setLoading(true);
+                                                            getLeaderboard().then(result => {
+                                                                if (result.error) {
+                                                                    setError(result.error);
+                                                                } else {
+                                                                    setEntries(result.data || []);
+                                                                }
+                                                                setLoading(false);
+                                                            });
+                                                        }}
+                                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                                                    >
+                                                        <RefreshCw className="w-4 h-4" />
+                                                        Retry
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )}
+                                    {!loading && !error && entries.length === 0 && (
                                         <tr>
                                             <td
                                                 colSpan={6}
@@ -114,7 +167,7 @@ export default function LeaderboardPage() {
                                             </td>
                                         </tr>
                                     )}
-                                    {!loading && entries.map((entry, idx) => {
+                                    {!loading && !error && entries.map((entry, idx) => {
                                         const percentMet = entry.percentageMet || 0;
                                         const isTop3 = idx < 3;
                                         const badgeColor = idx === 0 ? 'bg-yellow-400' : idx === 1 ? 'bg-gray-300' : idx === 2 ? 'bg-orange-300' : '';
