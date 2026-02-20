@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import DistrictReportCard from "../../../../components/district/DistrictReportCard";
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Header } from "@/components/ui/header";
@@ -37,19 +37,20 @@ async function getDistrictDetail(slug: string): Promise<DistrictDetail | null> {
   }
 }
 
-interface DistrictPageProps {
-  params: Promise<{ slug: string }>;
-}
+type DistrictPageProps = {
+  params: {
+    slug: string;
+  };
+};
 
-export async function generateMetadata({
-  params,
-}: DistrictPageProps): Promise<Metadata> {
-  const { slug } = await params;
+export async function generateMetadata({ params }: DistrictPageProps) {
+  const slug = params.slug;
   const data = await getDistrictDetail(slug);
 
   if (!data) {
     return {
-      title: "District Not Found | Vayura",
+      title: "District not found | Vayura",
+      description: "The district you are looking for does not exist or has no data available.",
     };
   }
 
@@ -89,8 +90,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function DistrictPage({ params }: DistrictPageProps) {
-  const { slug } = await params;
+export default async function DistrictPage(
+  { params }: DistrictPageProps
+) {
+  const slug = params.slug;
   const t = await getTranslations('district');
 
   if (!slug) {
@@ -155,9 +158,13 @@ export default async function DistrictPage({ params }: DistrictPageProps) {
                 </Link>
               </div>
             </div>
-
+             {/* Report Card Section */}
+<div className="mb-10">
+  <DistrictReportCard district={data} />
+</div>
             {/* Summary cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
+      </div>
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">
                   Population
