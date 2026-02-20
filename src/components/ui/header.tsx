@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import {useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -8,6 +8,7 @@ import { AuthModal } from "./auth-modal";
 import { Sprout } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "./language-switcher";
+import Image from "next/image";
 
 export function Header() {
   const t = useTranslations();
@@ -15,13 +16,7 @@ export function Header() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  // At the top of your component
-  const [photoError, setPhotoError] = useState(false);
-
-  // Reset when user changes
-  useEffect(() => {
-    setPhotoError(false);
-  }, [user?.photoURL]);
+  const [photoErrorURL, setPhotoErrorURL] = useState<string | null>(null);
 
   return (
     <>
@@ -170,7 +165,7 @@ export function Header() {
                     onClick={() => setShowUserMenu(!showUserMenu)}
                     className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
                   >
-                    {user.photoURL && !photoError ? (
+                    {user.photoURL && user.photoURL !== photoErrorURL ? (
                       <img
                         src={user.photoURL}
                         alt={user.displayName || "User"}
@@ -179,9 +174,9 @@ export function Header() {
                           width: "32px",
                           height: "32px",
                           minWidth: "32px",
-                        }} // 👈 bypass Tailwind
+                        }}
                         referrerPolicy="no-referrer"
-                        onError={() => setPhotoError(true)}
+                        onError={() => setPhotoErrorURL(user.photoURL)} // store the failed URL
                       />
                     ) : (
                       <div
@@ -190,7 +185,7 @@ export function Header() {
                           width: "32px",
                           height: "32px",
                           minWidth: "32px",
-                        }} // 👈 consistent
+                        }}
                       >
                         {(user.displayName ||
                           user.email ||
