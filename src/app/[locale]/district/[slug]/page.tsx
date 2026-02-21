@@ -1,3 +1,4 @@
+import { calculateHealthScore } from "@/lib/calculations/healthScore";
 import { notFound } from "next/navigation";
 import DistrictReportCard from "../../../../components/district/DistrictReportCard";
 import { getTranslations } from 'next-intl/server';
@@ -119,6 +120,28 @@ export default async function DistrictPage(
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+  const healthScore = calculateHealthScore(
+  data.environmentalData.aqi,
+  data.environmentalData.disasterFrequency,
+  data.environmentalData.soilQuality
+);
+
+// Status + color logic
+let healthColor = "text-red-600";
+let barColor = "bg-red-500";
+let healthLabel = "Critical";
+
+if (healthScore >= 70) {
+  healthColor = "text-green-600";
+  barColor = "bg-green-500";
+  healthLabel = "Healthy";
+} else if (healthScore >= 40) {
+  healthColor = "text-yellow-600";
+  barColor = "bg-yellow-500";
+  healthLabel = "Moderate";
+}
+
+
 
   return (
     <>
@@ -165,6 +188,29 @@ export default async function DistrictPage(
             {/* Summary cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
       </div>
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
+            <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+  <h2 className="text-sm font-semibold text-gray-500 mb-2">
+    Environmental Health Score
+  </h2>
+
+  <p className={`text-2xl font-bold ${healthColor}`}>
+    {healthScore} / 100
+  </p>
+
+  <p className="text-xs mt-1 text-gray-500">
+    {healthLabel}
+  </p>
+
+  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+    <div
+      className={`${barColor} h-2 rounded-full`}
+      style={{ width: `${healthScore}%` }}
+    ></div>
+  </div>
+</div>
+
+
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">
                   Population
