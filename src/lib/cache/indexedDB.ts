@@ -4,7 +4,7 @@
  */
 
 const DB_NAME = 'vayura-offline-cache';
-const DB_VERSION = 2; // 🔥 bump version
+const DB_VERSION = 3; // 🔥 bumped (added METADATA store + AQI fix)
 const STORES = {
     DISTRICTS: 'districts',
     DISTRICT_DETAILS: 'district_details',
@@ -63,34 +63,37 @@ class IndexedDBCache {
             };
 
             request.onupgradeneeded = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
+    const db = (event.target as IDBOpenDBRequest).result;
 
-                // Store for district list/search results
-                if (!db.objectStoreNames.contains(STORES.DISTRICTS)) {
-                    const districtsStore = db.createObjectStore(STORES.DISTRICTS, { keyPath: 'id' });
-                    districtsStore.createIndex('slug', 'data.slug', { unique: true });
-                    districtsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
-                }
+    // Store for district list/search results
+    if (!db.objectStoreNames.contains(STORES.DISTRICTS)) {
+        const districtsStore = db.createObjectStore(STORES.DISTRICTS, { keyPath: 'id' });
+        districtsStore.createIndex('slug', 'data.slug', { unique: true });
+        districtsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
+    }
 
-                // Store for detailed district data
-                if (!db.objectStoreNames.contains(STORES.DISTRICT_DETAILS)) {
-                    const detailsStore = db.createObjectStore(STORES.DISTRICT_DETAILS, { keyPath: 'slug' });
-                    detailsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
-                }
+    // Store for detailed district data
+    if (!db.objectStoreNames.contains(STORES.DISTRICT_DETAILS)) {
+        const detailsStore = db.createObjectStore(STORES.DISTRICT_DETAILS, { keyPath: 'slug' });
+        detailsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
+    }
 
-                // Store for search results
-                if (!db.objectStoreNames.contains(STORES.SEARCH_RESULTS)) {
-                    const searchStore = db.createObjectStore(STORES.SEARCH_RESULTS, { keyPath: 'query' });
-                    searchStore.createIndex('timestamp', 'timestamp', { unique: false });
-                }
+    // Store for search results
+    if (!db.objectStoreNames.contains(STORES.SEARCH_RESULTS)) {
+        const searchStore = db.createObjectStore(STORES.SEARCH_RESULTS, { keyPath: 'query' });
+        searchStore.createIndex('timestamp', 'timestamp', { unique: false });
+    }
 
-                // Store for cache metadata
-                // Store for AQI data
-                if (!db.objectStoreNames.contains(STORES.AQI)) {
-                    db.createObjectStore(STORES.AQI, { keyPath: 'slug' });
-                }
+    // ✅ Store for cache metadata (FIXED)
+    if (!db.objectStoreNames.contains(STORES.METADATA)) {
+        db.createObjectStore(STORES.METADATA, { keyPath: 'key' });
+    }
 
-            };
+    // ✅ Store for AQI data
+    if (!db.objectStoreNames.contains(STORES.AQI)) {
+        db.createObjectStore(STORES.AQI, { keyPath: 'slug' });
+    }
+};
         });
 
         return this.dbPromise;
