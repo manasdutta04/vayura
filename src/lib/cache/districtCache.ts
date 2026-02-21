@@ -114,6 +114,50 @@ export async function getCachedDistrictDetail(
 }
 
 /**
+ * ===============================
+ * ✅ NEW: Cache district AQI data
+ * ===============================
+ */
+export async function cacheDistrictAQI(
+    slug: string,
+    aqi: number,
+    ttl: number = 60 * 60 * 1000 // 1 hour default
+): Promise<void> {
+    await indexedDBCache.set(
+        STORES.AQI,
+        slug,
+        { aqi },
+        ttl
+    );
+}
+
+/**
+ * ===============================
+ * ✅ NEW: Get cached district AQI
+ * ===============================
+ */
+export async function getCachedDistrictAQI(
+    slug: string
+): Promise<CachedDistrictResult<{ aqi: number }> | null> {
+    const cached = await indexedDBCache.get<{ aqi: number }>(
+        STORES.AQI,
+        slug
+    );
+
+    if (!cached) return null;
+
+    const now = Date.now();
+    const isStale = now > cached.expiresAt;
+
+    return {
+        data: cached.data,
+        source: isStale ? 'stale-cache' : 'cache',
+        cachedAt: cached.timestamp,
+        isStale,
+    };
+}
+
+/**
  * Get all cached districts (for offline browsing)
  */
 export async function getAllCachedDistricts(): Promise<DistrictSearchResult[]> {
@@ -145,7 +189,6 @@ export async function getAllCachedDistrictDetails(): Promise<Array<{
 export async function getRecentDistricts(limit: number = 5): Promise<DistrictSearchResult[]> {
     const cached = await indexedDBCache.getAll<DistrictDetail>(STORES.DISTRICT_DETAILS);
 
-    // Sort by lastAccessed descending
     cached.sort((a, b) => b.lastAccessed - a.lastAccessed);
 
     return cached.slice(0, limit).map(item => ({
@@ -162,6 +205,7 @@ export async function getRecentDistricts(limit: number = 5): Promise<DistrictSea
  */
 export async function clearDistrictCache(slug: string): Promise<void> {
     await indexedDBCache.delete(STORES.DISTRICT_DETAILS, slug);
+    await indexedDBCache.delete(STORES.AQI, slug); // also clear AQI
 }
 
 /**

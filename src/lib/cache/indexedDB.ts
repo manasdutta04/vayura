@@ -4,16 +4,17 @@
  */
 
 const DB_NAME = 'vayura-offline-cache';
-const DB_VERSION = 1;
+const DB_VERSION = 3; // 🔥 bumped (added METADATA store + AQI fix)
 const STORES = {
     DISTRICTS: 'districts',
     DISTRICT_DETAILS: 'district_details',
     SEARCH_RESULTS: 'search_results',
     METADATA: 'metadata',
+    AQI: 'aqi', // ✅ ADD HERE
 } as const;
 
-// Default TTL: 24 hours in milliseconds
-const DEFAULT_TTL = 24 * 60 * 60 * 1000;
+// Default TTL: 6 hours (aligned with issue spec 6–12h)
+const DEFAULT_TTL = 6 * 60 * 60 * 1000;
 
 // Maximum number of cached districts (LRU eviction)
 const MAX_CACHED_DISTRICTS = 10;
@@ -62,32 +63,37 @@ class IndexedDBCache {
             };
 
             request.onupgradeneeded = (event) => {
-                const db = (event.target as IDBOpenDBRequest).result;
+    const db = (event.target as IDBOpenDBRequest).result;
 
-                // Store for district list/search results
-                if (!db.objectStoreNames.contains(STORES.DISTRICTS)) {
-                    const districtsStore = db.createObjectStore(STORES.DISTRICTS, { keyPath: 'id' });
-                    districtsStore.createIndex('slug', 'data.slug', { unique: true });
-                    districtsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
-                }
+    // Store for district list/search results
+    if (!db.objectStoreNames.contains(STORES.DISTRICTS)) {
+        const districtsStore = db.createObjectStore(STORES.DISTRICTS, { keyPath: 'id' });
+        districtsStore.createIndex('slug', 'data.slug', { unique: true });
+        districtsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
+    }
 
-                // Store for detailed district data
-                if (!db.objectStoreNames.contains(STORES.DISTRICT_DETAILS)) {
-                    const detailsStore = db.createObjectStore(STORES.DISTRICT_DETAILS, { keyPath: 'slug' });
-                    detailsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
-                }
+    // Store for detailed district data
+    if (!db.objectStoreNames.contains(STORES.DISTRICT_DETAILS)) {
+        const detailsStore = db.createObjectStore(STORES.DISTRICT_DETAILS, { keyPath: 'slug' });
+        detailsStore.createIndex('lastAccessed', 'lastAccessed', { unique: false });
+    }
 
-                // Store for search results
-                if (!db.objectStoreNames.contains(STORES.SEARCH_RESULTS)) {
-                    const searchStore = db.createObjectStore(STORES.SEARCH_RESULTS, { keyPath: 'query' });
-                    searchStore.createIndex('timestamp', 'timestamp', { unique: false });
-                }
+    // Store for search results
+    if (!db.objectStoreNames.contains(STORES.SEARCH_RESULTS)) {
+        const searchStore = db.createObjectStore(STORES.SEARCH_RESULTS, { keyPath: 'query' });
+        searchStore.createIndex('timestamp', 'timestamp', { unique: false });
+    }
 
-                // Store for cache metadata
-                if (!db.objectStoreNames.contains(STORES.METADATA)) {
-                    db.createObjectStore(STORES.METADATA, { keyPath: 'key' });
-                }
-            };
+    // ✅ Store for cache metadata (FIXED)
+    if (!db.objectStoreNames.contains(STORES.METADATA)) {
+        db.createObjectStore(STORES.METADATA, { keyPath: 'key' });
+    }
+
+    // ✅ Store for AQI data
+    if (!db.objectStoreNames.contains(STORES.AQI)) {
+        db.createObjectStore(STORES.AQI, { keyPath: 'slug' });
+    }
+};
         });
 
         return this.dbPromise;
@@ -163,14 +169,16 @@ class IndexedDBCache {
 
                 // Add key property based on store type
                 if (storeName === STORES.DISTRICTS) {
-                    cachedItem['id'] = key;
-                } else if (storeName === STORES.DISTRICT_DETAILS) {
-                    cachedItem['slug'] = key;
-                } else if (storeName === STORES.SEARCH_RESULTS) {
-                    cachedItem['query'] = key;
-                } else if (storeName === STORES.METADATA) {
-                    cachedItem['key'] = key;
-                }
+    cachedItem['id'] = key;
+} else if (storeName === STORES.DISTRICT_DETAILS) {
+    cachedItem['slug'] = key;
+} else if (storeName === STORES.SEARCH_RESULTS) {
+    cachedItem['query'] = key;
+} else if (storeName === STORES.METADATA) {
+    cachedItem['key'] = key;
+} else if (storeName === STORES.AQI) {
+    cachedItem['slug'] = key;
+}
 
                 const request = store.put(cachedItem);
                 request.onsuccess = () => resolve();
