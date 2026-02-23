@@ -4,7 +4,8 @@ import React from 'react';
 import dynamic from 'next/dynamic';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
-import { Map, Info, MousePointer2, Layers } from 'lucide-react';
+import { Map as MapIcon, Info, MousePointer2, Layers } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 
 // Import map component dynamically to avoid SSR issues with Leaflet
 const IndiaMap = dynamic(() => import('@/components/ui/india-map'), {
@@ -20,6 +21,8 @@ const IndiaMap = dynamic(() => import('@/components/ui/india-map'), {
 });
 
 export default function MapPage() {
+  const t = useTranslations('map');
+
   return (
     <main className="flex flex-col min-h-screen">
       <Header />
@@ -28,26 +31,25 @@ export default function MapPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-emerald-600 font-semibold tracking-wide uppercase text-sm">
-              <Map size={16} />
-              Geographic Intelligence
+              <MapIcon size={16} />
+              {t('geographicIntelligence')}
             </div>
             <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-              India <span className="text-emerald-600">District Map</span>
+              {t('title')} <span className="text-emerald-600">{t('titleHighlight')}</span>
             </h1>
             <p className="text-lg text-slate-600 max-w-2xl">
-              Visualize oxygen self-sufficiency and environmental health across 200+ major districts. 
-              Click on any district to dive deeper into its environmental statistics.
+              {t('subtitle')}
             </p>
           </div>
           
           <div className="flex flex-wrap gap-4">
             <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
               <MousePointer2 size={14} className="text-emerald-500" />
-              <span>Click to explore</span>
+              <span>{t('clickToExplore')}</span>
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
               <Layers size={14} className="text-emerald-500" />
-              <span>Interactive Layers</span>
+              <span>{t('interactiveLayers')}</span>
             </div>
           </div>
         </div>
@@ -61,34 +63,34 @@ export default function MapPage() {
             <div className="bg-emerald-50 border border-emerald-100 p-6 rounded-2xl">
               <h3 className="flex items-center gap-2 text-emerald-800 font-bold mb-3">
                 <Info size={18} />
-                Map Guide
+                {t('guideTitle')}
               </h3>
               <ul className="space-y-4 text-sm text-emerald-900/80">
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full flex items-center justify-center text-[10px] font-bold">1</span>
-                  <span>Hover over any district to see its name and current oxygen supply/demand ratio.</span>
+                  <span>{t('guideStep1')}</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full flex items-center justify-center text-[10px] font-bold">2</span>
-                  <span>Color coding represents self-sufficiency status, from green (surplus) to red (critical).</span>
+                  <span>{t('guideStep2')}</span>
                 </li>
                 <li className="flex gap-3">
                   <span className="flex-shrink-0 w-5 h-5 bg-emerald-200 text-emerald-700 rounded-full flex items-center justify-center text-[10px] font-bold">3</span>
-                  <span>Click on a district to view detailed environmental analytics, AQI data, and tree plantation history.</span>
+                  <span>{t('guideStep3')}</span>
                 </li>
               </ul>
             </div>
             
             <div className="bg-white border border-slate-200 p-6 rounded-2xl shadow-sm">
-              <h3 className="text-slate-900 font-bold mb-4">Quick Stats</h3>
+              <h3 className="text-slate-900 font-bold mb-4">{t('quickStats')}</h3>
               <div className="space-y-4">
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Total Districts</div>
+                  <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">{t('totalDistricts')}</div>
                   <div className="text-2xl font-black text-slate-900">200+</div>
                 </div>
                 <div className="p-3 bg-slate-50 rounded-xl border border-slate-100">
-                  <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">Real-time Data</div>
-                  <div className="text-2xl font-black text-slate-900">Enabled</div>
+                  <div className="text-xs text-slate-500 uppercase font-bold tracking-wider mb-1">{t('realTimeData')}</div>
+                  <div className="text-2xl font-black text-slate-900">{t('enabled')}</div>
                 </div>
               </div>
             </div>

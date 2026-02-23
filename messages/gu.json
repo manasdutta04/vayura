@@ -30,7 +30,13 @@
     "donateTree": "વૃક્ષ દાન કરો",
     "contribute": "યોગદાન આપો",
     "myContributions": "મારા યોગદાન",
-    "navigate": "નેવિગેટ કરો"
+    "navigate": "નેવિગેટ કરો",
+    "mapView": "નકશો",
+    "champions": "વિજેતાઓ",
+    "challenges": "પડકારો",
+    "analytics": "એનાલિટિક્સ",
+    "profile": "પ્રોફાઇલ",
+    "contributeOnGithub": "GitHub પર યોગદાન આપો"
   },
   "footer": {
     "description": "ડેટા-આધારિત ઓક્સિજન બુદ્ધિમત્તા અને સમુદાય ક્રિયા દ્વારા ભારતના લીલા ભવિષ્યને સશક્ત બનાવવું.",
@@ -42,6 +48,12 @@
     "privacyPolicy": "ગોપનીયતા નીતિ",
     "termsOfService": "સેવાની શરતો",
     "dataSources": "ડેટા સ્રોતો",
+    "home": "હોમ",
+    "about": "વિશે",
+    "contact": "સંપર્ક",
+    "feedback": "પ્રતિસાદ",
+    "analytics": "એનાલિટિક્સ",
+    "quickLinks": "ઝડપી લિંક્સ",
     "copyright": "© {year} Vayura. સર્વાધિકાર સુરક્ષિત."
   },
   "auth": {

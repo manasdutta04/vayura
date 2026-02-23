@@ -30,7 +30,13 @@
     "donateTree": "গাছ দান করুন",
     "contribute": "অবদান রাখুন",
     "myContributions": "আমার অবদান",
-    "navigate": "নেভিগেট"
+    "navigate": "নেভিগেট",
+    "mapView": "ম্যাপ ভিউ",
+    "champions": "চ্যাম্পিয়নস",
+    "challenges": "চ্যালেঞ্জ",
+    "analytics": "অ্যানালিটিক্স",
+    "profile": "প্রোফাইল",
+    "contributeOnGithub": "GitHub-এ অবদান রাখুন"
   },
   "footer": {
     "description": "তথ্য-চালিত অক্সিজেন বুদ্ধিমত্তা এবং সামাজিক কর্মের মাধ্যমে ভারতের সবুজ ভবিষ্যতকে শক্তিশালী করা।",
@@ -42,6 +48,12 @@
     "privacyPolicy": "গোপনীয়তা নীতি",
     "termsOfService": "সেবার শর্তাবলী",
     "dataSources": "ডেটা উৎস",
+    "home": "হোম",
+    "about": "আমাদের সম্পর্কে",
+    "contact": "যোগাযোগ",
+    "feedback": "মতামত",
+    "analytics": "অ্যানালিটিক্স",
+    "quickLinks": "দ্রুত লিঙ্ক",
     "copyright": "© {year} Vayura। সর্বস্বত্ব সংরক্ষিত।"
   },
   "auth": {

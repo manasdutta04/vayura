@@ -1,8 +1,7 @@
 'use client';
 
 import React, { useEffect, useState, useMemo } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
-import L from 'leaflet';
+import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRouter } from 'next/navigation';
 import MapLegend from './map-legend';
@@ -47,11 +46,6 @@ const IndiaMap = () => {
         ]);
 
         if (!geoRes.ok || !stateRes.ok || !dataRes.ok) {
-          console.error('Fetch error:', {
-            districtsGeo: { ok: geoRes.ok, status: geoRes.status },
-            statesGeo: { ok: stateRes.ok, status: stateRes.status },
-            mapData: { ok: dataRes.ok, status: dataRes.status }
-          });
           throw new Error('Failed to fetch map data');
         }
 
@@ -64,7 +58,7 @@ const IndiaMap = () => {
         setDistrictsData(districts);
       } catch (error) {
         console.error('Error loading map data:', error);
-        setError('Unable to load interactive map. Please try again later.');
+        setError('Failed to load map data. Please try again later.');
       } finally {
         setLoading(false);
       }
@@ -76,22 +70,20 @@ const IndiaMap = () => {
   const dataMap = useMemo(() => {
     const map = new Map<string, MapData>();
     districtsData.forEach(d => {
-      // Create a key using both name and state to avoid collisions
       const key = `${d.name.toLowerCase()}-${d.state.toLowerCase()}`;
       map.set(key, d);
-      // Also set by name only as fallback
       map.set(d.name.toLowerCase(), d);
     });
     return map;
   }, [districtsData]);
 
   const getColor = (supply: number, demand: number) => {
-    if (demand === 0) return '#10b981'; // Default to green if no demand data
+    if (demand === 0) return '#10b981';
     const ratio = supply / demand;
-    if (ratio >= 1.0) return '#10b981'; // Green - Surplus
-    if (ratio >= 0.5) return '#fbbf24'; // Yellow - Moderate deficit
-    if (ratio >= 0.25) return '#f97316'; // Orange - High deficit
-    return '#ef4444'; // Red - Critical deficit
+    if (ratio >= 1.0) return '#10b981';
+    if (ratio >= 0.5) return '#fbbf24';
+    if (ratio >= 0.25) return '#f97316';
+    return '#ef4444';
   };
 
   const style = (feature: unknown) => {
@@ -185,7 +177,7 @@ const IndiaMap = () => {
             onClick={() => window.location.reload()}
             className="mt-4 px-4 py-2 bg-emerald-600 text-white text-sm font-semibold rounded-lg hover:bg-emerald-700 transition-colors"
           >
-            Retry Loading
+            Retry
           </button>
         </div>
       </div>
@@ -219,9 +211,9 @@ const IndiaMap = () => {
               fillColor: 'transparent',
               weight: 2,
               opacity: 1,
-              color: '#000000', // Black for state boundaries
+              color: '#000000',
               fillOpacity: 0,
-              interactive: false // Don't block clicks to districts
+              interactive: false
             }}
           />
         )}

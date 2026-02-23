@@ -30,7 +30,13 @@
     "donateTree": "झाड दान करा",
     "contribute": "योगदान द्या",
     "myContributions": "माझे योगदान",
-    "navigate": "नेव्हिगेट करा"
+    "navigate": "नेव्हिगेट करा",
+    "mapView": "नकाशा",
+    "champions": "विजेते",
+    "challenges": "आव्हाने",
+    "analytics": "अॅनालिटिक्स",
+    "profile": "प्रोफाइल",
+    "contributeOnGithub": "GitHub वर योगदान द्या"
   },
   "footer": {
     "description": "डेटा-चालित ऑक्सिजन बुद्धिमत्ता आणि समुदाय कृतीद्वारे भारताच्या हिरव्या भविष्याला सक्षम करणे.",
@@ -42,6 +48,12 @@
     "privacyPolicy": "गोपनीयता धोरण",
     "termsOfService": "सेवा अटी",
     "dataSources": "डेटा स्रोत",
+    "home": "होम",
+    "about": "बद्दल",
+    "contact": "संपर्क",
+    "feedback": "प्रतिसाद",
+    "analytics": "अॅनालिटिक्स",
+    "quickLinks": "क्विक लिंक्स",
     "copyright": "© {year} Vayura. सर्व हक्क राखीव."
   },
   "auth": {

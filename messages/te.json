@@ -30,7 +30,13 @@
     "donateTree": "చెట్టు దానం చేయండి",
     "contribute": "సహకరించండి",
     "myContributions": "నా సహకారాలు",
-    "navigate": "నావిగేట్ చేయండి"
+    "navigate": "నావిగేట్ చేయండి",
+    "mapView": "మ్యాప్ వీక్షణ",
+    "champions": "ఛాంపియన్స్",
+    "challenges": "సవాళ్లు",
+    "analytics": "విశ్లేషణ",
+    "profile": "ప్రొఫైల్",
+    "contributeOnGithub": "GitHubలో సహకరించండి"
   },
   "footer": {
     "description": "డేటా-ఆధారిత ఆక్సిజన్ ఇంటెలిజెన్స్ మరియు సమాజ చర్య ద్వారా భారతదేశ పచ్చని భవిష్యత్తును శక్తివంతం చేయడం.",
@@ -42,6 +48,12 @@
     "privacyPolicy": "గోప్యతా విధానం",
     "termsOfService": "సేవా నిబంధనలు",
     "dataSources": "డేటా మూలాలు",
+    "home": "హోమ్",
+    "about": "గురించి",
+    "contact": "సంప్రదించండి",
+    "feedback": "అభిప్రాయం",
+    "analytics": "విశ్లేషణ",
+    "quickLinks": "శీఘ్ర లింకులు",
     "copyright": "© {year} Vayura. అన్ని హక్కులు రిజర్వ్ చేయబడ్డాయి."
   },
   "auth": {

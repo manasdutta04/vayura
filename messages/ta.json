@@ -30,7 +30,13 @@
     "donateTree": "மரம் நன்கொடை",
     "contribute": "பங்களிக்கவும்",
     "myContributions": "என் பங்களிப்புகள்",
-    "navigate": "வழிசெலுத்து"
+    "navigate": "வழிசெலுத்து",
+    "mapView": "வரைபடக் காட்சி",
+    "champions": "சாம்பியன்கள்",
+    "challenges": "சவால்கள்",
+    "analytics": "பகுப்பாய்வு",
+    "profile": "சுயவிவரம்",
+    "contributeOnGithub": "GitHub-இல் பங்களிக்கவும்"
   },
   "footer": {
     "description": "தரவு சார்ந்த ஆக்சிஜன் நுண்ணறிவு மற்றும் சமூக நடவடிக்கை மூலம் இந்தியாவின் பசுமையான எதிர்காலத்தை மேம்படுத்துதல்.",
@@ -42,6 +48,12 @@
     "privacyPolicy": "தனியுரிமைக் கொள்கை",
     "termsOfService": "சேவை விதிமுறைகள்",
     "dataSources": "தரவு ஆதாரங்கள்",
+    "home": "முகப்பு",
+    "about": "பற்றி",
+    "contact": "தொடர்பு",
+    "feedback": "கருத்து",
+    "analytics": "பகுப்பாய்வு",
+    "quickLinks": "விரைவு இணைப்புகள்",
     "copyright": "© {year} Vayura. அனைத்து உரிமைகளும் பாதுகாக்கப்பட்டவை."
   },
   "auth": {

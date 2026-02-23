@@ -40,37 +40,37 @@ export function Header() {
               href="/map"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              Map View
+              {t("nav.mapView")}
             </Link>
             <Link
               href="/leaderboard"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              Leaderboard
+              {t("nav.leaderboard")}
             </Link>
             <Link
               href="/champions"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              Champions
+              {t("nav.champions")}
             </Link>
             <Link
               href="/challenges"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              Challenges
+              {t("nav.challenges")}
             </Link>
             <Link
               href="/calculator"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              CO₂ Calculator
+              {t("nav.calculator")}
             </Link>
             <Link
               href="/methodology"
               className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
             >
-              Methodology
+              {t("nav.methodology")}
             </Link>
             {user && (
               <>
@@ -84,7 +84,7 @@ export function Header() {
                   href="/analytics"
                   className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
                 >
-                  Analytics
+                  {t("nav.analytics")}
                 </Link>
                 <Link
                   href="/plant"
@@ -209,7 +209,7 @@ export function Header() {
                         className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50"
                         onClick={() => setShowUserMenu(false)}
                       >
-                        Profile
+                        {t("nav.profile")}
                       </Link>
                       <Link
                         href="/contribution"
@@ -348,7 +348,7 @@ export function Header() {
                         d="M9 2v18M16 6.513l-7-3.5M9 20l7-3.5"
                       />
                     </svg>
-                    <span>Map View</span>
+                    <span>{t("nav.mapView")}</span>
                   </Link>
 
                   <Link
@@ -390,7 +390,7 @@ export function Header() {
                         d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"
                       />
                     </svg>
-                    <span>Champions</span>
+                    <span>{t("nav.champions")}</span>
                   </Link>
 
                   <Link
@@ -411,7 +411,7 @@ export function Header() {
                         d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                       />
                     </svg>
-                    <span>Challenges</span>
+                    <span>{t("nav.challenges")}</span>
                   </Link>
 
                   <Link
@@ -476,7 +476,7 @@ export function Header() {
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                           />
                         </svg>
-                        <span>Dashboard</span>
+                        <span>{t("nav.dashboard")}</span>
                       </Link>
                     </>
                   )}
@@ -550,7 +550,7 @@ export function Header() {
                           clipRule="evenodd"
                         />
                       </svg>
-                      Contribute on GitHub
+                      {t("nav.contributeOnGithub")}
                     </a>
                   </div>
                 </motion.div>

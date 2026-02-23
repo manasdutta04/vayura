@@ -11,7 +11,7 @@ const DistrictTooltip = ({ name, state, oxygenSupply, oxygenDemand }: DistrictTo
   const ratio = oxygenSupply / oxygenDemand;
   const deficitPercent = Math.max(0, (1 - ratio) * 100);
   
-  let status = 'Surplus';
+  let status = 'Oxygen Surplus';
   let color = 'text-emerald-600';
   
   if (ratio < 1.0) {

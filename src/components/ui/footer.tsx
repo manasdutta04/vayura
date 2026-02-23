@@ -59,27 +59,27 @@ export function Footer() {
           {/* Quick Links */}
           <div>
             <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
-              Quick Links
+              {t('footer.quickLinks')}
             </h3>
             <ul className="space-y-3">
               <li>
                 <Link href="/" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Home
+                  {t('footer.home')}
                 </Link>
               </li>
               <li>
                 <Link href="/about" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  About
+                  {t('footer.about')}
                 </Link>
               </li>
               <li>
                 <Link href="/contact" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Contact
+                  {t('footer.contact')}
                 </Link>
               </li>
               <li>
                 <Link href="/feedback" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Feedback
+                  {t('footer.feedback')}
                 </Link>
               </li>
             </ul>
@@ -113,7 +113,7 @@ export function Footer() {
               </li>
               <li>
                 <Link href="/analytics" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
-                  Analytics
+                  {t('nav.analytics')}
                 </Link>
               </li>
             </ul>

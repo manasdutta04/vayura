@@ -8,6 +8,7 @@ import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { useAuth } from '@/lib/auth-context';
 import { formatCompactNumber } from '@/lib/utils/helpers';
+import { useTranslations } from 'next-intl';
 import {
     ContributorLeaderboardResponse,
     ContributorLeaderboardEntry,
@@ -122,6 +123,8 @@ function LeaderboardEntryRow({
     showLocation?: boolean;
 }) {
     const isTop3 = entry.rank <= 3;
+    const tc = useTranslations('champions');
+    const tcom = useTranslations('common');
 
     return (
         <div
@@ -161,7 +164,7 @@ function LeaderboardEntryRow({
                         {entry.userName}
                         {entry.isCurrentUser && (
                             <span className="ml-2 text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
-                                You
+                                {tc('you')}
                             </span>
                         )}
                     </h3>
@@ -193,7 +196,7 @@ function LeaderboardEntryRow({
                 </div>
                 <div className="flex items-center gap-1 justify-end text-sm text-gray-500">
                     <Wind className="w-3 h-3" />
-                    <span>{formatCompactNumber(entry.totalO2Impact)} kg O₂</span>
+                    <span>{tc('o2Impact', { amount: formatCompactNumber(entry.totalO2Impact) })}</span>
                 </div>
             </div>
         </div>
@@ -218,6 +221,8 @@ function ScopeSelector({
     onStateSelect: (state: string | null) => void;
     states: string[];
 }) {
+    const t = useTranslations('champions.scope');
+
     return (
         <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
             <div className="flex flex-wrap gap-2 mb-4">
@@ -229,7 +234,7 @@ function ScopeSelector({
                         }`}
                 >
                     <Globe className="w-4 h-4" />
-                    National
+                    {t('national')}
                 </button>
                 <button
                     onClick={() => onScopeChange('state')}
@@ -239,7 +244,7 @@ function ScopeSelector({
                         }`}
                 >
                     <Building2 className="w-4 h-4" />
-                    By State
+                    {t('state')}
                 </button>
                 <button
                     onClick={() => onScopeChange('district')}
@@ -249,7 +254,7 @@ function ScopeSelector({
                         }`}
                 >
                     <MapPin className="w-4 h-4" />
-                    By District
+                    {t('district')}
                 </button>
             </div>
 
@@ -260,7 +265,7 @@ function ScopeSelector({
                         onChange={(e) => onStateSelect(e.target.value || null)}
                         className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 appearance-none cursor-pointer focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     >
-                        <option value="">Select a State</option>
+                        <option value="">{t('selectState')}</option>
                         {states.map((state) => (
                             <option key={state} value={state}>
                                 {state}
@@ -298,6 +303,7 @@ function ChampionsPageContent() {
     const [leaderboard, setLeaderboard] = useState<ContributorLeaderboardResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [states, setStates] = useState<string[]>([]);
+    const t = useTranslations('champions');
 
     // Fetch list of states
     useEffect(() => {
@@ -368,11 +374,10 @@ function ChampionsPageContent() {
                         <Trophy className="w-8 h-8" />
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        District Champions
+                        {t('title')}
                     </h1>
                     <p className="text-gray-600 max-w-lg mx-auto">
-                        Celebrating the top contributors making a real impact on India&apos;s environment.
-                        Plant trees, earn badges, and climb the leaderboard!
+                        {t('heroSubtitle')}
                     </p>
                 </div>
 
@@ -380,7 +385,7 @@ function ChampionsPageContent() {
                 <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm">
                     <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-500" />
-                        Achievement Badges
+                        {t('achievementBadges')}
                     </h3>
                     <div className="flex flex-wrap gap-4">
                         {Object.values(BADGE_DEFINITIONS).map((badge) => (
@@ -415,15 +420,15 @@ function ChampionsPageContent() {
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
                                 <Users className="w-5 h-5 text-gray-400" />
-                                Top Contributors
+                                {t('topContributors')}
                                 {scope !== 'national' && (
                                     <span className="text-green-600">
-                                        in {leaderboard.scopeName}
+                                        {t('inScope', { scope: leaderboard.scopeName })}
                                     </span>
                                 )}
                             </h2>
                             <span className="text-sm text-gray-500">
-                                {leaderboard.totalContributors} contributors
+                                {t('contributorsCount', { count: leaderboard.totalContributors })}
                             </span>
                         </div>
                     )}
@@ -458,13 +463,13 @@ function ChampionsPageContent() {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
                                 {scope !== 'national' && !(selectedDistrict || selectedState)
-                                    ? `Select a ${scope} to view contributors`
-                                    : 'No contributors yet'}
+                                    ? t('selectToView', { scope: t(`scope.${scope}`) })
+                                    : t('noContributors')}
                             </h3>
                             <p className="text-gray-500 mb-6 max-w-sm mx-auto">
                                 {scope !== 'national' && !(selectedDistrict || selectedState)
-                                    ? `Choose a ${scope} from the dropdown above to see the leaderboard.`
-                                    : 'Be the first to plant a tree and claim the top spot!'}
+                                    ? t('chooseScope', { scope: t(`scope.${scope}`) })
+                                    : t('beTheFirst')}
                             </p>
                             {(scope === 'national' || selectedDistrict || selectedState) && (
                                 <Link
@@ -472,7 +477,7 @@ function ChampionsPageContent() {
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium shadow-lg shadow-green-200 hover:shadow-xl hover:shadow-green-300 transition-all"
                                 >
                                     <TreeDeciduous className="w-5 h-5" />
-                                    Plant a Tree Now
+                                    {t('plantNow')}
                                 </Link>
                             )}
                         </div>
@@ -494,10 +499,9 @@ function ChampionsPageContent() {
 
                 {/* CTA Section */}
                 <div className="mt-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center shadow-xl">
-                    <h3 className="text-2xl font-bold mb-3">Ready to Become a Champion?</h3>
+                    <h3 className="text-2xl font-bold mb-3">{t('readyToBecome')}</h3>
                     <p className="text-green-100 mb-6 max-w-lg mx-auto">
-                        Every tree you plant brings you closer to earning badges and climbing the leaderboard.
-                        Start your journey today!
+                        {t('readySubtitle')}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link
@@ -505,14 +509,14 @@ function ChampionsPageContent() {
                             className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
                         >
                             <TreeDeciduous className="w-5 h-5" />
-                            Plant a Tree
+                            {t('plantATree')}
                         </Link>
                         <Link
                             href="/donate"
                             className="inline-flex items-center gap-2 px-6 py-3 bg-green-500/20 text-white border border-white/30 rounded-lg font-semibold hover:bg-green-500/30 transition-colors"
                         >
                             <Shield className="w-5 h-5" />
-                            Donate Trees
+                            {t('donateTrees')}
                         </Link>
                     </div>
                 </div>

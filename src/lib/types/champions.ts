@@ -5,12 +5,12 @@
 
 // Achievement Badge Types
 export type BadgeType =
-    | 'GREEN_STARTER'      // 🌱 First verified contribution
-    | 'OXYGEN_GUARDIAN'    // 🌳 Significant contribution milestone (10+ trees)
-    | 'DISTRICT_CHAMPION'  // 🏆 Top contributor in a district
-    | 'STATE_CHAMPION'     // ⭐ Top contributor in a state
-    | 'ECO_WARRIOR'        // 🛡️ 50+ verified trees
-    | 'FOREST_LEGEND';     // 👑 100+ verified trees
+    | 'seedling'
+    | 'green_thumb'
+    | 'eco_warrior'
+    | 'oxygen_hero'
+    | 'forest_guardian'
+    | 'master_planter';
 
 export interface Badge {
     id: string;
@@ -36,52 +36,52 @@ export interface BadgeDefinition {
 
 // All badge definitions
 export const BADGE_DEFINITIONS: Record<BadgeType, BadgeDefinition> = {
-    GREEN_STARTER: {
-        type: 'GREEN_STARTER',
-        name: 'Green Starter',
-        description: 'Made your first verified contribution',
+    seedling: {
+        type: 'seedling',
+        name: 'Seedling Planter',
+        description: 'Planted your first tree!',
+        requirement: 'Plant 1 tree',
         icon: 'Sprout',
-        requirement: '1 verified tree',
         tier: 'bronze',
     },
-    OXYGEN_GUARDIAN: {
-        type: 'OXYGEN_GUARDIAN',
-        name: 'Oxygen Guardian',
-        description: 'Significant environmental impact achieved',
+    green_thumb: {
+        type: 'green_thumb',
+        name: 'Green Thumb',
+        description: 'A growing contribution to the environment.',
+        requirement: 'Plant 5 trees',
         icon: 'TreeDeciduous',
-        requirement: '10+ verified trees',
+        tier: 'bronze',
+    },
+    eco_warrior: {
+        type: 'eco_warrior',
+        name: 'Eco Warrior',
+        description: 'Making a significant impact on your district.',
+        requirement: 'Plant 25 trees',
+        icon: 'Shield',
         tier: 'silver',
     },
-    DISTRICT_CHAMPION: {
-        type: 'DISTRICT_CHAMPION',
-        name: 'District Champion',
-        description: 'Top contributor in your district',
-        icon: 'Trophy',
-        requirement: '#1 in district',
+    oxygen_hero: {
+        type: 'oxygen_hero',
+        name: 'Oxygen Hero',
+        description: 'Providing clean air for dozens of people.',
+        requirement: 'Plant 50 trees',
+        icon: 'Wind',
         tier: 'gold',
     },
-    STATE_CHAMPION: {
-        type: 'STATE_CHAMPION',
-        name: 'State Champion',
-        description: 'Top contributor in your state',
-        icon: 'Star',
-        requirement: '#1 in state',
+    forest_guardian: {
+        type: 'forest_guardian',
+        name: 'Forest Guardian',
+        description: 'Protecting and restoring entire ecosystems.',
+        requirement: 'Plant 100 trees',
+        icon: 'Trophy',
         tier: 'platinum',
     },
-    ECO_WARRIOR: {
-        type: 'ECO_WARRIOR',
-        name: 'Eco Warrior',
-        description: 'Committed environmental warrior',
-        icon: 'Shield',
-        requirement: '50+ verified trees',
-        tier: 'gold',
-    },
-    FOREST_LEGEND: {
-        type: 'FOREST_LEGEND',
-        name: 'Forest Legend',
-        description: 'Legendary contribution to the planet',
+    master_planter: {
+        type: 'master_planter',
+        name: 'Master Planter',
+        description: 'Leading India towards a greener future.',
+        requirement: 'Plant 250+ trees',
         icon: 'Crown',
-        requirement: '100+ verified trees',
         tier: 'platinum',
     },
 };
