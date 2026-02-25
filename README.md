@@ -1,7 +1,7 @@
 # Vayura
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-20-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-21-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 ## Why Vayura?
@@ -364,6 +364,7 @@ Always verify critical information with official sources and domain experts.
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/magic-peach"><img src="https://avatars.githubusercontent.com/u/146705736?v=4?s=100" width="100px;" alt="Akanksha Trehun"/><br /><sub><b>Akanksha Trehun</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=magic-peach" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://pooja-portfolio-alpha.vercel.app/"><img src="https://avatars.githubusercontent.com/u/116633432?v=4?s=100" width="100px;" alt="Pooja"/><br /><sub><b>Pooja</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=Pooja675" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/squirrelk6755-ctrl"><img src="https://avatars.githubusercontent.com/u/229552414?v=4?s=100" width="100px;" alt="Muskan"/><br /><sub><b>Muskan</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=squirrelk6755-ctrl" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://portfoliosaburi.vercel.app/"><img src="https://avatars.githubusercontent.com/u/167957664?v=4?s=100" width="100px;" alt="Saburi Nikam"/><br /><sub><b>Saburi Nikam</b></sub></a><br /><a href="https://github.com/manasdutta04/vayura/commits?author=saburi004" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
