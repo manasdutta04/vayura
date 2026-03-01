@@ -120,6 +120,17 @@ export default async function DistrictPage(
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+  const apiTimestamp = data.environmentalData?.timestamp;
+  const parsedLastUpdated = apiTimestamp ? new Date(apiTimestamp as unknown as string) : new Date();
+  const safeLastUpdated = Number.isNaN(parsedLastUpdated.getTime()) ? new Date() : parsedLastUpdated;
+  const formattedLastUpdated = safeLastUpdated.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
   const healthScore = calculateHealthScore(
   data.environmentalData.aqi,
   data.environmentalData.disasterFrequency,
@@ -188,6 +199,11 @@ if (healthScore >= 70) {
             {/* Summary cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
       </div>
+            <div className="mb-4">
+              <p className="text-sm text-gray-600">
+                Last Updated: {formattedLastUpdated}
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
             <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
   <h2 className="text-sm font-semibold text-gray-500 mb-2">
