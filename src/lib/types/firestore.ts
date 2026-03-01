@@ -23,6 +23,7 @@ export interface EnvironmentalData {
     soilQuality: number;
     disasterFrequency: number;
     dataSource?: string;
+    confidenceScore?: number;
     timestamp: Date;
     createdAt: Date;
 }
@@ -111,6 +112,24 @@ export interface AggregatedStats {
     lastUpdated: Date;
 }
 
+/**
+ * Confidence History for tracking data quality over time
+ */
+export interface ConfidenceHistoryEntry {
+    id?: string;
+    districtId: string;
+    confidenceScore: number;
+    factors: {
+        hasRealtimeAQI: boolean;
+        aqiSource: string;
+        usedGemini: boolean;
+        populationYear: number;
+        dataFreshnessHours: number;
+    };
+    timestamp: Date;
+    createdAt: Date;
+}
+
 // Firestore collection names
 export const Collections = {
     DISTRICTS: 'districts',
@@ -120,4 +139,5 @@ export const Collections = {
     LEADERBOARD: 'leaderboard',
     AGGREGATED_STATS: 'aggregated_stats',
     USERS: 'users',
+    CONFIDENCE_HISTORY: 'confidence_history',
 } as const;

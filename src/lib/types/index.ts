@@ -22,6 +22,7 @@ export interface EnvironmentalData {
     disasterFrequency: number;
     recommendations?: TreeRecommendation[];
     dataSource?: string;
+    confidenceScore?: number;
     timestamp: Date;
     createdAt: Date;
 }
@@ -132,6 +133,7 @@ export interface DistrictDetail extends District {
         totalTrees: number;
         oxygenOffset: number;
     };
+    confidenceScore?: number;
 }
 
 export interface DistrictSearchResult {

@@ -251,7 +251,7 @@ if (healthScore >= 70) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               <div className="bg-white rounded-2xl p-6 shadow border border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Oxygen demand vs tree supply
+                  Oxygen Demand Model
                 </h2>
                 <dl className="space-y-3 text-sm text-gray-700">
                   <div className="flex justify-between">
@@ -333,11 +333,22 @@ if (healthScore >= 70) {
                     </ul>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Confidence level:{" "}
-                    <span className="font-semibold capitalize">
-                      {calc.confidence_level}
-                    </span>
-                    . Estimates only, not medical or policy guidance.
+                    {data.confidenceScore !== undefined && (
+                      <>
+                        <span className={`font-semibold ${
+                          data.confidenceScore >= 71 ? 'text-green-600' :
+                          data.confidenceScore >= 41 ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          Confidence Score: {data.confidenceScore}%{' '}
+                          {data.confidenceScore >= 71 ? 'High' :
+                           data.confidenceScore >= 41 ? 'Medium' :
+                           'Low'}
+                        </span>
+                        .{' '}
+                      </>
+                    )}
+                    Estimates only, not medical or policy guidance.
                   </p>
                 </div>
               </div>
