@@ -5,8 +5,6 @@ import { AdminGuard } from "@/components/admin-guard";
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
 import {
-  LineChart,
-  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -15,29 +13,16 @@ import {
   ResponsiveContainer,
   BarChart,
   Bar,
-  Cell,
-  PieChart,
-  Pie,
-  Sector,
-  Radar,
-  RadarChart,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis,
   AreaChart,
   Area,
   Treemap,
 } from "recharts";
 import {
   TrendingUp,
-  Users,
   TreeDeciduous,
   Wind,
   Map,
   Download,
-  Filter,
-  Calendar,
-  ChevronDown,
   RefreshCw,
   ArrowUpRight,
   ArrowDownRight,
@@ -45,8 +30,6 @@ import {
 } from "lucide-react";
 import {
   AnalyticsData,
-  MetricSnapshot,
-  RegionalAnalytics,
 } from "@/lib/types/analytics";
 
 export default function AnalyticsPage() {

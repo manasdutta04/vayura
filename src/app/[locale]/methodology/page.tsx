@@ -90,7 +90,7 @@ export default function MethodologyPage() {
                             </p>
                             <div className="mt-3 sm:mt-4 p-3 sm:p-4 bg-blue-50 border border-blue-200 rounded-lg">
                                 <p className="text-xs sm:text-sm text-blue-800">
-                                    <strong>Note:</strong> AQI penalty is applied based on EPA category buckets (0-50, 51-100, 101-150, 151-200, 201-300, 300+). All AQI values within the same category receive the same penalty factor. For example, AQI 107 and AQI 149 both fall in the "Unhealthy for Sensitive Groups" category (101-150) and both receive the 1.15× penalty.
+                                    <strong>Note:</strong> AQI penalty is applied based on EPA category buckets (0-50, 51-100, 101-150, 151-200, 201-300, 300+). All AQI values within the same category receive the same penalty factor. For example, AQI 107 and AQI 149 both fall in the &ldquo;Unhealthy for Sensitive Groups&rdquo; category (101-150) and both receive the 1.15× penalty.
                                 </p>
                             </div>
 

@@ -1,7 +1,6 @@
 import { calculateHealthScore } from "@/lib/calculations/healthScore";
 import { notFound } from "next/navigation";
 import DistrictReportCard from "../../../../components/district/DistrictReportCard";
-import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
@@ -95,7 +94,6 @@ export default async function DistrictPage(
   { params }: DistrictPageProps
 ) {
   const { slug } = await params;
-  const t = await getTranslations('district');
 
   if (!slug) {
     notFound();

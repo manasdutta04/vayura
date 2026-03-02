@@ -144,6 +144,35 @@ export interface DistrictSearchResult {
     population: number;
 }
 
+export interface DistrictImpact {
+    districtId: string;
+    districtName: string;
+    state?: string;
+    totalTreesPlanted?: number;
+    totalTreesDonated?: number;
+    totalO2Offset?: number;
+    verifiedContributions?: number;
+    treesContributed: number;
+    oxygenOffsetKg: number;
+    percentOfDeficitOffset: number;
+    districtTotalDeficitKg?: number;
+}
+
+export interface UserImpactSummary {
+    userId: string;
+    userName?: string;
+    userEmail?: string;
+    totalTreesPlanted?: number;
+    totalTreesDonated?: number;
+    totalTrees: number;
+    totalO2Impact?: number;
+    verifiedContributions?: number;
+    districtImpacts: DistrictImpact[];
+    totalOxygenOffsetKg: number;
+    mostImpactedDistrict?: DistrictImpact | null;
+    totalDistricts: number;
+}
+
 // AQI Categories for color coding
 export type AQICategory = 'good' | 'moderate' | 'unhealthy' | 'veryUnhealthy' | 'hazardous';
 

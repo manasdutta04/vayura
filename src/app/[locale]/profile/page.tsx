@@ -1,14 +1,13 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { useAuth } from '@/lib/auth-context';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
-import { Button } from '@/components/ui/button';
 import { getUserProfile } from '@/lib/utils/user-profile';
 import { UserProfile } from '@/lib/types/firestore';
-import { User, Mail, Calendar, Edit3, Camera, LogOut, Trash2 } from 'lucide-react';
+import { User, Mail, Calendar, Edit3, LogOut, Trash2, Camera } from 'lucide-react';
 
 export default function ProfilePage() {
   const { user, loading, signOut } = useAuth();
@@ -135,6 +134,7 @@ export default function ProfilePage() {
               <div className="relative group">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                   {profile.photoURL ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img 
                       src={profile.photoURL} 
                       alt={profile.name || 'Profile'}

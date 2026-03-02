@@ -9,8 +9,8 @@ import { useAuth } from '@/lib/auth-context';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
 import { DistrictSearchResult } from '@/lib/types';
 import { DistrictSearch } from '@/components/ui/district-search';
-import { Leaf, Camera, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
+import { Leaf, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle, Camera } from 'lucide-react';
+import Image from 'next/image';
 
 function PlantPageContent() {
     const t = useTranslations('plant');
@@ -361,10 +361,12 @@ function PlantPageContent() {
                                         />
                                         {previewUrl ? (
                                             <div className="space-y-2">
-                                                <img
+                                                <Image
                                                     src={previewUrl}
                                                     alt="Tree preview"
                                                     className="mx-auto rounded-lg max-h-32 object-contain"
+                                                    width={128}
+                                                    height={128}
                                                     draggable={false}
                                                 />
                                                 <p className="text-xs text-gray-500">{t('clickToChange')}</p>

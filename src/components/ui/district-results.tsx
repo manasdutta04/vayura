@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
-import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
 import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
 import Skeleton from "@/components/ui/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";

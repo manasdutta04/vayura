@@ -24,10 +24,12 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
-            <img
+            <Image
               src="/logo.png"
               alt={t("common.brandName")}
               className="h-8 sm:h-10 w-auto"
+              width={40}
+              height={40}
             />
             <span className="text-lg font-semibold text-gray-900 tracking-tight">
               {t("common.brandName")}
@@ -166,17 +168,14 @@ export function Header() {
                     className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors"
                   >
                     {user.photoURL && user.photoURL !== photoErrorURL ? (
-                      <img
+                      <Image
                         src={user.photoURL}
                         alt={user.displayName || "User"}
                         className="rounded-full object-cover"
-                        style={{
-                          width: "32px",
-                          height: "32px",
-                          minWidth: "32px",
-                        }}
+                        width={32}
+                        height={32}
                         referrerPolicy="no-referrer"
-                        onError={() => setPhotoErrorURL(user.photoURL)} // store the failed URL
+                        onError={() => setPhotoErrorURL(user.photoURL)}
                       />
                     ) : (
                       <div

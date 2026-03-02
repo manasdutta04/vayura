@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -125,7 +124,6 @@ function LeaderboardEntryRow({
 }) {
     const isTop3 = entry.rank <= 3;
     const tc = useTranslations('champions');
-    const tcom = useTranslations('common');
 
     return (
         <div
@@ -141,6 +139,7 @@ function LeaderboardEntryRow({
             {/* User Avatar */}
             <div className="relative">
                 {entry.photoURL ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={entry.photoURL}
                         alt={entry.userName}
@@ -297,7 +296,6 @@ function ScopeSelector({
 // Main Content Component
 function ChampionsPageContent() {
     const { user } = useAuth();
-    const searchParams = useSearchParams();
     const [scope, setScope] = useState<LeaderboardScope>('national');
     const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
     const [selectedState, setSelectedState] = useState<string | null>(null);
@@ -306,7 +304,6 @@ function ChampionsPageContent() {
     const [states, setStates] = useState<string[]>([]);
     const t = useTranslations('champions');
 
-    // Fetch list of states
     useEffect(() => {
         async function fetchStates() {
             try {

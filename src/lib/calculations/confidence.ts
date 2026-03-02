@@ -46,24 +46,10 @@ const CURRENT_YEAR = new Date().getFullYear();
 const MAX_POPULATION_AGE_YEARS = 3;
 
 /**
- * Determines if AQI source is real-time
- */
-function isRealtimeAQI(source: string): boolean {
-  return source === 'openweathermap';
-}
-
-/**
  * Determines if AQI source is from Gemini (AI-estimated)
  */
 function isGeminiAQI(source: string): boolean {
   return source === 'gemini_ai_fallback';
-}
-
-/**
- * Determines if data is from a fallback/static source
- */
-function isFallbackAQI(source: string): boolean {
-  return !isRealtimeAQI(source) && !isGeminiAQI(source);
 }
 
 /**

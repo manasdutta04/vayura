@@ -299,13 +299,13 @@ export async function fetchPlantationRecommendations(
         dataType: 'recommendations',
     });
 
-    return data?.recommendations || getMockRecommendations(districtName, stateName);
+    return data?.recommendations || getMockRecommendations(districtName);
 }
 
 /**
  * Fallback mock recommendations for development/testing
  */
-function getMockRecommendations(district: string, state: string): TreeRecommendation[] {
+function getMockRecommendations(district: string): TreeRecommendation[] {
     return [
         {
             speciesName: "Neem",
@@ -385,9 +385,9 @@ export function validateGeminiData(data: GeminiDistrictData): {
         if (!Array.isArray(data.recommendations)) {
             errors.push('Recommendations must be an array');
         } else if (data.recommendations.length > 0) {
-            data.recommendations.forEach((rec, index) => {
-                if (!rec.speciesName) errors.push(`Recommendation ${index} missing speciesName`);
-                if (typeof rec.survivalProbability !== 'number') errors.push(`Recommendation ${index} missing survivalProbability`);
+            data.recommendations.forEach((rec, idx) => {
+                if (!rec.speciesName) errors.push(`Recommendation ${idx} missing speciesName`);
+                if (typeof rec.survivalProbability !== 'number') errors.push(`Recommendation ${idx} missing survivalProbability`);
             });
         }
     }

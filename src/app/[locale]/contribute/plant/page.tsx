@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
@@ -172,10 +173,12 @@ function PlantContributionForm() {
                         {previewUrl && (
                             <div className="mt-3">
                                 <p className="text-xs text-gray-500 mb-1">Preview</p>
-                                <img
+                                <Image
                                     src={previewUrl}
                                     alt="Tree preview"
                                     className="rounded-xl border border-gray-200 max-h-64 object-cover"
+                                    width={400}
+                                    height={256}
                                 />
                             </div>
                         )}

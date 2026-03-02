@@ -1,11 +1,9 @@
 import {
     collection,
     doc,
-    getDoc,
     getDocs,
     setDoc,
     updateDoc,
-    deleteDoc,
     query,
     where,
     orderBy,
@@ -14,7 +12,7 @@ import {
     QueryConstraint,
 } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
-import { Collections, District, EnvironmentalData, TreeContribution, Donation, LeaderboardEntry } from '@/lib/types/firestore';
+import { Collections, District, EnvironmentalData, TreeContribution, LeaderboardEntry } from '@/lib/types/firestore';
 
 /**
  * Convert Firestore Timestamp to Date
