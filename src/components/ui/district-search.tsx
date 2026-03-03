@@ -20,14 +20,13 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [recentDistricts, setRecentDistricts] = useState<DistrictSearchResult[]>([]);
   const [dataSource, setDataSource] = useState<'network' | 'cache' | null>(null);
   
   const isOnline = useIsOnline();
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const t = useTranslations('search');
+  const t = useTranslations('districtSearch');
 
   // Load recently viewed on mount
   useEffect(() => {

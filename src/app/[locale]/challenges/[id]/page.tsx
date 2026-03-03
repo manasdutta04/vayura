@@ -2,13 +2,12 @@
 
 import { useEffect, useState, Suspense } from 'react';
 import { useParams } from 'next/navigation';
-import { useRouter, Link } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { useAuth } from '@/lib/auth-context';
 import { formatCompactNumber } from '@/lib/utils/helpers';
 import {
-    ChallengeWithLeaders,
     ChallengeParticipant,
     ChallengeDetailResponse,
     getChallengeTimeRemaining,
@@ -37,7 +36,6 @@ import {
     TrendingUp,
     Zap,
     Share2,
-    ExternalLink,
 } from 'lucide-react';
 
 // Countdown Timer Component
@@ -200,6 +198,7 @@ function LeaderboardEntry({
             {/* User Avatar */}
             <div className="relative">
                 {participant.photoURL ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={participant.photoURL}
                         alt={participant.userName}
@@ -255,7 +254,6 @@ function LeaderboardEntry({
 // Main Content Component
 function ChallengeDetailContent() {
     const params = useParams();
-    const router = useRouter();
     const { user } = useAuth();
     const [data, setData] = useState<ChallengeDetailResponse | null>(null);
     const [loading, setLoading] = useState(true);

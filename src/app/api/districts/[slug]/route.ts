@@ -7,11 +7,22 @@ import { getDisasterData } from '@/lib/data-sources/disasters';
 import { fetchPlantationRecommendations } from '@/lib/data-sources/gemini-data-fetcher';
 import { DistrictDetail, EnvironmentalData, OxygenCalculation } from '@/lib/types';
 import { calculateOxygenRequirements } from '@/lib/utils/oxygen-calculator';
+import { calculateConfidenceScore } from '@/lib/calculations/confidence';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
 
 export const dynamic = 'force-dynamic';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+
+/**
+ * Check if error is a Firestore permission/availability error
+ */
+function isFirestoreError(error: unknown): boolean {
+    if (!error) return false;
+    const err = error as { code?: number; message?: string };
+    return err.code === 7 || 
+           (typeof err.message === 'string' && err.message.includes('Firestore'));
+}
 
 function timestampToDate(value: unknown): Date {
     if (!value) return new Date();
@@ -95,6 +106,19 @@ export async function GET(
                 fetchPlantationRecommendations(district.name, district.state),
             ]);
 
+            // Calculate confidence score before saving
+            const aqiSource = aqiData.source;
+            const usedGemini = recommendations && recommendations.length > 0;
+            const populationYear = 2021;
+            
+            const confidenceScore = calculateConfidenceScore({
+                hasRealtimeAQI: aqiSource === 'openweathermap',
+                aqiSource: aqiSource,
+                usedGemini: usedGemini,
+                populationYear: populationYear,
+                dataFreshnessHours: 0,
+            });
+
             const newEnvRef = adminDb.collection('environmental_data').doc();
             await newEnvRef.set({
                 districtId: district.id,
@@ -104,6 +128,7 @@ export async function GET(
                 disasterFrequency: disasterData.disasterFrequency,
                 recommendations: recommendations,
                 dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
+                confidenceScore: confidenceScore,
                 timestamp: new Date(),
                 createdAt: new Date(),
             });
@@ -117,6 +142,7 @@ export async function GET(
                 disasterFrequency: disasterData.disasterFrequency,
                 recommendations: recommendations,
                 dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
+                confidenceScore: confidenceScore,
                 timestamp: new Date(),
                 createdAt: new Date(),
             };
@@ -210,12 +236,31 @@ export async function GET(
             oxygenOffset,
         };
 
+        // Calculate confidence score based on data quality
+        const dataFreshnessHours = (now - envData.timestamp.getTime()) / (1000 * 60 * 60);
+        const aqiSource = envData.dataSource?.split(',')[0] || 'unknown';
+        
+        // Determine if Gemini was used (from recommendations being present)
+        const usedGemini = !!envData.recommendations && envData.recommendations.length > 0;
+        
+        // Population year - default to 2021 (Census) if not available
+        const populationYear = district.population ? 2021 : 2021;
+
+        const confidenceScore = calculateConfidenceScore({
+            hasRealtimeAQI: aqiSource === 'openweathermap',
+            aqiSource: aqiSource,
+            usedGemini: usedGemini,
+            populationYear: populationYear,
+            dataFreshnessHours: dataFreshnessHours,
+        });
+
         const response: DistrictDetail = {
             ...district,
             environmentalData: envData,
             oxygenCalculation,
             recommendations: envData.recommendations,
             stats, // state-level contribution stats
+            confidenceScore: confidenceScore,
         };
 
         return NextResponse.json(response);
@@ -224,6 +269,15 @@ export async function GET(
         console.error('Error fetching district details:', err);
         console.error('Error stack:', err?.stack);
         console.error('Error message:', err?.message);
+
+        // Handle Firestore errors gracefully
+        if (isFirestoreError(error)) {
+            console.warn('Firestore unavailable, cannot fetch district data');
+            return NextResponse.json(
+                { error: 'Database temporarily unavailable. Please try again later.', fallback: true },
+                { status: 503 }
+            );
+        }
 
         // Provide more detailed error information in development
         const errorMessage = process.env.NODE_ENV === 'development'

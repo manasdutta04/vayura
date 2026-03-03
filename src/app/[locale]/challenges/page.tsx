@@ -18,7 +18,6 @@ import {
     getChallengeProgress,
     SCOPE_DISPLAY_NAMES,
     STATUS_DISPLAY_INFO,
-    ChallengeParticipant,
 } from '@/lib/types/challenges';
 import {
     Target,
@@ -164,6 +163,7 @@ function ContributorAvatar({ photoURL, userName, rank }: { photoURL?: string; us
     return (
         <div className="relative">
             {photoURL ? (
+                // eslint-disable-next-line @next/next/no-img-element
                 <img
                     src={photoURL}
                     alt={userName}
@@ -381,7 +381,6 @@ function ChallengesPageContent() {
     const [loading, setLoading] = useState(true);
     const [scopeFilter, setScopeFilter] = useState<ChallengeScope | 'all'>('all');
     const [statusFilter, setStatusFilter] = useState<ChallengeStatus | 'all'>('active');
-    const [joiningId, setJoiningId] = useState<string | null>(null);
 
     // Fetch challenges
     useEffect(() => {
@@ -415,7 +414,6 @@ function ChallengesPageContent() {
             return;
         }
 
-        setJoiningId(challengeId);
         try {
             const res = await fetch('/api/challenges', {
                 method: 'POST',
@@ -438,8 +436,6 @@ function ChallengesPageContent() {
             }
         } catch (error) {
             console.error('Error joining challenge:', error);
-        } finally {
-            setJoiningId(null);
         }
     };
 

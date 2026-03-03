@@ -9,7 +9,7 @@ import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictResults } from '@/components/ui/district-results';
 import { formatCompactNumber } from '@/lib/utils/helpers';
-import { DistrictSearchResult, DistrictDetail } from '@/lib/types';
+import { DistrictDetail } from '@/lib/types';
 import { TreeDeciduous, Heart, Wind, Calculator, BarChart3, Lightbulb, ArrowRight, Sprout, Leaf } from 'lucide-react';
 
 export default function Dashboard() {
@@ -23,10 +23,8 @@ export default function Dashboard() {
     totalO2Impact: 0,
     verifiedContributions: 0,
   });
-  const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
   const [districtDetail, setDistrictDetail] = useState<DistrictDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
-  const [districtNotFound, setDistrictNotFound] = useState(false);
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -228,16 +226,15 @@ export default function Dashboard() {
                         if (response.ok) {
                           const data = await response.json();
                           setDistrictDetail(data);
-                          setDistrictNotFound(false);
                         } else if (response.status === 404) {
-                          setDistrictNotFound(true);
+                          setDistrictDetail(null);
                         } else {
                           console.error('Failed to load district details');
-                          setDistrictNotFound(true);
+                          setDistrictDetail(null);
                         }
                       } catch (error) {
                         console.error('Error loading district details:', error);
-                        setDistrictNotFound(true);
+                        setDistrictDetail(null);
                       } finally {
                         setLoadingDetail(false);
                       }

@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { DistrictDetail } from '@/lib/types';
 import { formatCompactNumber, formatNumber, getAQICategory } from '@/lib/utils/helpers';
-import { validateDataSource, formatDataSource, getReliabilityColor } from '@/lib/data-sources/validation';
 import { exportDistrictAsCSV, exportDistrictAsJSON } from '@/lib/utils/export';
 import Skeleton from "@/components/ui/skeleton-card";
 import EmptyState from "@/components/ui/EmptyState";
@@ -199,7 +198,7 @@ export function DistrictResults({ data }: DistrictResultsProps) {
           </div>
         </div>
 
-        {/* Oxygen Analysis */}
+        {/* Oxygen Demand Model */}
         <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-6">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
@@ -208,15 +207,15 @@ export function DistrictResults({ data }: DistrictResultsProps) {
               </svg>
             </div>
             <div>
-              <h3 className="text-lg font-bold text-gray-900">Oxygen Analysis</h3>
-              <p className="text-xs text-gray-500">Supply vs Demand Breakdown</p>
+              <h3 className="text-lg font-bold text-gray-900">Oxygen Demand Model</h3>
+              <p className="text-xs text-gray-500">Modeled Human Oxygen Demand (Annual Estimate)</p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Demand Card */}
+            {/* Estimated Demand Card */}
             <div className="p-4 rounded-lg bg-gray-50 border border-gray-100 flex flex-col">
-              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Total Demand</span>
+              <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Estimated Demand</span>
               <div className="mt-auto">
                 <span className="text-2xl font-bold text-gray-900">
                   {formatCompactNumber(Math.round(calc.penalty_adjusted_demand_kg_per_year))}
@@ -225,9 +224,9 @@ export function DistrictResults({ data }: DistrictResultsProps) {
               </div>
             </div>
 
-            {/* Deficit Card */}
+            {/* Remaining Deficit Card */}
             <div className="p-4 rounded-lg bg-red-50 border border-red-100 flex flex-col">
-              <span className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Deficit</span>
+              <span className="text-xs font-semibold text-red-600 uppercase tracking-wider mb-1">Remaining Deficit</span>
               <div className="mt-auto">
                 <span className="text-2xl font-bold text-red-700">
                   {formatCompactNumber(Math.round(calc.oxygen_deficit_kg_per_year))}
@@ -317,13 +316,21 @@ export function DistrictResults({ data }: DistrictResultsProps) {
                 </div>
               </div>
               <div className="pt-3 border-t border-gray-300 space-y-2">
-                <p className="text-xs text-gray-500">
-                  <strong>Confidence:</strong>{' '}
-                  <span className="capitalize font-semibold text-gray-700">{calc.confidence_level}</span>
-                </p>
-                <div className="space-y-1">
-                  {/* Detailed sources removed as per user request to reduce clutter */}
-                </div>
+                {data.confidenceScore !== undefined && (
+                  <p className="text-xs text-gray-500">
+                    <strong>Confidence Score:</strong>{' '}
+                    <span className={`font-semibold ${
+                      data.confidenceScore >= 71 ? 'text-green-600' :
+                      data.confidenceScore >= 41 ? 'text-yellow-600' :
+                      'text-red-600'
+                    }`}>
+                      {data.confidenceScore}%{' '}
+                      {data.confidenceScore >= 71 ? 'High' :
+                       data.confidenceScore >= 41 ? 'Medium' :
+                       'Low'}
+                    </span>
+                  </p>
+                )}
               </div>
             </div>
           </div>
