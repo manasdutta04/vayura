@@ -1,8 +1,11 @@
 import BackToTop from "@/components/BackToTop";
 import { Providers } from "./providers";
+import { validateRequiredEnvVars } from "@/lib/env-validation";
 import type { Metadata } from "next";
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
+
+validateRequiredEnvVars();
 
 const inter = Inter({
   variable: "--font-inter",
