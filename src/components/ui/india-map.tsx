@@ -8,6 +8,7 @@ import MapLegend from './map-legend';
 import { renderToStaticMarkup } from 'react-dom/server';
 import DistrictTooltip from './district-tooltip';
 import type { GeoJsonObject } from 'geojson';
+import { useTheme } from '@/lib/theme-context';
 
 interface MapData {
   id: string;
@@ -35,6 +36,11 @@ const IndiaMap = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const { theme } = useTheme();
+
+  const tileUrl = theme === 'dark'
+    ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
+    : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -191,11 +197,11 @@ const IndiaMap = () => {
         zoom={5}
         scrollWheelZoom={true}
         className="w-full h-full"
-        style={{ background: '#f8fafc' }}
+        style={{ background: theme === 'dark' ? '#1f2937' : '#f8fafc' }}
       >
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
+          url={tileUrl}
         />
         {geoData && (
           <GeoJSON

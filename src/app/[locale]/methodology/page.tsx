@@ -12,30 +12,30 @@ export default function MethodologyPage() {
     return (
         <>
             <Header />
-            <div className="min-h-screen bg-gray-50">
+            <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
                 {/* Content */}
                 <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
                     {/* Page Title */}
                     <div className="mb-8 sm:mb-12">
-                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2 sm:mb-3">{t('title')}</h1>
-                        <p className="text-sm sm:text-base md:text-lg text-gray-600">
+                        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-2 sm:mb-3">{t('title')}</h1>
+                        <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300">
                             {t('subtitle')}
                         </p>
                     </div>
                     {/* Model Version Badge */}
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-8 sm:mb-12 p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6 mb-8 sm:mb-12 p-4 sm:p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
                         <div className="flex items-center gap-3">
                             <GitBranch className="w-5 h-5 text-green-700 flex-shrink-0" />
                             <div>
-                                <div className="text-xs sm:text-sm font-medium text-gray-600">{t('version')}</div>
-                                <div className="text-xl sm:text-2xl font-bold text-green-700">v1.0</div>
+                                <div className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('version')}</div>
+                                <div className="text-xl sm:text-2xl font-bold text-green-700 dark:text-green-400">v1.0</div>
                             </div>
                         </div>
                         <div className="flex items-center gap-3 sm:border-l sm:border-gray-300 sm:pl-6 pt-4 sm:pt-0 border-t sm:border-t-0 border-gray-200">
                             <Calendar className="w-5 h-5 text-green-700 flex-shrink-0" />
                             <div>
-                                <div className="text-xs sm:text-sm font-medium text-gray-600">{t('lastUpdated')}</div>
-                                <div className="text-base sm:text-lg font-semibold text-green-700">{t('jan2026')}</div>
+                                <div className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400">{t('lastUpdated')}</div>
+                                <div className="text-base sm:text-lg font-semibold text-green-700 dark:text-green-400">{t('jan2026')}</div>
                             </div>
                         </div>
                     </div>
@@ -44,10 +44,10 @@ export default function MethodologyPage() {
                     <section className="mb-8 sm:mb-12">
                         <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
                             <BookOpen className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
-                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{t('overview.title')}</h2>
+                            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-gray-100">{t('overview.title')}</h2>
                         </div>
-                        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 sm:p-6">
-                            <p className="text-sm sm:text-base text-gray-700 leading-relaxed mb-3 sm:mb-4">
+                        <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm p-4 sm:p-6">
+                            <p className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed mb-3 sm:mb-4">
                                 {t('overview.p1')}
                             </p>
                             <p className="text-sm sm:text-base text-gray-700 leading-relaxed">

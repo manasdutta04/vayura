@@ -1,11 +1,12 @@
 "use client";
 
-import {useState } from "react";
+import {useState, useEffect } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { useTheme } from "@/lib/theme-context";
 import { AuthModal } from "./auth-modal";
-import { Sprout, Menu, X, Github, Map, BarChart3, Trophy, Zap, Calculator, BookOpen, LayoutGrid, TrendingUp, Leaf, DollarSign } from "lucide-react";
+import { Sprout, Menu, X, Github, Map, BarChart3, Trophy, Zap, Calculator, BookOpen, LayoutGrid, TrendingUp, Leaf, DollarSign, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "./language-switcher";
 import Image from "next/image";
@@ -13,14 +14,20 @@ import Image from "next/image";
 export function Header() {
   const t = useTranslations();
   const { user, loading, signOut } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [photoErrorURL, setPhotoErrorURL] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <>
-      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-sm border-b border-gray-200/50">
+      <header className="fixed top-0 left-0 right-0 z-40 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm border-b border-gray-200/50 dark:border-gray-700/50 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 flex-shrink-0">
@@ -31,7 +38,7 @@ export function Header() {
               width={40}
               height={40}
             />
-            <span className="text-lg font-semibold text-gray-900 tracking-tight">
+            <span className="text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
               {t("common.brandName")}
             </span>
           </Link>
@@ -40,7 +47,7 @@ export function Header() {
           <nav className="hidden lg:flex items-center gap-1 xl:gap-2">
             <Link
               href="/map"
-              className="px-3 py-2 text-sm text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-all font-medium"
+              className="px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-all font-medium"
             >
               {t("nav.mapView")}
             </Link>
@@ -106,13 +113,24 @@ export function Header() {
 
           {/* Mobile + Auth + Language */}
           <div className="flex items-center gap-2 sm:gap-3">
+            {/* Theme Toggle */}
+            {mounted && (
+              <button
+                onClick={toggleTheme}
+                className="p-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-md transition-colors"
+                aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              >
+                {theme === 'light' ? <Moon className="w-5 h-5" /> : <Sun className="w-5 h-5" />}
+              </button>
+            )}
+
             {/* Language Switcher */}
             <LanguageSwitcher />
 
             {/* Mobile Hamburger Menu */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="lg:hidden p-2 text-gray-700 hover:bg-gray-100 rounded-md transition-colors"
+              className="lg:hidden p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-md transition-colors"
               aria-label={showMobileMenu ? "Close menu" : "Open menu"}
             >
               {showMobileMenu ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}

@@ -28,9 +28,7 @@ import {
   ArrowDownRight,
   Info,
 } from "lucide-react";
-import {
-  AnalyticsData,
-} from "@/lib/types/analytics";
+import { useTheme } from "@/lib/theme-context";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -38,6 +36,13 @@ export default function AnalyticsPage() {
   const [error, setError] = useState<string | null>(null);
   const [filterRange, setFilterRange] = useState("6m");
   const [selectedRegion, setSelectedRegion] = useState("all");
+  const { theme } = useTheme();
+
+  const chartColors = {
+    grid: theme === 'dark' ? '#374151' : '#f0f0f0',
+    text: theme === 'dark' ? '#d1d5db' : '#6b7280',
+    background: theme === 'dark' ? '#1f2937' : '#ffffff',
+  };
 
   const filteredRegionalData =
     data?.regionalData.filter(
@@ -267,7 +272,7 @@ export default function AnalyticsPage() {
                           <CartesianGrid
                             strokeDasharray="3 3"
                             vertical={false}
-                            stroke="#f0f0f0"
+                            stroke={chartColors.grid}
                           />
                           <XAxis
                             dataKey="timestamp"
@@ -278,19 +283,18 @@ export default function AnalyticsPage() {
                             }
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#6b7280", fontSize: 12 }}
+                            tick={{ fill: chartColors.text, fontSize: 12 }}
                           />
                           <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#6b7280", fontSize: 12 }}
+                            tick={{ fill: chartColors.text, fontSize: 12 }}
                           />
                           <Tooltip
                             contentStyle={{
-                              backgroundColor: "#fff",
-                              borderRadius: "8px",
-                              border: "1px solid #e5e7eb",
-                              boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                              backgroundColor: chartColors.background,
+                              border: `1px solid ${chartColors.grid}`,
+                              borderRadius: "6px",
                             }}
                           />
                           <Area
@@ -332,18 +336,18 @@ export default function AnalyticsPage() {
                           <CartesianGrid
                             strokeDasharray="3 3"
                             vertical={false}
-                            stroke="#f0f0f0"
+                            stroke={chartColors.grid}
                           />
                           <XAxis
                             dataKey="regionName"
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#6b7280", fontSize: 12 }}
+                            tick={{ fill: chartColors.text, fontSize: 12 }}
                           />
                           <YAxis
                             axisLine={false}
                             tickLine={false}
-                            tick={{ fill: "#6b7280", fontSize: 12 }}
+                            tick={{ fill: chartColors.text, fontSize: 12 }}
                             tickFormatter={(value) => {
                               if (value >= 10000000)
                                 return `${(value / 10000000).toFixed(1)}Cr`;

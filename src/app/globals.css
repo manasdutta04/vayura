@@ -3,12 +3,23 @@
 @import "leaflet/dist/leaflet.css";
 
 :root {
-  --background: #f8faf9;
-  --foreground: #0f1419;
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --border: #e5e7eb;
+  --muted: #f9fafb;
   --nature-primary: #22c55e;
   --nature-secondary: #16a34a;
   --earth-primary: #b8732a;
   --sky-primary: #0ea5e9;
+}
+
+.dark {
+  --background: #000000;
+  --foreground: #ffffff;
+  --card: #000000;
+  --border: #2a2a2a;
+  --muted: #0a0a0a;
 }
 
 body {
@@ -51,4 +62,15 @@ html {
   animation: shimmer 2s infinite;
   background: linear-gradient(to right, #f0f0f0 4%, #e0e0e0 25%, #f0f0f0 36%);
   background-size: 1000px 100%;
+}
+
+/* Enforce pure black in dark mode for commonly used Tailwind background utilities */
+.dark .dark\:bg-gray-900,
+.dark .dark\:bg-gray-800,
+.dark .dark\:bg-gray-700,
+.dark .dark\:bg-slate-900,
+.dark .dark\:bg-slate-800,
+.dark .dark\:bg-zinc-900,
+.dark .dark\:bg-zinc-800 {
+  background-color: #000000 !important;
 }
