@@ -191,6 +191,11 @@ export interface DistrictImpact {
     oxygenOffset: number;
     percentageOffset: number;
     deficit: number;
+    // Backward compatibility aliases (from legacy interface)
+    treesContributed?: number;
+    oxygenOffsetKg?: number;
+    percentOfDeficitOffset?: number;
+    districtTotalDeficitKg?: number;
 }
 
 export interface UserImpact {
