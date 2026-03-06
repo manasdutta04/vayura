@@ -26,7 +26,6 @@ export default function Dashboard() {
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
   const [districtDetail, setDistrictDetail] = useState<DistrictDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
-  const [districtNotFound, setDistrictNotFound] = useState(false);
 
   // Redirect to home if not authenticated
   useEffect(() => {
@@ -221,23 +220,17 @@ export default function Dashboard() {
                       setSelectedDistrict(district);
                       setLoadingDetail(true);
                       setDistrictDetail(null);
-                      setDistrictNotFound(false);
 
                       try {
                         const response = await fetch(`/api/districts/${district.slug}`);
                         if (response.ok) {
                           const data = await response.json();
                           setDistrictDetail(data);
-                          setDistrictNotFound(false);
-                        } else if (response.status === 404) {
-                          setDistrictNotFound(true);
                         } else {
                           console.error('Failed to load district details');
-                          setDistrictNotFound(true);
                         }
                       } catch (error) {
                         console.error('Error loading district details:', error);
-                        setDistrictNotFound(true);
                       } finally {
                         setLoadingDetail(false);
                       }

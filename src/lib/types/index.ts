@@ -164,3 +164,22 @@ export interface APIError {
     message: string;
     statusCode: number;
 }
+
+// User Impact types
+export interface DistrictImpact {
+    districtId: string;
+    districtName: string;
+    state?: string;
+    treeCount: number;
+    oxygenOffset: number;
+    percentageOffset: number;
+    deficit: number;
+}
+
+export interface UserImpact {
+    districts: DistrictImpact[];
+    mostImpactedDistrict: DistrictImpact | null;
+    totalTrees: number;
+    totalOxygenOffset: number;
+    hasContributions: boolean;
+}
