@@ -34,7 +34,7 @@ async function _fetchDistrictOxygenDeficit(districtId: string): Promise<{ name: 
             return {
                 name: districtData.name,
                 state: districtData.state,
-                oxygenDeficit: getOxygenDeficit(null) // Will be extracted below
+                oxygenDeficit: getOxygenDeficit(districtData.oxygenCalculation)
             };
         }
 
