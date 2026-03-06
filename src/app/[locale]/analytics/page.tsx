@@ -32,7 +32,6 @@ import { useTheme } from "@/lib/theme-context";
 import {
   AnalyticsData,
 } from "@/lib/types/analytics";
-import type { ReactNode } from "react";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -485,7 +484,7 @@ export default function AnalyticsPage() {
                           </span>
                         </div>
                         <p className="text-sm text-gray-600 leading-relaxed mb-4 italic">
-                          "{data.predictive.aiSummary}"
+                          {`"${data.predictive.aiSummary}"`}
                         </p>
                         {data.predictive.recommendations && (
                           <div className="space-y-2">

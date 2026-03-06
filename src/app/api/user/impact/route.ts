@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { adminDb } from '@/lib/firebase-admin';
+import { adminDb, adminAuth } from '@/lib/firebase-admin';
 import { TreeContribution, Donation, UserImpact } from '@/lib/types';
 import { QueryDocumentSnapshot } from 'firebase-admin/firestore';
-import { calculateUserImpact, getOxygenDeficit } from '@/lib/calculations/user-impact';
+import { calculateUserImpact } from '@/lib/calculations/user-impact';
 
 export const dynamic = 'force-dynamic';
 
@@ -15,89 +15,38 @@ function timestampToDate(value: unknown): Date {
 }
 
 /**
- * Fetch oxygen calculation data for a district
- * This fetches the most recent environmental data and calculates oxygen requirements
+ * Verify Firebase ID token from request headers and ensure it matches the requested userId
+ * This prevents IDOR attacks where users could access other users' data
  */
-async function _fetchDistrictOxygenDeficit(districtId: string): Promise<{ name: string; state?: string; oxygenDeficit: number } | null> {
+async function verifyAuthenticatedUser(request: Request, requestedUserId: string): Promise<{ authenticated: boolean; error?: string }> {
     try {
-        // Fetch the district document
-        const districtDoc = await adminDb.collection('districts').doc(districtId).get();
+        const authHeader = request.headers.get('authorization');
         
-        if (!districtDoc.exists) {
-            return null;
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return { authenticated: false, error: 'Missing or invalid authorization header' };
         }
 
-        const districtData = districtDoc.data() as { name: string; state?: string; oxygenCalculation?: { oxygen_deficit_kg_per_year?: number; penalty_adjusted_demand_kg_per_year?: number } };
+        const idToken = authHeader.replace('Bearer ', '');
         
-        // Try to get oxygen calculation from district document
-        if (districtData.oxygenCalculation) {
-            return {
-                name: districtData.name,
-                state: districtData.state,
-                oxygenDeficit: getOxygenDeficit(districtData.oxygenCalculation)
-            };
+        // Verify the ID token
+        let decodedToken;
+        try {
+            decodedToken = await adminAuth.verifyIdToken(idToken);
+        } catch (verifyError) {
+            console.error('Token verification failed:', verifyError);
+            return { authenticated: false, error: 'Invalid or expired token' };
         }
 
-        // If no oxygen calculation stored, fetch environmental data and calculate
-        const envSnap = await adminDb.collection('environmental_data')
-            .where('districtId', '==', districtId)
-            .limit(1)
-            .get();
-
-        if (envSnap.empty) {
-            // Return with 0 deficit if no environmental data
-            return {
-                name: districtData.name,
-                state: districtData.state,
-                oxygenDeficit: 0
-            };
+        // Assert that the authenticated user matches the requested userId
+        if (decodedToken.uid !== requestedUserId) {
+            console.error(`IDOR attempt: Token user ${decodedToken.uid} requested data for ${requestedUserId}`);
+            return { authenticated: false, error: 'You can only access your own data' };
         }
 
-        // For now, return a default deficit if we can't calculate
-        // In production, this would trigger a calculation
-        return {
-            name: districtData.name,
-            state: districtData.state,
-            oxygenDeficit: 0
-        };
+        return { authenticated: true };
     } catch (error) {
-        console.error(`Error fetching district ${districtId}:`, error);
-        return null;
-    }
-}
-
-/**
- * Alternative: Get oxygen deficit from the district's stored oxygen calculation
- */
-async function _getDistrictStoredOxygenDeficit(districtId: string): Promise<{ name: string; state?: string; oxygenDeficit: number } | null> {
-    try {
-        const districtDoc = await adminDb.collection('districts').doc(districtId).get();
-        
-        if (!districtDoc.exists) {
-            return null;
-        }
-
-        const data = districtDoc.data() as { 
-            name: string; 
-            state?: string; 
-            oxygenCalculation?: {
-                oxygen_deficit_kg_per_year?: number;
-                penalty_adjusted_demand_kg_per_year?: number;
-            }
-        };
-
-        const oxygenDeficit = data.oxygenCalculation?.penalty_adjusted_demand_kg_per_year || 
-                            data.oxygenCalculation?.oxygen_deficit_kg_per_year || 
-                            0;
-
-        return {
-            name: data.name,
-            state: data.state,
-            oxygenDeficit
-        };
-    } catch (error) {
-        console.error(`Error fetching district oxygen data for ${districtId}:`, error);
-        return null;
+        console.error('Auth verification error:', error);
+        return { authenticated: false, error: 'Authentication failed' };
     }
 }
 
@@ -110,6 +59,15 @@ export async function GET(request: Request) {
             return NextResponse.json(
                 { error: 'User ID is required' },
                 { status: 400 }
+            );
+        }
+
+        // Verify authentication - check that the requester owns this userId
+        const authResult = await verifyAuthenticatedUser(request, userId);
+        if (!authResult.authenticated) {
+            return NextResponse.json(
+                { error: authResult.error || 'Unauthorized' },
+                { status: 401 }
             );
         }
 

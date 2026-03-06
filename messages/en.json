@@ -151,7 +151,7 @@
       "button": "Join Vayura Now"
     }
   },
-"dashboard": {
+  "dashboard": {
     "welcome": "Welcome Back",
     "welcomeUser": "Welcome back,",
     "trackImpact": "Track your environmental impact and explore district data",
@@ -159,6 +159,7 @@
     "makingIndiaGreener": "Making India Greener",
     "active": "Active",
     "trees": "trees",
+    "totalTrees": "Total Trees",
     "nVerified": "{count} verified",
     "startJourney": "Start your journey today",
     "supported": "Supported",
@@ -197,7 +198,6 @@
     "exploreDistrictsCTA": "Explore Districts",
     "yourHighestImpact": "Your Highest Impact District",
     "ofDeficit": "of deficit",
-    "totalTrees": "Total Trees",
     "oxygenOffset": "O₂ Offset",
     "districtContribution": "District Contribution",
     "district": "District",

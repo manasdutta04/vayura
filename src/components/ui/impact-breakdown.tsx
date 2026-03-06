@@ -68,7 +68,7 @@ export function ImpactBreakdown({ impact, loading }: ImpactBreakdownProps) {
                     </p>
                     <div className="flex flex-col sm:flex-row gap-3 justify-center">
                         <Link
-                            href="/contribute/plant"
+                            href="/plant"
                             className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors"
                         >
                             🌱 {t('plantTreeCTA') || 'Plant a Tree'}

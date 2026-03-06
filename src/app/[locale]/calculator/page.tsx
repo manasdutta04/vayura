@@ -154,12 +154,6 @@ export default function CalculatorPage() {
                                         </button>
                                     ))}
                                 </div>
-                                                }`}
-                                        >
-                                            {preset.toLocaleString()}
-                                        </button>
-                                    ))}
-                                </div>
                             </div>
                         </div>
 
