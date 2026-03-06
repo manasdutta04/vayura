@@ -53,7 +53,7 @@ export function aggregateContributionsByDistrict(
     
     for (const contribution of validContributions) {
         const districtId = contribution.districtId;
-        const treeQuantity = contribution.treeQuantity || 1;
+        const treeQuantity = contribution.treeQuantity ?? 1;
         
         const existing = districtMap.get(districtId);
         if (existing) {
