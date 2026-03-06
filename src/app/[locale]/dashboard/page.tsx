@@ -86,26 +86,26 @@ export default function Dashboard() {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-white pb-20">
+        <div className="min-h-screen bg-white dark:bg-gray-900 pb-20">
           <div className="max-w-7xl mx-auto px-6">
             {/* Header Skeleton */}
-            <div className="pt-12 pb-8 border-b border-gray-100 animate-pulse">
-              <div className="h-8 w-64 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 w-96 bg-gray-100 rounded"></div>
+            <div className="pt-12 pb-8 border-b border-gray-100 dark:border-gray-700 animate-pulse">
+              <div className="h-8 w-64 bg-gray-200 dark:bg-gray-700 rounded mb-2"></div>
+              <div className="h-4 w-96 bg-gray-100 dark:bg-gray-800 rounded"></div>
             </div>
 
             {/* Stats Grid Skeleton */}
             <div className="py-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[...Array(3)].map((_, idx) => (
-                  <div key={idx} className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm animate-pulse">
+                  <div key={idx} className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm animate-pulse">
                     <div className="flex items-center justify-between mb-4">
-                      <div className="w-12 h-12 bg-gray-200 rounded-xl"></div>
-                      <div className="h-6 w-16 bg-gray-100 rounded-full"></div>
+                      <div className="w-12 h-12 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
+                      <div className="h-6 w-16 bg-gray-100 dark:bg-gray-800 rounded-full"></div>
                     </div>
-                    <div className="h-4 w-24 bg-gray-100 rounded mb-2"></div>
-                    <div className="h-10 w-32 bg-gray-200 rounded mb-3"></div>
-                    <div className="h-3 w-40 bg-gray-100 rounded"></div>
+                    <div className="h-4 w-24 bg-gray-100 dark:bg-gray-800 rounded mb-2"></div>
+                    <div className="h-10 w-32 bg-gray-200 dark:bg-gray-700 rounded mb-3"></div>
+                    <div className="h-3 w-40 bg-gray-100 dark:bg-gray-800 rounded"></div>
                   </div>
                 ))}
               </div>
@@ -121,24 +121,24 @@ export default function Dashboard() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white pb-20">
+      <div className="min-h-screen bg-white dark:bg-gray-900 pb-20">
         <div className="max-w-7xl mx-auto px-6">
 
           {/* Dashboard Header */}
-          <section className="pt-12 pb-8 border-b border-gray-100">
+          <section className="pt-12 pb-8 border-b border-gray-100 dark:border-gray-700">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
               <div>
-                <h1 className="text-3xl font-semibold text-gray-900 mb-2 tracking-tight">
-                  {t('welcomeUser')} <span className="text-gray-600">{user?.displayName || user?.email?.split('@')[0]}</span>
+                <h1 className="text-3xl font-semibold text-gray-900 dark:text-gray-100 mb-2 tracking-tight">
+                  {t('welcomeUser')} <span className="text-gray-600 dark:text-gray-400">{user?.displayName || user?.email?.split('@')[0]}</span>
                 </h1>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
                   {t('trackImpact')}
                 </p>
 
               </div>
               <div className="text-right hidden md:block">
-                <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-1">{t('currentImpact')}</p>
-                <p className="text-green-600 font-medium flex items-center justify-end gap-2">
+                <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-1">{t('currentImpact')}</p>
+                <p className="text-green-600 dark:text-green-400 font-medium flex items-center justify-end gap-2">
                   <Sprout className="w-4 h-4" />
                   {t('makingIndiaGreener')}
                 </p>
@@ -150,7 +150,7 @@ export default function Dashboard() {
           <section className="py-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {/* Planted Stats */}
-              <div className="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow group">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl p-6 border border-gray-100 dark:border-gray-700 shadow-sm hover:shadow-md transition-shadow group">
                 <div className="flex items-center justify-between mb-4">
                   <div className="bg-green-50 p-3 rounded-xl group-hover:bg-green-100 transition-colors">
                     <TreeDeciduous className="w-6 h-6 text-green-600" />
@@ -160,14 +160,14 @@ export default function Dashboard() {
                   </span>
                 </div>
                 <div>
-                  <p className="text-gray-500 text-sm font-medium mb-1">{t('treesPlanted')}</p>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm font-medium mb-1">{t('treesPlanted')}</p>
                   <div className="flex items-baseline gap-2">
-                    <h3 className="text-4xl font-bold text-gray-900 tracking-tight">
+                    <h3 className="text-4xl font-bold text-gray-900 dark:text-gray-100 tracking-tight">
                       {userStats.totalTreesPlanted}
                     </h3>
-                    <span className="text-sm text-gray-400">{t('trees')}</span>
+                    <span className="text-sm text-gray-400 dark:text-gray-500">{t('trees')}</span>
                   </div>
-                  <p className="text-xs text-green-600 mt-3 flex items-center gap-1">
+                  <p className="text-xs text-green-600 dark:text-green-400 mt-3 flex items-center gap-1">
                     <Leaf className="w-3 h-3" />
                     {userStats.verifiedContributions > 0 ? t('nVerified', { count: userStats.verifiedContributions }) : t('startJourney')}
                   </p>

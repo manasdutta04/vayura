@@ -53,69 +53,69 @@ export default function LeaderboardPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen bg-white pb-20">
+            <main className="min-h-screen bg-white dark:bg-gray-900 pb-20 transition-colors duration-300">
                 <section className="max-w-6xl mx-auto px-6 pt-8">
                     <div className="mb-8">
-                        <h1 className="text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
+                        <h1 className="text-2xl font-semibold text-gray-900 dark:text-white mb-1 tracking-tight">
                             {t('title')}
                         </h1>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-gray-500 dark:text-gray-400">
                             {t('rankedBy')}
                         </p>
                     </div>
 
-                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                         <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200 whitespace-nowrap">
-                                <thead className="bg-gray-50/50">
+                            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700 whitespace-nowrap">
+                                <thead className="bg-gray-50/50 dark:bg-gray-900/50">
                                     <tr>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('rank')}
                                         </th>
-                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('state')}
                                         </th>
-                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('treesCol')}
                                         </th>
-                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('o2Supply')}
                                         </th>
-                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('o2Needed')}
                                         </th>
-                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 uppercase tracking-wider">
+                                        <th className="px-4 py-3 text-right text-xs font-medium text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                                             {t('target2050')}
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody className="bg-white divide-y divide-gray-100">
+                                <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700">
                                     {loading && (
                                         <>
                                             {[...Array(10)].map((_, idx) => (
                                                 <tr key={idx} className="animate-pulse">
                                                     <td className="px-4 py-3">
-                                                        <div className="h-4 w-8 bg-gray-200 rounded"></div>
+                                                        <div className="h-4 w-8 bg-gray-200 dark:bg-gray-700 rounded"></div>
                                                     </td>
                                                     <td className="px-4 py-3">
                                                         <div className="space-y-2">
-                                                            <div className="h-4 w-32 bg-gray-200 rounded"></div>
-                                                            <div className="h-3 w-20 bg-gray-100 rounded"></div>
+                                                            <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded"></div>
+                                                            <div className="h-3 w-20 bg-gray-100 dark:bg-gray-600 rounded"></div>
                                                         </div>
                                                     </td>
                                                     <td className="px-4 py-3 text-right">
-                                                        <div className="h-4 w-16 bg-gray-200 rounded ml-auto"></div>
+                                                        <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded ml-auto"></div>
                                                     </td>
                                                     <td className="px-4 py-3 text-right">
-                                                        <div className="h-4 w-20 bg-gray-200 rounded ml-auto"></div>
+                                                        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded ml-auto"></div>
                                                     </td>
                                                     <td className="px-4 py-3 text-right">
-                                                        <div className="h-4 w-20 bg-gray-200 rounded ml-auto"></div>
+                                                        <div className="h-4 w-20 bg-gray-200 dark:bg-gray-700 rounded ml-auto"></div>
                                                     </td>
                                                     <td className="px-4 py-3 text-right">
                                                         <div className="space-y-2">
-                                                            <div className="h-5 w-16 bg-gray-200 rounded ml-auto"></div>
-                                                            <div className="h-3 w-24 bg-gray-100 rounded ml-auto"></div>
+                                                            <div className="h-5 w-16 bg-gray-200 dark:bg-gray-700 rounded ml-auto"></div>
+                                                            <div className="h-3 w-24 bg-gray-100 dark:bg-gray-600 rounded ml-auto"></div>
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -148,7 +148,7 @@ export default function LeaderboardPage() {
                                                                 setLoading(false);
                                                             });
                                                         }}
-                                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors"
+                                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-sm font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors"
                                                     >
                                                         <RefreshCw className="w-4 h-4" />
                                                         Retry
@@ -161,7 +161,7 @@ export default function LeaderboardPage() {
                                         <tr>
                                             <td
                                                 colSpan={6}
-                                                className="px-4 py-6 text-center text-sm text-gray-500"
+                                                className="px-4 py-6 text-center text-sm text-gray-500 dark:text-gray-400"
                                             >
                                                 {t('noData')}
                                             </td>
@@ -206,18 +206,18 @@ export default function LeaderboardPage() {
                                             : Math.ceil(o2Needed2050 / ENVIRONMENTAL_CONSTANTS.OXYGEN.PRODUCTION_PER_TREE_KG_YEAR * 0.10); // 10% as climate resilience buffer for self-sufficient states
 
                                         // Color code based on magnitude
-                                        const percentageColor = treesWithResilience <= 1000000 ? 'text-green-600' :
-                                            treesWithResilience <= 10000000 ? 'text-green-500' :
-                                                treesWithResilience <= 50000000 ? 'text-yellow-600' :
-                                                    treesWithResilience <= 100000000 ? 'text-orange-600' :
-                                                        'text-red-600';
+                                        const percentageColor = treesWithResilience <= 1000000 ? 'text-green-600 dark:text-green-400' :
+                                            treesWithResilience <= 10000000 ? 'text-green-500 dark:text-green-400' :
+                                                treesWithResilience <= 50000000 ? 'text-yellow-600 dark:text-yellow-500' :
+                                                    treesWithResilience <= 100000000 ? 'text-orange-600 dark:text-orange-500' :
+                                                        'text-red-600 dark:text-red-500';
 
                                         return (
                                             <tr
                                                 key={entry.id}
-                                                className={`hover:bg-nature-50/60 ${isTop3 ? 'bg-yellow-50/30' : ''}`}
+                                                className={`hover:bg-nature-50/60 dark:hover:bg-nature-900/30 ${isTop3 ? 'bg-yellow-50/30 dark:bg-yellow-900/10' : ''}`}
                                             >
-                                                <td className="px-4 py-3 text-sm text-gray-900 font-semibold">
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 font-semibold">
                                                     <div className="flex items-center gap-2">
                                                         {isTop3 && (
                                                             <span className={`inline-block w-2 h-2 rounded-full ${badgeColor}`}></span>
@@ -225,18 +225,18 @@ export default function LeaderboardPage() {
                                                         <span>{entry.rank ?? '-'}</span>
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900">
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100">
                                                     <div className="font-semibold text-base">{entry.state}</div>
-                                                    <div className="text-xs text-gray-500">
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400">
                                                         {t('pop', { value: formatCompactNumber(entry.population || 0) })}
                                                     </div>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                                                    <span className={entry.totalTrees > 0 ? 'text-nature-600 font-semibold' : 'text-gray-400'}>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 text-right">
+                                                    <span className={entry.totalTrees > 0 ? 'text-nature-600 dark:text-nature-400 font-semibold' : 'text-gray-400 dark:text-gray-500'}>
                                                         {formatCompactNumber(entry.totalTrees || 0)}
                                                     </span>
                                                     {entry.totalTrees > 0 && (
-                                                        <div className="text-xs text-gray-500 mt-1 space-y-0.5">
+                                                        <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 space-y-0.5">
                                                             {entry.existingForestTrees && entry.existingForestTrees > 0 && (
                                                                 <div>{t('forest', { value: formatCompactNumber(entry.existingForestTrees) })}</div>
                                                             )}
@@ -248,13 +248,13 @@ export default function LeaderboardPage() {
                                                         </div>
                                                     )}
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                                                    <span className={entry.o2Supply && entry.o2Supply > 0 ? 'text-green-600 font-semibold' : 'text-gray-400'}>
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 text-right">
+                                                    <span className={entry.o2Supply && entry.o2Supply > 0 ? 'text-green-600 dark:text-green-400 font-semibold' : 'text-gray-400 dark:text-gray-500'}>
                                                         {formatCompactNumber(entry.o2Supply || 0)}
                                                     </span>
                                                 </td>
-                                                <td className="px-4 py-3 text-sm text-gray-900 text-right">
-                                                    <span className="text-red-600 font-semibold">
+                                                <td className="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 text-right">
+                                                    <span className="text-red-600 dark:text-red-400 font-semibold">
                                                         {formatCompactNumber(entry.o2Needed || 0)}
                                                     </span>
                                                 </td>
@@ -262,19 +262,19 @@ export default function LeaderboardPage() {
                                                     <div className={`text-lg font-bold ${percentageColor}`}>
                                                         {formatCompactNumber(treesWithResilience)}
                                                     </div>
-                                                    <div className="text-xs text-gray-500 mt-1">
+                                                    <div className="text-xs text-gray-500 dark:text-gray-400 mt-1">
                                                         {t('by2050', { pop: formatCompactNumber(Math.round(projectedPopulation2050)) })}
                                                     </div>
                                                     {baseTreesNeeded === 0 ? (
-                                                        <div className="text-xs text-green-600 font-medium mt-1">
+                                                        <div className="text-xs text-green-600 dark:text-green-400 font-medium mt-1">
                                                             {t('climateResilience')}
                                                         </div>
                                                     ) : cappedPercentMet >= 100 ? (
-                                                        <div className="text-xs text-yellow-600 font-medium mt-1">
+                                                        <div className="text-xs text-yellow-600 dark:text-yellow-500 font-medium mt-1">
                                                             {t('futureNeed')}
                                                         </div>
                                                     ) : (
-                                                        <div className="text-xs text-orange-600 font-medium mt-1">
+                                                        <div className="text-xs text-orange-600 dark:text-orange-500 font-medium mt-1">
                                                             {t('criticalNeed')}
                                                         </div>
                                                     )}
@@ -286,43 +286,43 @@ export default function LeaderboardPage() {
                             </table>
                         </div>
                     </div>
-                    <div className="mt-8 space-y-3 bg-gray-50 p-5 rounded-lg border border-gray-200">
+                    <div className="mt-8 space-y-3 bg-gray-50 dark:bg-gray-800 p-5 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between">
-                            <p className="text-sm font-medium text-gray-900">
+                            <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
                                 {t('howRankingsWork')}
                             </p>
                             <Link
                                 href="/data-policy"
-                                className="w-5 h-5 rounded-full bg-gray-200 hover:bg-gray-300 text-gray-700 flex items-center justify-center text-xs font-medium transition-colors"
+                                className="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 flex items-center justify-center text-xs font-medium transition-colors"
                                 title={t('viewDataSources')}
                             >
                                 i
                             </Link>
                         </div>
-                        <ul className="text-xs text-gray-600 space-y-1 ml-4 list-disc">
-                            <li><span className="text-red-600 font-semibold">{t('o2Needed')}</span> = {t('o2NeededDesc').split('= ')[1]}</li>
-                            <li><span className="text-green-600 font-semibold">{t('o2Supply')}</span> = {t('o2SupplyDesc').split('= ')[1]}</li>
-                            <li><span className="font-semibold">{t('target2050')}</span> = {t('targetDesc').split('= ')[1]}</li>
-                            <li><strong>{t('deficitStates').split(':')[0]}:</strong>{t('deficitStates').split(':')[1]}</li>
-                            <li><strong>{t('selfSufficientStates').split(':')[0]}:</strong>{t('selfSufficientStates').split(':')[1]}</li>
-                            <li><strong>{t('rankingMethod').split(':')[0]}:</strong>{t('rankingMethod').split(':')[1]}</li>
+                        <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-1 ml-4 list-disc">
+                            <li><span className="text-red-600 dark:text-red-400 font-semibold">{t('o2Needed')}</span> = {t('o2NeededDesc').split('= ')[1]}</li>
+                            <li><span className="text-green-600 dark:text-green-400 font-semibold">{t('o2Supply')}</span> = {t('o2SupplyDesc').split('= ')[1]}</li>
+                            <li><span className="font-semibold text-gray-900 dark:text-gray-100">{t('target2050')}</span> = {t('targetDesc').split('= ')[1]}</li>
+                            <li><strong className="text-gray-900 dark:text-gray-100">{t('deficitStates').split(':')[0]}:</strong>{t('deficitStates').split(':')[1]}</li>
+                            <li><strong className="text-gray-900 dark:text-gray-100">{t('selfSufficientStates').split(':')[0]}:</strong>{t('selfSufficientStates').split(':')[1]}</li>
+                            <li><strong className="text-gray-900 dark:text-gray-100">{t('rankingMethod').split(':')[0]}:</strong>{t('rankingMethod').split(':')[1]}</li>
                         </ul>
-                        <p className="text-xs text-gray-500 mt-3">
-                            <strong>{t('colorGuide')}</strong>
-                            <span className="text-green-600 ml-2">{t('lowTarget')}</span>
-                            <span className="text-yellow-600 ml-2">{t('mediumTarget')}</span>
-                            <span className="text-orange-600 ml-2">{t('highTarget')}</span>
-                            <span className="text-red-600 ml-2">{t('criticalTarget')}</span>
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-3">
+                            <strong className="text-gray-900 dark:text-gray-100">{t('colorGuide')}</strong>
+                            <span className="text-green-600 dark:text-green-400 ml-2">{t('lowTarget')}</span>
+                            <span className="text-yellow-600 dark:text-yellow-500 ml-2">{t('mediumTarget')}</span>
+                            <span className="text-orange-600 dark:text-orange-500 ml-2">{t('highTarget')}</span>
+                            <span className="text-red-600 dark:text-red-400 ml-2">{t('criticalTarget')}</span>
                         </p>
-                        <p className="text-xs text-gray-400 mt-2">
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-2">
                             {t('scienceNote')}
                         </p>
                     </div>
 
                     {/* Data Sources Modal */}
                     {showDataSources && (
-                        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowDataSources(false)}>
-                            <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+                        <div className="fixed inset-0 bg-black/50 dark:bg-black/70 flex items-center justify-center z-50 p-4" onClick={() => setShowDataSources(false)}>
+                            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
                                 <div className="sticky top-0 bg-gradient-to-r from-nature-500 to-sky-500 px-6 py-4 flex items-center justify-between">
                                     <h2 className="text-2xl font-bold text-white">{t('dataSources')}</h2>
                                     <button
@@ -334,29 +334,29 @@ export default function LeaderboardPage() {
                                 </div>
                                 <div className="p-6 space-y-6">
                                     <div>
-                                        <h3 className="text-lg font-semibold text-gray-900 mb-3">{t('validatedSources')}</h3>
-                                        <p className="text-sm text-gray-600 mb-4">
+                                        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-3">{t('validatedSources')}</h3>
+                                        <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                                             {t('validatedSourcesDesc')}
                                         </p>
                                     </div>
 
                                     {/* High Reliability Sources */}
                                     <div>
-                                        <h4 className="text-sm font-semibold text-green-700 mb-3 flex items-center gap-2">
-                                            <span className="w-3 h-3 rounded-full bg-green-600"></span>
+                                        <h4 className="text-sm font-semibold text-green-700 dark:text-green-400 mb-3 flex items-center gap-2">
+                                            <span className="w-3 h-3 rounded-full bg-green-600 dark:bg-green-500"></span>
                                             {t('highReliability')}
                                         </h4>
                                         <div className="space-y-3">
                                             {Object.values(VALIDATED_DATA_SOURCES)
                                                 .filter(s => s.reliability === 'high')
                                                 .map((source, idx) => (
-                                                    <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                                    <div key={idx} className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                                                         <div className="flex items-start justify-between">
                                                             <div className="flex-1">
-                                                                <h5 className="font-semibold text-gray-900">{source.name}</h5>
-                                                                <p className="text-xs text-gray-600 mt-1">{source.description}</p>
+                                                                <h5 className="font-semibold text-gray-900 dark:text-gray-100">{source.name}</h5>
+                                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{source.description}</p>
                                                                 {source.lastUpdated && (
-                                                                    <p className="text-xs text-gray-500 mt-1">{t('lastUpdated', { value: source.lastUpdated })}</p>
+                                                                    <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">{t('lastUpdated', { value: source.lastUpdated })}</p>
                                                                 )}
                                                             </div>
                                                             {source.url && (
@@ -364,14 +364,14 @@ export default function LeaderboardPage() {
                                                                     href={source.url}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="ml-4 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-md hover:bg-gray-800 transition-colors whitespace-nowrap"
+                                                                    className="ml-4 px-3 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap"
                                                                 >
                                                                     {t('visit')} ↗
                                                                 </a>
                                                             )}
                                                         </div>
                                                         {source.license && (
-                                                            <p className="text-xs text-gray-500 mt-2">{t('license', { value: source.license })}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{t('license', { value: source.license })}</p>
                                                         )}
                                                     </div>
                                                 ))}
@@ -380,33 +380,33 @@ export default function LeaderboardPage() {
 
                                     {/* Medium Reliability Sources */}
                                     <div>
-                                        <h4 className="text-sm font-semibold text-yellow-700 mb-3 flex items-center gap-2">
-                                            <span className="w-3 h-3 rounded-full bg-yellow-600"></span>
+                                        <h4 className="text-sm font-semibold text-yellow-700 dark:text-yellow-500 mb-3 flex items-center gap-2">
+                                            <span className="w-3 h-3 rounded-full bg-yellow-600 dark:bg-yellow-500"></span>
                                             {t('mediumReliability')}
                                         </h4>
                                         <div className="space-y-3">
                                             {Object.values(VALIDATED_DATA_SOURCES)
                                                 .filter(s => s.reliability === 'medium')
                                                 .map((source, idx) => (
-                                                    <div key={idx} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                                    <div key={idx} className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 border border-gray-200 dark:border-gray-600">
                                                         <div className="flex items-start justify-between">
                                                             <div className="flex-1">
-                                                                <h5 className="font-semibold text-gray-900">{source.name}</h5>
-                                                                <p className="text-xs text-gray-600 mt-1">{source.description}</p>
+                                                                <h5 className="font-semibold text-gray-900 dark:text-gray-100">{source.name}</h5>
+                                                                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">{source.description}</p>
                                                             </div>
                                                             {source.url && (
                                                                 <a
                                                                     href={source.url}
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
-                                                                    className="ml-4 px-3 py-1.5 bg-gray-900 text-white text-xs font-medium rounded-md hover:bg-gray-800 transition-colors whitespace-nowrap"
+                                                                    className="ml-4 px-3 py-1.5 bg-gray-900 dark:bg-white text-white dark:text-gray-900 text-xs font-medium rounded-md hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors whitespace-nowrap"
                                                                 >
                                                                     {t('visit')} ↗
                                                                 </a>
                                                             )}
                                                         </div>
                                                         {source.license && (
-                                                            <p className="text-xs text-gray-500 mt-2">{t('license', { value: source.license })}</p>
+                                                            <p className="text-xs text-gray-500 dark:text-gray-500 mt-2">{t('license', { value: source.license })}</p>
                                                         )}
                                                     </div>
                                                 ))}
@@ -415,18 +415,18 @@ export default function LeaderboardPage() {
 
                                     {/* Scientific References */}
                                     <div>
-                                        <h4 className="text-sm font-semibold text-gray-700 mb-3">{t('scientificReferences')}</h4>
-                                        <ul className="text-xs text-gray-600 space-y-2 ml-4 list-disc">
+                                        <h4 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3">{t('scientificReferences')}</h4>
+                                        <ul className="text-xs text-gray-600 dark:text-gray-400 space-y-2 ml-4 list-disc">
                                             <li>{t('humanO2Ref')}</li>
                                             <li>{t('treeO2Ref')}</li>
                                             <li>{t('aqiRef')}</li>
                                         </ul>
                                     </div>
 
-                                    <div className="pt-4 border-t border-gray-200">
-                                        <p className="text-xs text-gray-500">
-                                            <strong>Note:</strong> {t('sourceNote')}{' '}
-                                            <a href="/DATA_SOURCES.md" target="_blank" className="text-nature-600 hover:underline">
+                                    <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            <strong className="text-gray-900 dark:text-gray-100">Note:</strong> {t('sourceNote')}{' '}
+                                            <a href="/DATA_SOURCES.md" target="_blank" className="text-nature-600 dark:text-nature-400 hover:underline">
                                                 DATA_SOURCES.md
                                             </a>
                                         </p>

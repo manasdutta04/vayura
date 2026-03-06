@@ -67,13 +67,13 @@ function HomeContent() {
     return (
       <>
         <Header />
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-white dark:bg-gray-900">
           <div className="max-w-5xl mx-auto px-6 pt-32 pb-20">
             <div className="animate-pulse space-y-8">
               <div className="text-center space-y-4">
-                <div className="h-16 w-3/4 bg-gray-200 rounded-lg mx-auto"></div>
-                <div className="h-6 w-1/2 bg-gray-100 rounded mx-auto"></div>
-                <div className="h-12 w-48 bg-gray-200 rounded-md mx-auto mt-12"></div>
+                <div className="h-16 w-3/4 bg-gray-200 dark:bg-gray-700 rounded-lg mx-auto"></div>
+                <div className="h-6 w-1/2 bg-gray-100 dark:bg-gray-800 rounded mx-auto"></div>
+                <div className="h-12 w-48 bg-gray-200 dark:bg-gray-700 rounded-md mx-auto mt-12"></div>
               </div>
             </div>
           </div>
@@ -155,26 +155,26 @@ function HomeContent() {
   return (
     <>
       <Header />
-      <div className="min-h-screen bg-white overflow-hidden">
+      <div className="min-h-screen bg-white dark:bg-gray-900 overflow-hidden">
         {/* Hero Section */}
         <section className="relative pt-32 pb-20 px-6">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 via-white to-white pointer-events-none" />
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50/50 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-50 dark:from-blue-950/20 via-white dark:via-gray-900 to-white dark:to-gray-900 pointer-events-none" />
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-green-50/50 dark:bg-green-950/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none" />
 
           <div className="max-w-6xl mx-auto text-center relative z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 border border-green-100 text-green-700 text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-green-50 dark:bg-green-950/50 border border-green-100 dark:border-green-800 text-green-700 dark:text-green-300 text-sm font-medium mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
               <Sprout className="w-4 h-4" />
               <span>{t('home.hero.badge', { count: stats.totalDistricts })}</span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
+            <h1 className="text-5xl md:text-7xl font-bold text-gray-900 dark:text-gray-100 mb-6 tracking-tight leading-tight animate-in fade-in slide-in-from-bottom-6 duration-700 delay-100">
               {t('home.hero.title')} <br className="hidden md:block" />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">
                 {t('home.hero.titleHighlight')}
               </span>
             </h1>
 
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
+            <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-8 duration-700 delay-200">
               {t('home.hero.subtitle')}
             </p>
 
@@ -187,14 +187,14 @@ function HomeContent() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 animate-in fade-in slide-in-from-bottom-8 duration-700 delay-300">
               <button
                 onClick={() => setAuthModalManuallyOpened(true)}
-                className="px-6 py-3 bg-gray-900 text-white text-base font-medium rounded-lg hover:bg-gray-800 transition-all hover:scale-105 shadow-lg shadow-gray-900/20 flex items-center gap-2"
+                className="px-6 py-3 bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 text-base font-medium rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-all hover:scale-105 shadow-lg shadow-gray-900/20 dark:shadow-gray-100/20 flex items-center gap-2"
               >
                 {t('home.hero.joinMovement')}
                 <ArrowRight className="w-4 h-4" />
               </button>
               <Link
                 href="/methodology"
-                className="px-6 py-3 bg-white text-gray-700 text-base font-medium rounded-lg border border-gray-200 hover:bg-gray-50 hover:border-gray-300 transition-all"
+                className="px-6 py-3 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-base font-medium rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-all"
               >
                 {t('home.hero.viewMethodology')}
               </Link>
@@ -233,39 +233,39 @@ function HomeContent() {
                 </div>
               ) : (
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center text-center">
                     {statsLoading ? (
-                      <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
+                      <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 animate-pulse rounded mb-2"></div>
                     ) : (
-                      <span className="text-3xl font-bold text-gray-900 mb-1">{stats.totalDistricts}</span>
+                      <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{stats.totalDistricts}</span>
                     )}
-                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
                       {t('home.stats.districts')}
                     </span>
                   </div>
-                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center text-center">
                     {statsLoading ? (
                       <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
                     ) : (
                       <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalTrees)}</span>
                     )}
-                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
                       {t('home.stats.treesPlanted')}
                     </span>
                   </div>
-                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center text-center">
                     {statsLoading ? (
-                      <div className="h-8 w-16 bg-gray-200 animate-pulse rounded mb-2"></div>
+                      <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 animate-pulse rounded mb-2"></div>
                     ) : (
-                      <span className="text-3xl font-bold text-gray-900 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
+                      <span className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1">{formatCompactNumber(stats.totalOxygen)}kg</span>
                     )}
-                    <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-medium uppercase tracking-wider">
                       {t('home.stats.oxygenAdded')}
                     </span>
                   </div>
-                  <div className="bg-white/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 shadow-sm flex flex-col items-center justify-center text-center">
-                    <span className="text-3xl font-bold text-green-600 mb-1">{t('home.stats.live')}</span>
-                    <span className="text-xs text-green-600 font-medium uppercase tracking-wider">
+                  <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md p-4 rounded-xl border border-gray-100 dark:border-gray-700 shadow-sm flex flex-col items-center justify-center text-center">
+                    <span className="text-3xl font-bold text-green-600 dark:text-green-400 mb-1">{t('home.stats.live')}</span>
+                    <span className="text-xs text-green-600 dark:text-green-400 font-medium uppercase tracking-wider">
                       {t('home.stats.monitoring')}
                     </span>
                   </div>
@@ -276,7 +276,7 @@ function HomeContent() {
         </section>
 
         {/* Feature Grid */}
-        <section className="py-24 bg-gray-50/50">
+        <section className="py-24 bg-gray-50/50 dark:bg-gray-800/50">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center mb-16">
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
@@ -307,15 +307,15 @@ function HomeContent() {
         </section>
 
         {/* How It Works */}
-        <section className="py-24 bg-white">
+        <section className="py-24 bg-white dark:bg-gray-900">
           <div className="max-w-6xl mx-auto px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
               <div>
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-sm font-medium mb-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-950/50 border border-blue-100 dark:border-blue-800 text-blue-700 dark:text-blue-300 text-sm font-medium mb-6">
                   <Activity className="w-4 h-4" />
                   <span>{t('home.howItWorks.badge')}</span>
                 </div>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 leading-tight">
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-gray-100 mb-6 leading-tight">
                   {t('home.howItWorks.title')} <br />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-green-600">
                     {t('home.howItWorks.titleHighlight')}
@@ -331,10 +331,10 @@ function HomeContent() {
                         {item.step}
                       </div>
                       <div className="pt-1">
-                        <h4 className={`text-xl font-bold text-gray-900 mb-2 flex items-center gap-2 group cursor-default transition-colors hover:text-${item.color}-600`}>
+                        <h4 className={`text-xl font-bold text-gray-900 dark:text-gray-100 mb-2 flex items-center gap-2 group cursor-default transition-colors hover:text-${item.color}-600`}>
                           {item.title}
                         </h4>
-                        <p className="text-gray-600 text-lg leading-relaxed">{item.desc}</p>
+                        <p className="text-gray-600 dark:text-gray-300 text-lg leading-relaxed">{item.desc}</p>
                       </div>
                     </div>
                   ))}
@@ -343,8 +343,8 @@ function HomeContent() {
 
               {/* Visual Element */}
               <div className="relative group perspective-1000 flex justify-center items-center">
-                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 to-green-100 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
-                <div className="relative z-10 transform transition-all duration-500 hover:scale-[1.02] shadow-2xl rounded-3xl overflow-hidden bg-white/50 border border-white/50 p-2">
+                <div className="absolute inset-0 bg-gradient-to-tr from-blue-100 dark:from-blue-900/20 to-green-100 dark:to-green-900/20 rounded-3xl -rotate-6 transform scale-95 opacity-50 group-hover:rotate-0 transition-transform duration-500" />
+                <div className="relative z-10 transform transition-all duration-500 hover:scale-[1.02] shadow-2xl rounded-3xl overflow-hidden bg-white/50 dark:bg-gray-800/50 border border-white/50 dark:border-gray-700/50 p-2">
                   <Image
                     src="/demo.png"
                     alt="Vayura Process Demo"

@@ -3,6 +3,7 @@
 import { toPng } from "html-to-image";
 import { DistrictDetail } from "@/lib/types";
 import { getAQICategory } from "@/lib/utils/helpers";
+import ConfidenceBadge from "@/components/ui/confidence-badge";
 
 interface Props {
   district: DistrictDetail;
@@ -29,13 +30,16 @@ export default function DistrictReportCard({ district }: Props) {
           {district.name}, {district.state}
         </h2>
 
-        <div className="mb-3">
+        <div className="mb-3 flex items-center gap-2">
           <span
             className="px-3 py-1 text-sm font-semibold rounded"
             style={{ backgroundColor: `${aqiInfo.color}20`, color: aqiInfo.color }}
           >
             {aqiInfo.label}
           </span>
+          {district.confidenceScore !== undefined && (
+            <ConfidenceBadge score={district.confidenceScore} size="sm" />
+          )}
         </div>
 
         <p>

@@ -20,8 +20,7 @@ export function calculateBadges(
     verifiedTrees: number,
     districtRank: number | null,
     stateRank: number | null,
-    existingBadges: Badge[] = [],
-    districtInfo?: { id: string; name: string; state: string }
+    existingBadges: Badge[] = []
 ): Badge[] {
     const badges: Badge[] = [...existingBadges];
     const now = new Date();
@@ -235,12 +234,7 @@ export async function updateContributorProfile(
             totalTreesPlanted,
             districtRank ?? null,
             stateRank ?? null,
-            existingBadges,
-            primaryDistrictId ? {
-                id: primaryDistrictId,
-                name: primaryDistrictName || 'Unknown',
-                state: primaryState || 'Unknown',
-            } : undefined
+            existingBadges
         );
 
         const profile: ContributorProfile = {

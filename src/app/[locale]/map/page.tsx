@@ -34,20 +34,20 @@ export default function MapPage() {
               <MapIcon size={16} />
               {t('geographicIntelligence')}
             </div>
-            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight">
-              {t('title')} <span className="text-emerald-600">{t('titleHighlight')}</span>
+            <h1 className="text-4xl md:text-5xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+              {t('title')} <span className="text-emerald-600 dark:text-emerald-400">{t('titleHighlight')}</span>
             </h1>
-            <p className="text-lg text-slate-600 max-w-2xl">
+            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl">
               {t('subtitle')}
             </p>
           </div>
           
           <div className="flex flex-wrap gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm text-sm text-slate-600 dark:text-slate-300">
               <MousePointer2 size={14} className="text-emerald-500" />
               <span>{t('clickToExplore')}</span>
             </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white rounded-full border border-slate-200 shadow-sm text-sm text-slate-600">
+            <div className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 rounded-full border border-slate-200 dark:border-slate-700 shadow-sm text-sm text-slate-600 dark:text-slate-300">
               <Layers size={14} className="text-emerald-500" />
               <span>{t('interactiveLayers')}</span>
             </div>

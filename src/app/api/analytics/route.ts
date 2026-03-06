@@ -1,11 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getAnalyticsData } from '@/lib/services/analytics';
-import { adminDb } from '@/lib/firebase-admin';
 
 // Force dynamic to avoid build-time Firestore calls
 export const dynamic = 'force-dynamic';
 
-export async function GET(request: Request) {
+export async function GET() {
     try {
         // Check for admin authorization (optional: can be done via middleware or in page)
         // For now, we'll just fetch the data. 

@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useSearchParams } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -125,15 +124,14 @@ function LeaderboardEntryRow({
 }) {
     const isTop3 = entry.rank <= 3;
     const tc = useTranslations('champions');
-    const tcom = useTranslations('common');
 
     return (
         <div
             className={`flex items-center gap-4 p-4 rounded-xl transition-all duration-200 ${entry.isCurrentUser
-                ? 'bg-green-50 border-2 border-green-200 shadow-sm'
+                ? 'bg-green-50 dark:bg-green-900/20 border-2 border-green-200 dark:border-green-800 shadow-sm'
                 : isTop3
-                    ? 'bg-gradient-to-r from-amber-50/50 to-white border border-amber-100'
-                    : 'bg-white hover:bg-gray-50 border border-gray-100'
+                    ? 'bg-gradient-to-r from-amber-50/50 to-white dark:from-amber-900/20 dark:to-gray-800 border border-amber-100 dark:border-amber-900/30'
+                    : 'bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 border border-gray-100 dark:border-gray-700'
                 }`}
         >
             <RankBadge rank={entry.rank} />
@@ -141,10 +139,11 @@ function LeaderboardEntryRow({
             {/* User Avatar */}
             <div className="relative">
                 {entry.photoURL ? (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img
                         src={entry.photoURL}
                         alt={entry.userName}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-white shadow"
+                        className="w-12 h-12 rounded-full object-cover border-2 border-white dark:border-gray-800 shadow"
                     />
                 ) : (
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-400 to-emerald-500 flex items-center justify-center text-white font-bold text-lg shadow">
@@ -161,17 +160,17 @@ function LeaderboardEntryRow({
             {/* User Info */}
             <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-gray-900 truncate">
+                    <h3 className="font-semibold text-gray-900 dark:text-gray-100 truncate">
                         {entry.userName}
                         {entry.isCurrentUser && (
-                            <span className="ml-2 text-xs font-medium text-green-600 bg-green-100 px-2 py-0.5 rounded-full">
+                            <span className="ml-2 text-xs font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 px-2 py-0.5 rounded-full">
                                 {tc('you')}
                             </span>
                         )}
                     </h3>
                 </div>
                 {showLocation && (entry.districtName || entry.state) && (
-                    <p className="text-sm text-gray-500 flex items-center gap-1 mt-0.5">
+                    <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-1 mt-0.5">
                         <MapPin className="w-3 h-3" />
                         {entry.districtName && `${entry.districtName}, `}
                         {entry.state}
@@ -192,10 +191,10 @@ function LeaderboardEntryRow({
             {/* Stats */}
             <div className="text-right">
                 <div className="flex items-center gap-1 justify-end">
-                    <TreeDeciduous className="w-4 h-4 text-green-600" />
-                    <span className="font-bold text-gray-900">{formatCompactNumber(entry.totalTrees)}</span>
+                    <TreeDeciduous className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    <span className="font-bold text-gray-900 dark:text-gray-100">{formatCompactNumber(entry.totalTrees)}</span>
                 </div>
-                <div className="flex items-center gap-1 justify-end text-sm text-gray-500">
+                <div className="flex items-center gap-1 justify-end text-sm text-gray-500 dark:text-gray-400">
                     <Wind className="w-3 h-3" />
                     <span>{tc('o2Impact', { amount: formatCompactNumber(entry.totalO2Impact) })}</span>
                 </div>
@@ -225,13 +224,13 @@ function ScopeSelector({
     const t = useTranslations('champions.scope');
 
     return (
-        <div className="bg-white rounded-xl border border-gray-200 p-4 shadow-sm">
+        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 shadow-sm">
             <div className="flex flex-wrap gap-2 mb-4">
                 <button
                     onClick={() => onScopeChange('national')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'national'
-                        ? 'bg-gray-900 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
                 >
                     <Globe className="w-4 h-4" />
@@ -240,8 +239,8 @@ function ScopeSelector({
                 <button
                     onClick={() => onScopeChange('state')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'state'
-                        ? 'bg-gray-900 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
                 >
                     <Building2 className="w-4 h-4" />
@@ -250,8 +249,8 @@ function ScopeSelector({
                 <button
                     onClick={() => onScopeChange('district')}
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 ${scope === 'district'
-                        ? 'bg-gray-900 text-white shadow-md'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900 shadow-md'
+                        : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
                 >
                     <MapPin className="w-4 h-4" />
@@ -264,7 +263,7 @@ function ScopeSelector({
                     <select
                         value={selectedState || ''}
                         onChange={(e) => onStateSelect(e.target.value || null)}
-                        className="w-full px-4 py-3 rounded-lg border border-gray-300 bg-white text-gray-900 appearance-none cursor-pointer focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 appearance-none cursor-pointer focus:ring-2 focus:ring-green-500 focus:border-green-500"
                     >
                         <option value="">{t('selectState')}</option>
                         {states.map((state) => (
@@ -283,7 +282,7 @@ function ScopeSelector({
                         onDistrictSelect={(district) => onDistrictSelect(district)}
                     />
                     {selectedDistrict && (
-                        <p className="mt-2 text-sm text-green-600 font-medium flex items-center gap-1">
+                        <p className="mt-2 text-sm text-green-600 dark:text-green-400 font-medium flex items-center gap-1">
                             <MapPin className="w-4 h-4" />
                             {selectedDistrict.name}, {selectedDistrict.state}
                         </p>
@@ -297,7 +296,6 @@ function ScopeSelector({
 // Main Content Component
 function ChampionsPageContent() {
     const { user } = useAuth();
-    const searchParams = useSearchParams();
     const [scope, setScope] = useState<LeaderboardScope>('national');
     const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
     const [selectedState, setSelectedState] = useState<string | null>(null);
@@ -306,7 +304,6 @@ function ChampionsPageContent() {
     const [states, setStates] = useState<string[]>([]);
     const t = useTranslations('champions');
 
-    // Fetch list of states
     useEffect(() => {
         async function fetchStates() {
             try {
@@ -365,26 +362,26 @@ function ChampionsPageContent() {
     }, [scope, selectedDistrict, selectedState, user?.uid]);
 
     return (
-        <div className="min-h-screen bg-gradient-to-b from-green-50/50 to-white">
+        <div className="min-h-screen bg-gradient-to-b from-green-50/50 to-white dark:from-gray-900 dark:to-gray-900 transition-colors duration-300">
             <Header />
 
             <main className="max-w-4xl mx-auto px-6 py-8">
                 {/* Hero Section */}
                 <div className="text-center mb-10">
-                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white mb-4 shadow-lg shadow-amber-200">
+                    <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 text-white mb-4 shadow-lg shadow-amber-200 dark:shadow-amber-900/50">
                         <Trophy className="w-8 h-8" />
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                    <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                         {t('title')}
                     </h1>
-                    <p className="text-gray-600 max-w-lg mx-auto">
+                    <p className="text-gray-600 dark:text-gray-400 max-w-lg mx-auto">
                         {t('heroSubtitle')}
                     </p>
                 </div>
 
                 {/* Badge Legend */}
-                <div className="bg-white rounded-xl border border-gray-200 p-4 mb-6 shadow-sm">
-                    <h3 className="text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-4 mb-6 shadow-sm">
+                    <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
                         <Sparkles className="w-4 h-4 text-amber-500" />
                         {t('achievementBadges')}
                     </h3>
@@ -393,8 +390,8 @@ function ChampionsPageContent() {
                             <div key={badge.type} className="flex items-center gap-2">
                                 {getBadgeIcon(badge.icon, `w-5 h-5 ${tierIconColors[badge.tier]}`)}
                                 <div>
-                                    <p className="text-xs font-semibold text-gray-900">{badge.name}</p>
-                                    <p className="text-[10px] text-gray-500">{badge.requirement}</p>
+                                    <p className="text-xs font-semibold text-gray-900 dark:text-gray-100">{badge.name}</p>
+                                    <p className="text-[10px] text-gray-500 dark:text-gray-400">{badge.requirement}</p>
                                 </div>
                             </div>
                         ))}
@@ -419,16 +416,16 @@ function ChampionsPageContent() {
                     {/* Header */}
                     {leaderboard && leaderboard.scopeName && (
                         <div className="flex items-center justify-between mb-4">
-                            <h2 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
+                            <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 flex items-center gap-2">
                                 <Users className="w-5 h-5 text-gray-400" />
                                 {t('topContributors')}
                                 {scope !== 'national' && (
-                                    <span className="text-green-600">
+                                    <span className="text-green-600 dark:text-green-400">
                                         {t('inScope', { scope: leaderboard.scopeName })}
                                     </span>
                                 )}
                             </h2>
-                            <span className="text-sm text-gray-500">
+                            <span className="text-sm text-gray-500 dark:text-gray-400">
                                 {t('contributorsCount', { count: leaderboard.totalContributors })}
                             </span>
                         </div>
@@ -438,17 +435,17 @@ function ChampionsPageContent() {
                     {loading && (
                         <div className="space-y-3">
                             {[...Array(5)].map((_, idx) => (
-                                <div key={idx} className="bg-white rounded-xl border border-gray-100 p-4 animate-pulse">
+                                <div key={idx} className="bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-4 animate-pulse">
                                     <div className="flex items-center gap-4">
-                                        <div className="w-10 h-10 rounded-full bg-gray-200" />
-                                        <div className="w-12 h-12 rounded-full bg-gray-200" />
+                                        <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700" />
+                                        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
                                         <div className="flex-1 space-y-2">
-                                            <div className="h-4 w-32 bg-gray-200 rounded" />
-                                            <div className="h-3 w-24 bg-gray-100 rounded" />
+                                            <div className="h-4 w-32 bg-gray-200 dark:bg-gray-700 rounded" />
+                                            <div className="h-3 w-24 bg-gray-100 dark:bg-gray-600 rounded" />
                                         </div>
                                         <div className="text-right space-y-2">
-                                            <div className="h-4 w-16 bg-gray-200 rounded ml-auto" />
-                                            <div className="h-3 w-20 bg-gray-100 rounded ml-auto" />
+                                            <div className="h-4 w-16 bg-gray-200 dark:bg-gray-700 rounded ml-auto" />
+                                            <div className="h-3 w-20 bg-gray-100 dark:bg-gray-600 rounded ml-auto" />
                                         </div>
                                     </div>
                                 </div>
@@ -458,16 +455,16 @@ function ChampionsPageContent() {
 
                     {/* Empty State */}
                     {!loading && (!leaderboard || leaderboard.entries.length === 0) && (
-                        <div className="bg-white rounded-xl border border-gray-200 p-12 text-center">
-                            <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mx-auto mb-4">
-                                <Target className="w-8 h-8 text-gray-400" />
+                        <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-12 text-center">
+                            <div className="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
+                                <Target className="w-8 h-8 text-gray-400 dark:text-gray-500" />
                             </div>
-                            <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
                                 {scope !== 'national' && !(selectedDistrict || selectedState)
                                     ? t('selectToView', { scope: t(`scope.${scope}`) })
                                     : t('noContributors')}
                             </h3>
-                            <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+                            <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto">
                                 {scope !== 'national' && !(selectedDistrict || selectedState)
                                     ? t('chooseScope', { scope: t(`scope.${scope}`) })
                                     : t('beTheFirst')}
@@ -475,7 +472,7 @@ function ChampionsPageContent() {
                             {(scope === 'national' || selectedDistrict || selectedState) && (
                                 <Link
                                     href="/plant"
-                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium shadow-lg shadow-green-200 hover:shadow-xl hover:shadow-green-300 transition-all"
+                                    className="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-medium shadow-lg shadow-green-200 dark:shadow-green-900/40 hover:shadow-xl hover:shadow-green-300 dark:hover:shadow-green-900/60 transition-all"
                                 >
                                     <TreeDeciduous className="w-5 h-5" />
                                     {t('plantNow')}
@@ -499,15 +496,15 @@ function ChampionsPageContent() {
                 </div>
 
                 {/* CTA Section */}
-                <div className="mt-12 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl p-8 text-white text-center shadow-xl">
+                <div className="mt-12 bg-gradient-to-r from-green-600 to-emerald-600 dark:from-green-800 dark:to-emerald-800 rounded-2xl p-8 text-white text-center shadow-xl">
                     <h3 className="text-2xl font-bold mb-3">{t('readyToBecome')}</h3>
-                    <p className="text-green-100 mb-6 max-w-lg mx-auto">
+                    <p className="text-green-100 dark:text-green-200 mb-6 max-w-lg mx-auto">
                         {t('readySubtitle')}
                     </p>
                     <div className="flex flex-wrap justify-center gap-4">
                         <Link
                             href="/plant"
-                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 rounded-lg font-semibold hover:bg-green-50 transition-colors shadow-lg"
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white text-green-700 dark:bg-gray-100 dark:text-green-800 rounded-lg font-semibold hover:bg-green-50 dark:hover:bg-white transition-colors shadow-lg"
                         >
                             <TreeDeciduous className="w-5 h-5" />
                             {t('plantATree')}
@@ -534,8 +531,8 @@ export default function ChampionsPage() {
             fallback={
                 <>
                     <Header />
-                    <div className="min-h-screen bg-gradient-to-b from-green-50/50 to-white flex items-center justify-center">
-                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900" />
+                    <div className="min-h-screen bg-gradient-to-b from-green-50/50 to-white dark:from-gray-900 dark:to-gray-900 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white" />
                     </div>
                     <Footer />
                 </>

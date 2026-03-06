@@ -56,25 +56,25 @@ export default function CalculatorPage() {
     return (
         <>
             <Header />
-            <main className="min-h-screen bg-white pb-12 md:pb-20">
+            <main className="min-h-screen bg-white dark:bg-gray-900 pb-12 md:pb-20">
                 <section className="max-w-6xl mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
                     {/* Page Header */}
                     <div className="mb-6 sm:mb-8">
-                        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-1 tracking-tight">
+                        <h1 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-1 tracking-tight">
                             {t('pageTitle')}
                         </h1>
-                        <p className="text-xs sm:text-sm text-gray-500">
+                        <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
                             {t('pageSubtitle')}
                         </p>
                     </div>
 
                     {/* Calculator Card */}
-                    <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
                         {/* Input Section */}
-                        <div className="p-4 sm:p-6 md:p-8 bg-gray-50/30 border-b border-gray-100">
+                        <div className="p-4 sm:p-6 md:p-8 bg-gray-50/30 dark:bg-gray-700/30 border-b border-gray-100 dark:border-gray-600">
                             {/* Value Display */}
                             <div className="flex flex-col items-center mb-6 sm:mb-8">
-                                <label className="text-gray-400 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2">
+                                <label className="text-gray-400 dark:text-gray-500 text-[10px] sm:text-xs font-bold uppercase tracking-widest mb-2">
                                     {t('treesPlantedLabel')}
                                 </label>
                                 <div className="flex items-baseline gap-1.5 sm:gap-2 justify-center">
@@ -99,10 +99,10 @@ export default function CalculatorPage() {
                                             if (trees === 0) final = 1;
                                             setTrees(final);
                                         }}
-                                        className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 tracking-tight bg-transparent text-center w-32 sm:w-48 md:w-64 border-b-2 border-transparent hover:border-gray-200 focus:border-green-500 focus:outline-none transition-all placeholder-gray-200 appearance-none m-0 p-0 leading-none"
+                                        className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-900 dark:text-gray-100 tracking-tight bg-transparent text-center w-32 sm:w-48 md:w-64 border-b-2 border-transparent hover:border-gray-200 dark:hover:border-gray-600 focus:border-green-500 focus:outline-none transition-all placeholder-gray-200 dark:placeholder-gray-700 appearance-none m-0 p-0 leading-none"
                                         style={{ MozAppearance: 'textfield' }}
                                     />
-                                    <span className="text-base sm:text-lg md:text-xl text-gray-500 font-medium">{t('treesUnit')}</span>
+                                    <span className="text-base sm:text-lg md:text-xl text-gray-500 dark:text-gray-400 font-medium">{t('treesUnit')}</span>
                                 </div>
                             </div>
 
@@ -110,7 +110,7 @@ export default function CalculatorPage() {
                                 <div className="flex items-center gap-3 sm:gap-6 mb-6 sm:mb-8">
                                     <button
                                         onClick={() => setTrees(Math.max(1, trees - 10))}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 dark:border-gray-600 text-gray-400 hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 transition-all active:scale-95"
                                         aria-label="Decrease"
                                     >
                                         <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,13 +125,13 @@ export default function CalculatorPage() {
                                             max="10000"
                                             value={trees}
                                             onChange={(e) => setTrees(Number(e.target.value))}
-                                            className="w-full h-2 bg-gray-200 rounded-full appearance-none cursor-pointer slider focus:outline-none focus:ring-2 focus:ring-green-500/20"
+                                            className="w-full h-2 bg-gray-200 dark:bg-gray-700 rounded-full appearance-none cursor-pointer slider focus:outline-none focus:ring-2 focus:ring-green-500/20"
                                         />
                                     </div>
 
                                     <button
                                         onClick={() => setTrees(Math.min(10000, trees + 10))}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 text-gray-400 hover:border-green-500 hover:text-green-600 hover:bg-green-50 transition-all active:scale-95"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 flex-shrink-0 flex items-center justify-center rounded-full border-2 border-gray-200 dark:border-gray-600 text-gray-400 hover:border-green-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/30 transition-all active:scale-95"
                                         aria-label="Increase"
                                     >
                                         <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -147,7 +147,13 @@ export default function CalculatorPage() {
                                             onClick={() => setTrees(preset)}
                                             className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-semibold transition-all border ${trees === preset
                                                 ? 'bg-green-600 text-white border-green-600 shadow-sm'
-                                                : 'bg-white text-gray-600 border-gray-200 hover:border-green-300 hover:text-green-700'
+                                                : 'bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-600 hover:border-green-300 dark:hover:border-green-700 hover:text-green-700 dark:hover:text-green-400'
+                                                }`}
+                                        >
+                                            {preset.toLocaleString()}
+                                        </button>
+                                    ))}
+                                </div>
                                                 }`}
                                         >
                                             {preset.toLocaleString()}

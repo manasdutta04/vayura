@@ -20,14 +20,13 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [recentDistricts, setRecentDistricts] = useState<DistrictSearchResult[]>([]);
   const [dataSource, setDataSource] = useState<'network' | 'cache' | null>(null);
   
   const isOnline = useIsOnline();
   const searchRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const t = useTranslations('search');
+  const t = useTranslations('districtSearch');
 
   // Load recently viewed on mount
   useEffect(() => {
@@ -124,7 +123,7 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
     <div ref={searchRef} className={cn("relative max-w-2xl mx-auto w-full group", className)}>
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-blue-500 transition-colors" size={20} />
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 group-focus-within:text-blue-500 transition-colors" size={20} />
         <input
           type="text"
           value={query}
@@ -135,7 +134,7 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
           onFocus={() => setIsOpen(true)}
           autoFocus={autoFocus}
           placeholder={t('placeholder')}
-          className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-100 shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none text-base text-gray-900 bg-white placeholder:text-gray-400 transition-all"
+          className="w-full pl-12 pr-12 py-4 rounded-xl border-2 border-gray-100 dark:border-gray-700 shadow-sm focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 outline-none text-base text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 placeholder:text-gray-400 dark:placeholder:text-gray-500 transition-all"
         />
         {loading && (
           <div className="absolute right-12 top-1/2 -translate-y-1/2">
@@ -157,11 +156,11 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
 
       {/* Results Dropdown */}
       {isOpen && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-[1100] animate-in fade-in slide-in-from-top-2 duration-200">
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-gray-800 rounded-2xl shadow-2xl border border-gray-100 dark:border-gray-700 overflow-hidden z-[1100] animate-in fade-in slide-in-from-top-2 duration-200">
           
           {/* Header/Status */}
           {(results.length > 0 || (debouncedQuery.length >= 2 && loading)) && (
-            <div className="px-4 py-2 bg-gray-50 border-b border-gray-100 flex items-center justify-between">
+            <div className="px-4 py-2 bg-gray-50 dark:bg-gray-700 border-b border-gray-100 dark:border-gray-600 flex items-center justify-between">
               <span className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
                 {t('districtsFound')}
               </span>
@@ -188,7 +187,7 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
 
           {/* Offline Notice */}
           {!isOnline && (
-            <div className="px-4 py-2 bg-amber-50 text-amber-700 text-xs flex items-center gap-2 border-b border-amber-100/50">
+            <div className="px-4 py-2 bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-300 text-xs flex items-center gap-2 border-b border-amber-100/50 dark:border-amber-800/50">
               <WifiOff className="w-3.5 h-3.5" />
               <span>{t('offlineNotice')}</span>
             </div>

@@ -8,7 +8,6 @@ import {
     Challenge,
     ChallengeWithLeaders,
     ChallengeParticipant,
-    ChallengeContribution,
     ChallengeListResponse,
     ChallengeDetailResponse,
     ChallengeScope,
@@ -187,7 +186,7 @@ async function getTopContributors(
         .limit(limit)
         .get();
 
-    return snapshot.docs.map((doc, index: number) => {
+    return snapshot.docs.map((doc, index) => {
         const data = doc.data();
         return {
             id: doc.id,
@@ -477,7 +476,7 @@ export async function createChallenge(
 
     // Remove undefined values to prevent Firestore errors
     const cleanedData = Object.fromEntries(
-        Object.entries(challengeData).filter(([_, value]) => value !== undefined)
+        Object.entries(challengeData).filter(([, value]) => value !== undefined)
     );
 
     const docRef = await db.collection(CHALLENGES_COLLECTION).add(cleanedData);

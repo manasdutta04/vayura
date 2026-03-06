@@ -7,7 +7,7 @@ async function testCache() {
     const start1 = Date.now();
     try {
         const res1 = await fetch(url1);
-        const json1 = await res1.json();
+        await res1.json();
         const time1 = Date.now() - start1;
         console.log(`Response Time: ${time1}ms`);
     } catch (e) {
@@ -21,7 +21,7 @@ async function testCache() {
     const start2 = Date.now();
     try {
         const res2 = await fetch(url2);
-        const json2 = await res2.json();
+        await res2.json();
         const time2 = Date.now() - start2;
         console.log(`Response Time: ${time2}ms`);
     } catch (e) {

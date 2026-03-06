@@ -9,7 +9,7 @@ export function Footer() {
   const t = useTranslations();
 
   return (
-    <footer className="bg-white border-t border-gray-100">
+    <footer className="bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-6 py-12 md:py-16">
         <nav
           aria-label="Footer navigation"
@@ -25,12 +25,12 @@ export function Footer() {
                 height={32}
                 className="h-8 w-auto"
               />
-              <span className="text-lg font-semibold text-gray-900 tracking-tight">
+              <span className="text-lg font-semibold text-gray-900 dark:text-gray-100 tracking-tight">
                 {t('common.brandName')}
               </span>
             </Link>
 
-            <p className="text-sm text-gray-500 leading-relaxed mb-6">
+            <p className="text-sm text-gray-500 dark:text-gray-400 leading-relaxed mb-6">
               {t('footer.description')}
             </p>
 
@@ -39,7 +39,7 @@ export function Footer() {
                 href="https://github.com/manasdutta04/vayura"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-gray-900 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                 aria-label="GitHub"
               >
                 <Github className="w-5 h-5" />
@@ -48,7 +48,7 @@ export function Footer() {
                 href="https://www.linkedin.com/in/manasdutta04/"
                 target="_blank"
                 rel="noreferrer"
-                className="text-gray-400 hover:text-gray-900 transition-colors"
+                className="text-gray-400 dark:text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
                 aria-label="LinkedIn"
               >
                 <Linkedin className="w-5 h-5" />
@@ -58,12 +58,12 @@ export function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-900 tracking-wider uppercase mb-4">
+            <h3 className="text-sm font-semibold text-gray-900 dark:text-gray-100 tracking-wider uppercase mb-4">
               {t('footer.quickLinks')}
             </h3>
             <ul className="space-y-3">
               <li>
-                <Link href="/" className="text-sm text-gray-500 hover:text-green-600 transition-colors">
+                <Link href="/" className="text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors">
                   {t('footer.home')}
                 </Link>
               </li>

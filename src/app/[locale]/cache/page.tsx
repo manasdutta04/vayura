@@ -47,7 +47,7 @@ export default function CacheManagementPage() {
         try {
             await clearCache();
             setMessage({ type: 'success', text: 'All cached data cleared successfully' });
-        } catch (error) {
+        } catch {
             setMessage({ type: 'error', text: 'Failed to clear cache' });
         } finally {
             setIsClearing(false);
@@ -60,7 +60,7 @@ export default function CacheManagementPage() {
             await clearDistrictCache(slug);
             await refreshCacheStats();
             setMessage({ type: 'success', text: `Removed ${name} from cache` });
-        } catch (error) {
+        } catch {
             setMessage({ type: 'error', text: 'Failed to remove from cache' });
         } finally {
             setIsDeleting(null);
@@ -75,7 +75,7 @@ export default function CacheManagementPage() {
             } else {
                 setMessage({ type: 'success', text: 'No expired entries to clean up' });
             }
-        } catch (error) {
+        } catch {
             setMessage({ type: 'error', text: 'Failed to cleanup expired entries' });
         }
     };

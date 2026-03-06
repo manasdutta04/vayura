@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
-import { ShieldCheck, Server, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
+import { ShieldCheck, Database, Lock, Eye, AlertCircle, FileText } from 'lucide-react';
 import LegalHeader from "@/components/LegalHeader"
 
 const DATA_SOURCES = [

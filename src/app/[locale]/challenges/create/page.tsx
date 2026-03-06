@@ -49,7 +49,6 @@ function CreateChallengeContent() {
     const [endDate, setEndDate] = useState<string>('');
 
     // UI state
-    const [showPreview, setShowPreview] = useState(false);
     const [submitting, setSubmitting] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);

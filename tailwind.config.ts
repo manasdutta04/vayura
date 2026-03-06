@@ -1,6 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
+    darkMode: 'class',
     content: [
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -9,7 +10,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                // Environmental theme colors
+                background: 'var(--background)',
+                foreground: 'var(--foreground)',
+                card: 'var(--card)',
+                border: 'var(--border)',
+                muted: 'var(--muted)',
                 nature: {
                     50: '#f0fdf4',
                     100: '#dcfce7',

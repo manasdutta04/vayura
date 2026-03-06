@@ -1,7 +1,6 @@
 import { calculateHealthScore } from "@/lib/calculations/healthScore";
 import { notFound } from "next/navigation";
 import DistrictReportCard from "../../../../components/district/DistrictReportCard";
-import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { Header } from "@/components/ui/header";
 import { Footer } from "@/components/ui/footer";
@@ -95,7 +94,6 @@ export default async function DistrictPage(
   { params }: DistrictPageProps
 ) {
   const { slug } = await params;
-  const t = await getTranslations('district');
 
   if (!slug) {
     notFound();
@@ -120,6 +118,17 @@ export default async function DistrictPage(
 
   const aqiInfo = getAQICategory(data.environmentalData.aqi);
   const calc = data.oxygenCalculation;
+  const apiTimestamp = data.environmentalData?.timestamp;
+  const parsedLastUpdated = apiTimestamp ? new Date(apiTimestamp as unknown as string) : new Date();
+  const safeLastUpdated = Number.isNaN(parsedLastUpdated.getTime()) ? new Date() : parsedLastUpdated;
+  const formattedLastUpdated = safeLastUpdated.toLocaleString('en-IN', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true,
+  });
   const healthScore = calculateHealthScore(
   data.environmentalData.aqi,
   data.environmentalData.disasterFrequency,
@@ -188,6 +197,11 @@ if (healthScore >= 70) {
             {/* Summary cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
       </div>
+            <div className="mb-4">
+              <p className="text-sm text-gray-600">
+                Last Updated: {formattedLastUpdated}
+              </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
             <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
   <h2 className="text-sm font-semibold text-gray-500 mb-2">
@@ -251,7 +265,7 @@ if (healthScore >= 70) {
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               <div className="bg-white rounded-2xl p-6 shadow border border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
-                  Oxygen demand vs tree supply
+                  Oxygen Demand Model
                 </h2>
                 <dl className="space-y-3 text-sm text-gray-700">
                   <div className="flex justify-between">
@@ -333,11 +347,22 @@ if (healthScore >= 70) {
                     </ul>
                   </div>
                   <p className="text-xs text-gray-500 mt-2">
-                    Confidence level:{" "}
-                    <span className="font-semibold capitalize">
-                      {calc.confidence_level}
-                    </span>
-                    . Estimates only, not medical or policy guidance.
+                    {data.confidenceScore !== undefined && (
+                      <>
+                        <span className={`font-semibold ${
+                          data.confidenceScore >= 71 ? 'text-green-600' :
+                          data.confidenceScore >= 41 ? 'text-yellow-600' :
+                          'text-red-600'
+                        }`}>
+                          Confidence Score: {data.confidenceScore}%{' '}
+                          {data.confidenceScore >= 71 ? 'High' :
+                           data.confidenceScore >= 41 ? 'Medium' :
+                           'Low'}
+                        </span>
+                        .{' '}
+                      </>
+                    )}
+                    Estimates only, not medical or policy guidance.
                   </p>
                 </div>
               </div>

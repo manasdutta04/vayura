@@ -10,8 +10,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     
     const variantClasses = 
       variant === 'default' 
-        ? 'bg-gray-900 text-white hover:bg-gray-800 focus:ring-gray-900' 
-        : 'border border-gray-300 bg-white text-gray-700 hover:bg-gray-50 focus:ring-gray-900';
+        ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 hover:bg-gray-800 dark:hover:bg-gray-200 focus:ring-gray-900 dark:focus:ring-gray-100' 
+        : 'border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 focus:ring-gray-900 dark:focus:ring-gray-100';
     
     const classes = `${baseClasses} ${variantClasses} ${className}`;
 

@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 import { updateUserProfileFields, getUserProfile } from '@/lib/utils/user-profile';
 import { uploadProfileImage } from '@/lib/utils/storage';
 import { UserProfile } from '@/lib/types/firestore';
-import { User, Mail, Camera, Save, ArrowLeft, Upload, X } from 'lucide-react';
+import { User, Mail, Save, ArrowLeft, Upload, X } from 'lucide-react';
 
 export default function EditProfilePage() {
   const { user, loading, updateUserProfile } = useAuth();
@@ -282,6 +282,7 @@ export default function EditProfilePage() {
                 <div className="relative">
                   <div className="w-24 h-24 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                     {previewImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img
                         src={previewImage}
                         alt="Profile preview"
