@@ -29,6 +29,7 @@ import {
   Info,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
+import { AnalyticsData } from "@/lib/types/analytics";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);

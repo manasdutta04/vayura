@@ -6,7 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "@/lib/theme-context";
 import { AuthModal } from "./auth-modal";
-import { Sprout, Menu, X, Github, Map, BarChart3, Trophy, Zap, Calculator, BookOpen, LayoutGrid, TrendingUp, Leaf, DollarSign, Sun, Moon } from "lucide-react";
+import { Sprout, Menu, X, Github, Map, BarChart3, Trophy, Zap, Calculator, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "./language-switcher";
 import Image from "next/image";
@@ -22,6 +22,7 @@ export function Header() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true);
   }, []);
 

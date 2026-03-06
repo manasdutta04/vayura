@@ -44,6 +44,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
     const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
     const initialTheme = savedTheme || systemTheme;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setTheme(initialTheme);
     applyTheme(initialTheme);
 

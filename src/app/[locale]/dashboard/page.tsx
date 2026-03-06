@@ -9,7 +9,7 @@ import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictResults } from '@/components/ui/district-results';
 import { formatCompactNumber } from '@/lib/utils/helpers';
-import { DistrictDetail } from '@/lib/types';
+import { DistrictDetail, DistrictSearchResult } from '@/lib/types';
 import { TreeDeciduous, Heart, Wind, Calculator, BarChart3, Lightbulb, ArrowRight, Sprout, Leaf } from 'lucide-react';
 
 export default function Dashboard() {
@@ -25,6 +25,8 @@ export default function Dashboard() {
   });
   const [districtDetail, setDistrictDetail] = useState<DistrictDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
+  const [districtNotFound, setDistrictNotFound] = useState(false);
 
   // Redirect to home if not authenticated
   useEffect(() => {
