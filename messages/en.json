@@ -151,7 +151,7 @@
       "button": "Join Vayura Now"
     }
   },
-  "dashboard": {
+"dashboard": {
     "welcome": "Welcome Back",
     "welcomeUser": "Welcome back,",
     "trackImpact": "Track your environmental impact and explore district data",
@@ -189,7 +189,20 @@
     "environmentalTips": "Environmental Tips",
     "tip1": "A single mature tree can absorb about 21 kg of CO₂ per year.",
     "tip2": "Native trees support local wildlife and require less maintenance.",
-    "tip3": "Trees planted near homes can reduce cooling costs by up to 25%."
+    "tip3": "Trees planted near homes can reduce cooling costs by up to 25%.",
+    "impactBreakdown": "District Impact Breakdown",
+    "noContributionsImpact": "Start planting to see your district-level impact.",
+    "contributeToSeeImpact": "Track how your trees reduce oxygen deficit across Indian districts.",
+    "plantTreeCTA": "Plant a Tree",
+    "exploreDistrictsCTA": "Explore Districts",
+    "yourHighestImpact": "Your Highest Impact District",
+    "ofDeficit": "of deficit",
+    "totalTrees": "Total Trees",
+    "oxygenOffset": "O₂ Offset",
+    "districtContribution": "District Contribution",
+    "district": "District",
+    "o2Offset": "O₂ Offset",
+    "impactNote": "Oxygen offset is calculated based on 110 kg O₂/year per mature tree (USDA Forest Service). Percentage shows your contribution toward each district's oxygen deficit."
   },
   "leaderboard": {
     "title": "State Leaderboard",

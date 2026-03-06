@@ -8,8 +8,9 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { DistrictSearch } from '@/components/ui/district-search';
 import { DistrictResults } from '@/components/ui/district-results';
+import { ImpactBreakdown } from '@/components/ui/impact-breakdown';
 import { formatCompactNumber } from '@/lib/utils/helpers';
-import { DistrictSearchResult, DistrictDetail } from '@/lib/types';
+import { DistrictSearchResult, DistrictDetail, UserImpact } from '@/lib/types';
 import { TreeDeciduous, Heart, Wind, Calculator, BarChart3, Lightbulb, ArrowRight, Sprout, Leaf } from 'lucide-react';
 
 export default function Dashboard() {
@@ -23,6 +24,8 @@ export default function Dashboard() {
     totalO2Impact: 0,
     verifiedContributions: 0,
   });
+  const [userImpact, setUserImpact] = useState<UserImpact | null>(null);
+  const [impactLoading, setImpactLoading] = useState(false);
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
   const [districtDetail, setDistrictDetail] = useState<DistrictDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
@@ -34,7 +37,7 @@ export default function Dashboard() {
     }
   }, [user, loading, router]);
 
-  // Fetch user contributions
+// Fetch user contributions
   useEffect(() => {
     async function fetchUserStats() {
       if (!user) return;
@@ -56,6 +59,27 @@ export default function Dashboard() {
       }
     }
     fetchUserStats();
+  }, [user]);
+
+  // Fetch user impact breakdown
+  useEffect(() => {
+    async function fetchUserImpact() {
+      if (!user) return;
+
+      setImpactLoading(true);
+      try {
+        const response = await fetch(`/api/user/impact?userId=${user.uid}&userEmail=${encodeURIComponent(user.email || '')}`);
+        if (response.ok) {
+          const data = await response.json();
+          setUserImpact(data);
+        }
+      } catch (error) {
+        console.error('Error fetching user impact:', error);
+      } finally {
+        setImpactLoading(false);
+      }
+    }
+    fetchUserImpact();
   }, [user]);
 
   if (loading) {
@@ -198,7 +222,14 @@ export default function Dashboard() {
                 </div>
               </div>
             </div>
-          </section>
+</section>
+
+          {/* District Impact Breakdown */}
+          {userImpact && (
+            <section className="pb-8">
+              <ImpactBreakdown impact={userImpact} loading={impactLoading} />
+            </section>
+          )}
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 pb-12">
             {/* Left Column - Search & Results */}
