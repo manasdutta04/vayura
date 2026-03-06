@@ -124,16 +124,11 @@ export async function GET(request: Request) {
 
         // If no results, try querying with uid field
         if (contributionsSnap.empty) {
-            console.log(`No contributions found with userId=${userId}, trying uid field...`);
             contributionsSnap = await contributionsRef
                 .where('uid', '==', userId)
                 .limit(200)
                 .get();
         }
-
-        // Debug: Log the number of contributions found
-        console.log(`Fetched ${contributionsSnap.size} tree contributions for userId=${userId}`);
-
         const contributions = contributionsSnap.docs.map((doc: QueryDocumentSnapshot) => {
             const data = doc.data();
             return {
