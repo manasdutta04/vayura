@@ -49,9 +49,9 @@ export default function CacheManagementPage() {
             setMessage({ type: 'success', text: 'All cached data cleared successfully' });
         } catch {
             setMessage({ type: 'error', text: 'Failed to clear cache' });
-        } finally {
-            setIsClearing(false);
         }
+        
+        setIsClearing(false);
     };
 
     const handleDeleteDistrict = async (slug: string, name: string) => {

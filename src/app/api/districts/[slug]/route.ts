@@ -14,9 +14,6 @@ export const dynamic = 'force-dynamic';
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
-/**
- * Check if error is a Firestore permission/availability error
- */
 function isFirestoreError(error: unknown): boolean {
     if (!error) return false;
     const err = error as { code?: number; message?: string };
@@ -46,7 +43,6 @@ export async function GET(
             );
         }
 
-        // Fetch district by slug
         const districtsRef = adminDb.collection('districts');
         const districtSnap = await districtsRef.where('slug', '==', slug).limit(1).get();
 
@@ -65,8 +61,6 @@ export async function GET(
             updatedAt: new Date(),
         };
 
-        // Fetch latest environmental data (cached 24h)
-        // Get all env data for this district and sort in memory to avoid index requirement
         const envRef = adminDb.collection('environmental_data');
         const envSnap = await envRef
             .where('districtId', '==', district.id)
@@ -76,7 +70,6 @@ export async function GET(
         const now = Date.now();
 
         if (!envSnap.empty) {
-            // Sort by timestamp in memory (newest first)
             const sortedDocs = envSnap.docs.sort((a: QueryDocumentSnapshot, b: QueryDocumentSnapshot) => {
                 const aTime = a.data().timestamp?.toDate?.() || a.data().timestamp || new Date(0);
                 const bTime = b.data().timestamp?.toDate?.() || b.data().timestamp || new Date(0);
@@ -106,7 +99,6 @@ export async function GET(
                 fetchPlantationRecommendations(district.name, district.state),
             ]);
 
-            // Calculate confidence score before saving
             const aqiSource = aqiData.source;
             const usedGemini = recommendations && recommendations.length > 0;
             const populationYear = 2021;
@@ -122,12 +114,12 @@ export async function GET(
             const newEnvRef = adminDb.collection('environmental_data').doc();
             await newEnvRef.set({
                 districtId: district.id,
-                aqi: aqiData.aqi,
-                pm25: aqiData.pm25,
-                soilQuality: soilData.soilQuality,
-                disasterFrequency: disasterData.disasterFrequency,
-                recommendations: recommendations,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
+                aqi: aqiData.aqi ?? null,
+                pm25: aqiData.pm25 ?? null,
+                soilQuality: soilData.soilQuality ?? null,
+                disasterFrequency: disasterData.disasterFrequency ?? null,
+                recommendations: recommendations ?? [],
+                dataSource: `${aqiData.source ?? 'unknown'},${soilData.source ?? 'unknown'},${disasterData.source ?? 'unknown'},Gemini AI`,
                 confidenceScore: confidenceScore,
                 timestamp: new Date(),
                 createdAt: new Date(),
@@ -136,12 +128,12 @@ export async function GET(
             envData = {
                 id: newEnvRef.id,
                 districtId: district.id,
-                aqi: aqiData.aqi,
-                pm25: aqiData.pm25,
-                soilQuality: soilData.soilQuality,
-                disasterFrequency: disasterData.disasterFrequency,
-                recommendations: recommendations,
-                dataSource: `${aqiData.source},${soilData.source},${disasterData.source},Gemini AI`,
+                aqi: aqiData.aqi ?? undefined,
+                pm25: aqiData.pm25 ?? undefined,
+                soilQuality: soilData.soilQuality ?? undefined,
+                disasterFrequency: disasterData.disasterFrequency ?? undefined,
+                recommendations: recommendations ?? [],
+                dataSource: `${aqiData.source ?? 'unknown'},${soilData.source ?? 'unknown'},${disasterData.source ?? 'unknown'},Gemini AI`,
                 confidenceScore: confidenceScore,
                 timestamp: new Date(),
                 createdAt: new Date(),
@@ -155,8 +147,6 @@ export async function GET(
             );
         }
 
-        // Calculate oxygen requirements
-        // Try Python service first, fallback to local calculation
         let oxygenCalculation: OxygenCalculation;
         const pythonServiceUrl = process.env.PYTHON_SERVICE_URL;
 
@@ -173,7 +163,7 @@ export async function GET(
                         disaster_frequency: envData.disasterFrequency,
                     }),
                     cache: 'no-store',
-                    signal: AbortSignal.timeout(5000), // 5 second timeout
+                    signal: AbortSignal.timeout(5000),
                 });
 
                 if (calcResponse.ok) {
@@ -183,7 +173,6 @@ export async function GET(
                 }
             } catch (error) {
                 console.warn('Python service unavailable, using local calculation:', error);
-                // Fallback to local calculation
                 oxygenCalculation = calculateOxygenRequirements({
                     district_name: district.name,
                     population: district.population,
@@ -193,7 +182,6 @@ export async function GET(
                 });
             }
         } else {
-            // Use local calculation (no Python service configured)
             oxygenCalculation = calculateOxygenRequirements({
                 district_name: district.name,
                 population: district.population,
@@ -203,7 +191,6 @@ export async function GET(
             });
         }
 
-        // Fetch district-level tree contributions
         const contributionsRef = adminDb.collection('tree_contributions');
         const contributionsSnap = await contributionsRef
             .where('districtId', '==', district.id)
@@ -215,7 +202,6 @@ export async function GET(
             return sum + (data.treeQuantity || 1);
         }, 0);
 
-        // Fetch district-level donations
         const donationsRef = adminDb.collection('donations');
         const donationsSnap = await donationsRef
             .where('districtId', '==', district.id)
@@ -236,14 +222,9 @@ export async function GET(
             oxygenOffset,
         };
 
-        // Calculate confidence score based on data quality
         const dataFreshnessHours = (now - envData.timestamp.getTime()) / (1000 * 60 * 60);
         const aqiSource = envData.dataSource?.split(',')[0] || 'unknown';
-        
-        // Determine if Gemini was used (from recommendations being present)
         const usedGemini = !!envData.recommendations && envData.recommendations.length > 0;
-        
-        // Population year - default to 2021 (Census) if not available
         const populationYear = district.population ? 2021 : 2021;
 
         const confidenceScore = calculateConfidenceScore({
@@ -259,7 +240,7 @@ export async function GET(
             environmentalData: envData,
             oxygenCalculation,
             recommendations: envData.recommendations,
-            stats, // state-level contribution stats
+            stats,
             confidenceScore: confidenceScore,
         };
 
@@ -270,7 +251,6 @@ export async function GET(
         console.error('Error stack:', err?.stack);
         console.error('Error message:', err?.message);
 
-        // Handle Firestore errors gracefully
         if (isFirestoreError(error)) {
             console.warn('Firestore unavailable, cannot fetch district data');
             return NextResponse.json(
@@ -279,7 +259,6 @@ export async function GET(
             );
         }
 
-        // Provide more detailed error information in development
         const errorMessage = process.env.NODE_ENV === 'development'
             ? err?.message || 'Failed to fetch district details'
             : 'Failed to fetch district details';
@@ -290,3 +269,4 @@ export async function GET(
         );
     }
 }
+

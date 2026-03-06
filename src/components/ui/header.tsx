@@ -9,7 +9,6 @@ import { AuthModal } from "./auth-modal";
 import { Sprout, Menu, X, Github, Map, BarChart3, Trophy, Zap, Calculator, BookOpen, LayoutGrid, TrendingUp, Leaf, DollarSign, Sun, Moon } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "./language-switcher";
-import Image from "next/image";
 
 export function Header() {
   const t = useTranslations();
