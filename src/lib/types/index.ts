@@ -144,20 +144,6 @@ export interface DistrictSearchResult {
     population: number;
 }
 
-export interface DistrictImpact {
-    districtId: string;
-    districtName: string;
-    state?: string;
-    totalTreesPlanted?: number;
-    totalTreesDonated?: number;
-    totalO2Offset?: number;
-    verifiedContributions?: number;
-    treesContributed: number;
-    oxygenOffsetKg: number;
-    percentOfDeficitOffset: number;
-    districtTotalDeficitKg?: number;
-}
-
 export interface UserImpactSummary {
     userId: string;
     userName?: string;
@@ -194,4 +180,28 @@ export interface APIError {
     error: string;
     message: string;
     statusCode: number;
+}
+
+// User Impact types
+export interface DistrictImpact {
+    districtId: string;
+    districtName: string;
+    state?: string;
+    treeCount: number;
+    oxygenOffset: number;
+    percentageOffset: number;
+    deficit: number;
+    // Backward compatibility aliases (from legacy interface)
+    treesContributed?: number;
+    oxygenOffsetKg?: number;
+    percentOfDeficitOffset?: number;
+    districtTotalDeficitKg?: number;
+}
+
+export interface UserImpact {
+    districts: DistrictImpact[];
+    mostImpactedDistrict: DistrictImpact | null;
+    totalTrees: number;
+    totalOxygenOffset: number;
+    hasContributions: boolean;
 }

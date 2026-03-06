@@ -305,7 +305,7 @@ export async function fetchPlantationRecommendations(
 /**
  * Fallback mock recommendations for development/testing
  */
-function getMockRecommendations(district: string): TreeRecommendation[] {
+function getMockRecommendations(district: string, _state?: string): TreeRecommendation[] {
     return [
         {
             speciesName: "Neem",

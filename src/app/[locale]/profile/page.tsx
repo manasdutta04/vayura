@@ -7,7 +7,8 @@ import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
 import { getUserProfile } from '@/lib/utils/user-profile';
 import { UserProfile } from '@/lib/types/firestore';
-import { User, Mail, Calendar, Edit3, LogOut, Trash2, Camera } from 'lucide-react';
+import { User, Mail, Calendar, Edit3, LogOut, Trash2 } from 'lucide-react';
+import Image from 'next/image';
 
 export default function ProfilePage() {
   const { user, loading, signOut } = useAuth();
@@ -134,18 +135,15 @@ export default function ProfilePage() {
               <div className="relative group">
                 <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center overflow-hidden border-4 border-white shadow-lg">
                   {profile.photoURL ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img 
+                    <Image 
                       src={profile.photoURL} 
                       alt={profile.name || 'Profile'}
-                      className="w-full h-full object-cover"
+                      fill
+                      className="object-cover"
                     />
                   ) : (
                     <User className="w-10 h-10 sm:w-16 sm:h-16 text-green-600" />
                   )}
-                </div>
-                <div className="absolute inset-0 rounded-full bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Camera className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
                 </div>
               </div>
               
@@ -240,3 +238,4 @@ export default function ProfilePage() {
     </>
   );
 }
+

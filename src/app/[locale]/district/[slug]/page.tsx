@@ -105,7 +105,7 @@ export default async function DistrictPage(
     return (
       <>
         <Header />
-        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-nature-50 via-white to-sky-50 px-6">
+        <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 via-white to-blue-50 px-6">
           <EmptyState
             title="District data not available yet"
             subtitle="Try searching for another district or adjusting your filters"
@@ -130,33 +130,30 @@ export default async function DistrictPage(
     hour12: true,
   });
   const healthScore = calculateHealthScore(
-  data.environmentalData.aqi,
-  data.environmentalData.disasterFrequency,
-  data.environmentalData.soilQuality
-);
+    data.environmentalData.aqi,
+    data.environmentalData.disasterFrequency,
+    data.environmentalData.soilQuality
+  );
 
-// Status + color logic
-let healthColor = "text-red-600";
-let barColor = "bg-red-500";
-let healthLabel = "Critical";
+  let healthColor = "text-red-600";
+  let barColor = "bg-red-500";
+  let healthLabel = "Critical";
 
-if (healthScore >= 70) {
-  healthColor = "text-green-600";
-  barColor = "bg-green-500";
-  healthLabel = "Healthy";
-} else if (healthScore >= 40) {
-  healthColor = "text-yellow-600";
-  barColor = "bg-yellow-500";
-  healthLabel = "Moderate";
-}
-
-
+  if (healthScore >= 70) {
+    healthColor = "text-green-600";
+    barColor = "bg-green-500";
+    healthLabel = "Healthy";
+  } else if (healthScore >= 40) {
+    healthColor = "text-yellow-600";
+    barColor = "bg-yellow-500";
+    healthLabel = "Moderate";
+  }
 
   return (
     <>
       <Header />
       <DistrictPageWrapper district={data} slug={slug}>
-        <main className="min-h-screen bg-gradient-to-br from-nature-50 via-white to-sky-50 pb-20">
+        <main className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50 pb-20">
           <section className="max-w-6xl mx-auto px-6 pt-10">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
               <div>
@@ -175,7 +172,7 @@ if (healthScore >= 70) {
                 <ExportButtons data={data} slug={slug} />
                 <Link
                   href="/plant"
-                  className="px-5 py-3 rounded-full bg-nature-600 text-white font-semibold hover:bg-nature-700 transition"
+                  className="px-5 py-3 rounded-full bg-green-600 text-white font-semibold hover:bg-green-700 transition"
                 >
                   I planted a tree
                 </Link>
@@ -184,46 +181,41 @@ if (healthScore >= 70) {
                     data.name,
                   )}`}
                   target="_blank"
-                  className="px-5 py-3 rounded-full bg-white text-nature-700 font-semibold border border-nature-500 hover:bg-nature-50 transition"
+                  className="px-5 py-3 rounded-full bg-white text-green-700 font-semibold border border-green-500 hover:bg-green-50 transition"
                 >
                   Donate trees
                 </Link>
               </div>
             </div>
-             {/* Report Card Section */}
-<div className="mb-10">
-  <DistrictReportCard district={data} />
-</div>
-            {/* Summary cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-10">
-      </div>
+
+            <div className="mb-10">
+              <DistrictReportCard district={data} />
+            </div>
+
             <div className="mb-4">
               <p className="text-sm text-gray-600">
                 Last Updated: {formattedLastUpdated}
               </p>
             </div>
+
             <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-10">
-            <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
-  <h2 className="text-sm font-semibold text-gray-500 mb-2">
-    Environmental Health Score
-  </h2>
-
-  <p className={`text-2xl font-bold ${healthColor}`}>
-    {healthScore} / 100
-  </p>
-
-  <p className="text-xs mt-1 text-gray-500">
-    {healthLabel}
-  </p>
-
-  <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
-    <div
-      className={`${barColor} h-2 rounded-full`}
-      style={{ width: `${healthScore}%` }}
-    ></div>
-  </div>
-</div>
-
+              <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
+                <h2 className="text-sm font-semibold text-gray-500 mb-2">
+                  Environmental Health Score
+                </h2>
+                <p className={`text-2xl font-bold ${healthColor}`}>
+                  {healthScore} / 100
+                </p>
+                <p className="text-xs mt-1 text-gray-500">
+                  {healthLabel}
+                </p>
+                <div className="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div
+                    className={`${barColor} h-2 rounded-full`}
+                    style={{ width: `${healthScore}%` }}
+                  ></div>
+                </div>
+              </div>
 
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">
@@ -233,6 +225,7 @@ if (healthScore >= 70) {
                   {formatCompactNumber(data.population)}
                 </p>
               </div>
+
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">AQI</h2>
                 <p
@@ -243,6 +236,7 @@ if (healthScore >= 70) {
                 </p>
                 <p className="text-xs text-gray-500 mt-1">{aqiInfo.label}</p>
               </div>
+
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">
                   Soil quality
@@ -251,6 +245,7 @@ if (healthScore >= 70) {
                   {Math.round(data.environmentalData.soilQuality)} / 100
                 </p>
               </div>
+
               <div className="bg-white rounded-2xl p-5 shadow border border-gray-100">
                 <h2 className="text-sm font-semibold text-gray-500 mb-2">
                   Disaster frequency
@@ -261,7 +256,6 @@ if (healthScore >= 70) {
               </div>
             </div>
 
-            {/* Oxygen model explanation */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               <div className="bg-white rounded-2xl p-6 shadow border border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">
@@ -305,7 +299,7 @@ if (healthScore >= 70) {
                   </div>
                   <div className="flex justify-between border-t border-dashed pt-3 mt-3">
                     <dt className="font-semibold">Trees required</dt>
-                    <dd className="font-mono text-lg font-semibold text-nature-700">
+                    <dd className="font-mono text-lg font-semibold text-green-700">
                       {formatNumber(Math.round(calc.trees_required))} trees
                     </dd>
                   </div>
@@ -319,7 +313,6 @@ if (healthScore >= 70) {
                 <div className="space-y-3 text-sm text-gray-700">
                   <div>
                     <p className="font-semibold mb-1">Formulas</p>
-
                     <ul className="list-disc list-inside space-y-1">
                       <li>
                         Human O₂ demand = population × {ENVIRONMENTAL_CONSTANTS.OXYGEN.HUMAN_CONSUMPTION_LITERS_DAY} L/day × {ENVIRONMENTAL_CONSTANTS.OXYGEN.DAYS_PER_YEAR}, converted
@@ -384,3 +377,4 @@ if (healthScore >= 70) {
     </>
   );
 }
+

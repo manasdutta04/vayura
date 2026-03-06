@@ -9,7 +9,7 @@ import { useAuth } from '@/lib/auth-context';
 import { createImagePreview, revokeImagePreview, validateImageFile } from '@/lib/utils/storage';
 import { DistrictSearchResult } from '@/lib/types';
 import { DistrictSearch } from '@/components/ui/district-search';
-import { Leaf, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle, Camera } from 'lucide-react';
+import { Leaf, Camera, MapPin, Award, Info, CheckCircle, UploadCloud, AlertCircle } from 'lucide-react';
 import Image from 'next/image';
 
 function PlantPageContent() {
@@ -111,7 +111,6 @@ function PlantPageContent() {
             formData.append('state', selectedDistrict.state);
             formData.append('treeName', treeName.trim());
             formData.append('treeQuantity', treeQuantity.toString());
-            // Default contributionType is 'plantation' for this page
             formData.append('contributionType', 'plantation');
 
             if (user?.uid) formData.append('userId', user.uid);
@@ -137,7 +136,6 @@ function PlantPageContent() {
             setTreeQuantity(1);
             setSelectedDistrict(null);
 
-            // Redirect to contribution page after 2 seconds
             setTimeout(() => {
                 router.push('/contribution');
             }, 2000);
@@ -170,14 +168,12 @@ function PlantPageContent() {
         );
     }
 
-    // Allow rendering the layout (will redirect if !user in useEffect)
     if (!user) return null;
 
     return (
         <div className="min-h-screen bg-gray-50 text-gray-900">
             <Header />
 
-            {/* Hero Section */}
             <div className="bg-white border-b border-gray-200">
                 <div className="max-w-7xl mx-auto px-6 py-12">
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -192,14 +188,12 @@ function PlantPageContent() {
             <main className="max-w-7xl mx-auto px-6 py-8">
                 <div className="flex flex-col lg:flex-row gap-8">
 
-                    {/* Left Column: Information & Guidelines */}
                     <div className="lg:w-2/3 space-y-6">
 
-                        {/* How it Works Card */}
                         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                             <div className="p-6 border-b border-gray-100 bg-gray-50/50">
                                 <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                    <Leaf className="w-5 h-5 text-nature-600" />
+                                    <Leaf className="w-5 h-5 text-green-600" />
                                     {t('howItWorks')}
                                 </h2>
                             </div>
@@ -228,11 +222,10 @@ function PlantPageContent() {
                             </div>
                         </div>
 
-                        {/* Guidelines Card */}
                         <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
                             <div className="p-6 border-b border-gray-100 bg-gray-50/50">
                                 <h2 className="text-lg font-bold text-gray-900 flex items-center gap-2">
-                                    <CheckCircle className="w-5 h-5 text-nature-600" />
+                                    <CheckCircle className="w-5 h-5 text-green-600" />
                                     {t('submissionGuidelines')}
                                 </h2>
                             </div>
@@ -261,7 +254,6 @@ function PlantPageContent() {
                             </div>
                         </div>
 
-                        {/* AI Message */}
                         <div className="bg-blue-50 border border-blue-100 rounded-lg p-4">
                             <div className="flex gap-3">
                                 <Info className="w-5 h-5 text-blue-600 flex-shrink-0" />
@@ -276,7 +268,6 @@ function PlantPageContent() {
 
                     </div>
 
-                    {/* Right Column: Submission Form */}
                     <div className="lg:w-1/3">
                         <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6 sticky top-8">
                             <div className="mb-6">
@@ -287,7 +278,6 @@ function PlantPageContent() {
                             </div>
 
                             <form onSubmit={handleSubmit} className="space-y-5">
-                                {/* District Selection */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                         {t('district')}
@@ -307,7 +297,6 @@ function PlantPageContent() {
                                     )}
                                 </div>
 
-                                {/* Tree Name & Quantity Row */}
                                 <div className="grid grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
@@ -336,7 +325,6 @@ function PlantPageContent() {
                                     </div>
                                 </div>
 
-                                {/* Image Upload */}
                                 <div>
                                     <label className="block text-xs font-semibold text-gray-700 uppercase tracking-wide mb-1.5">
                                         {t('photoEvidence')}
@@ -436,3 +424,4 @@ export default function PlantPage() {
         </Suspense>
     );
 }
+

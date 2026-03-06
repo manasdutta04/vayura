@@ -29,7 +29,9 @@ import {
   Info,
 } from "lucide-react";
 import { useTheme } from "@/lib/theme-context";
-import { AnalyticsData } from "@/lib/types/analytics";
+import {
+  AnalyticsData,
+} from "@/lib/types/analytics";
 
 export default function AnalyticsPage() {
   const [data, setData] = useState<AnalyticsData | null>(null);
@@ -482,7 +484,7 @@ export default function AnalyticsPage() {
                           </span>
                         </div>
                         <p className="text-sm text-gray-600 leading-relaxed mb-4 italic">
-                          &quot;{data.predictive.aiSummary}&quot;
+                          {`"${data.predictive.aiSummary}"`}
                         </p>
                         {data.predictive.recommendations && (
                           <div className="space-y-2">
@@ -603,3 +605,4 @@ function MetricCard({
     </div>
   );
 }
+

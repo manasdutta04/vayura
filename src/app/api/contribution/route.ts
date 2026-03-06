@@ -81,9 +81,10 @@ export async function GET(request: Request) {
         });
 
         // Get district names for plantations and donation verifications
+        // Guard against empty districtId strings to prevent Firestore errors
         const districtIds = [...new Set([
-            ...plantations.map((c: TreeContribution) => c.districtId),
-            ...donationVerifications.map((c: TreeContribution) => c.districtId)
+            ...plantations.map((c: TreeContribution) => c.districtId).filter((id: string) => id),
+            ...donationVerifications.map((c: TreeContribution) => c.districtId).filter((id: string) => id)
         ])];
         const districtsMap = new Map<string, string>();
 

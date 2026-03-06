@@ -1,6 +1,6 @@
 "use client";
 
-import {useState, useEffect } from "react";
+import { useState, useEffect, useSyncExternalStore } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { useAuth } from "@/lib/auth-context";
@@ -11,6 +11,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { LanguageSwitcher } from "./language-switcher";
 import Image from "next/image";
 
+function subscribe(callback: () => void) {
+  return () => {};
+}
+
 export function Header() {
   const t = useTranslations();
   const { user, loading, signOut } = useAuth();
@@ -19,12 +23,13 @@ export function Header() {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [photoErrorURL, setPhotoErrorURL] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setMounted(true);
-  }, []);
+  // Use useSyncExternalStore for SSR-safe hydration
+  const isMounted = useSyncExternalStore(
+    subscribe,
+    () => true,
+    () => false
+  );
 
   return (
     <>
@@ -115,7 +120,7 @@ export function Header() {
           {/* Mobile + Auth + Language */}
           <div className="flex items-center gap-2 sm:gap-3">
             {/* Theme Toggle */}
-            {mounted && (
+            {isMounted && (
               <button
                 onClick={toggleTheme}
                 className="p-2 text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800 rounded-md transition-colors"
@@ -468,3 +473,4 @@ export function Header() {
     </>
   );
 }
+

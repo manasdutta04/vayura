@@ -19,10 +19,10 @@ export const DistrictSearch = ({ onDistrictSelect, className = '', autoFocus = f
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<DistrictSearchResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
   const [recentDistricts, setRecentDistricts] = useState<DistrictSearchResult[]>([]);
   const [dataSource, setDataSource] = useState<'network' | 'cache' | null>(null);
-  const [error, setError] = useState<string | null>(null);
   
   const isOnline = useIsOnline();
   const searchRef = useRef<HTMLDivElement>(null);

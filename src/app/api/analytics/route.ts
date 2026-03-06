@@ -4,7 +4,7 @@ import { getAnalyticsData } from '@/lib/services/analytics';
 // Force dynamic to avoid build-time Firestore calls
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(_request: Request) {
     try {
         // Check for admin authorization (optional: can be done via middleware or in page)
         // For now, we'll just fetch the data. 

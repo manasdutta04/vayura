@@ -127,6 +127,12 @@ export function calculateUserImpact(
             districtId,
             districtName: data.districtName,
             state: data.state,
+            // New field names
+            treeCount: data.trees,
+            oxygenOffset: Math.round(data.oxygenOffset * 100) / 100,
+            percentageOffset: percentOfDeficit,
+            deficit: Math.round(districtDeficitKg * 100) / 100,
+            // Legacy field names (backward compatibility)
             treesContributed: data.trees,
             oxygenOffsetKg: Math.round(data.oxygenOffset * 100) / 100,
             districtTotalDeficitKg: Math.round(districtDeficitKg * 100) / 100,
@@ -137,19 +143,21 @@ export function calculateUserImpact(
     // Step 3: Sort by percentage of deficit offset (most impactful first)
     districtImpacts.sort((a, b) => {
         // Primary: highest percentage offset
-        if (b.percentOfDeficitOffset !== a.percentOfDeficitOffset) {
-            return b.percentOfDeficitOffset - a.percentOfDeficitOffset;
+        const aPercent = a.percentOfDeficitOffset || 0;
+        const bPercent = b.percentOfDeficitOffset || 0;
+        if (bPercent !== aPercent) {
+            return bPercent - aPercent;
         }
         // Tie-breaker: higher oxygen offset
-        return b.oxygenOffsetKg - a.oxygenOffsetKg;
+        return (b.oxygenOffsetKg || 0) - (a.oxygenOffsetKg || 0);
     });
 
     // Find most impacted district (first after sorting)
     const mostImpactedDistrict = districtImpacts.length > 0 ? districtImpacts[0] : null;
 
     // Calculate totals
-    const totalTrees = districtImpacts.reduce((sum, d) => sum + d.treesContributed, 0);
-    const totalOxygenOffset = districtImpacts.reduce((sum, d) => sum + d.oxygenOffsetKg, 0);
+    const totalTrees = districtImpacts.reduce((sum, d) => sum + (d.treesContributed || 0), 0);
+    const totalOxygenOffset = districtImpacts.reduce((sum, d) => sum + (d.oxygenOffsetKg || 0), 0);
 
     return {
         userId,

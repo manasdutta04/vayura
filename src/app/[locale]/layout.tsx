@@ -24,6 +24,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   // Provide all messages to the client side
+  // Fallback to English messages for missing translations
   const messages = await getMessages();
 
   return (
