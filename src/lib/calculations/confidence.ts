@@ -31,10 +31,10 @@ export interface ConfidenceWeights {
 export const DEFAULT_CONFIDENCE_WEIGHTS: ConfidenceWeights = {
   realtimeAQI: 30,
   fallbackAQI: 10,
-  geminiData: 25,
+  geminiData: 30,
   fallbackDataset: 15,
   recentPopulation: 25,
-  oldPopulation: 10,
+  oldPopulation: 15,
   freshData: 15,
   staleData: 0,
 };

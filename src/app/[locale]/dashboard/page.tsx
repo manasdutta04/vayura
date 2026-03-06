@@ -29,6 +29,8 @@ export default function Dashboard() {
   const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
   const [districtDetail, setDistrictDetail] = useState<DistrictDetail | null>(null);
   const [loadingDetail, setLoadingDetail] = useState(false);
+  const [selectedDistrict, setSelectedDistrict] = useState<DistrictSearchResult | null>(null);
+  const [districtNotFound, setDistrictNotFound] = useState(false);
 
   // Redirect to home if not authenticated
   useEffect(() => {

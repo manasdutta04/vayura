@@ -290,7 +290,7 @@ export async function fetchPlantationRecommendations(
 ): Promise<TreeRecommendation[]> {
     if (!config.apiKey) {
         console.warn('GEMINI_API_KEY not configured, returning mock recommendations');
-        return getMockRecommendations(districtName, stateName);
+        return getMockRecommendations(districtName);
     }
 
     const data = await fetchDistrictDataWithGemini({
