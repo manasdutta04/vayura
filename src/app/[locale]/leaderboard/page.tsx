@@ -1,8 +1,8 @@
 'use client';
 
-import { Link } from '@/i18n/navigation';
+import { Link, useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
-
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Header } from '@/components/ui/header';
 import { Footer } from '@/components/ui/footer';
@@ -10,18 +10,18 @@ import { LeaderboardEntry } from '@/lib/types';
 import { formatCompactNumber } from '@/lib/utils/helpers';
 import { VALIDATED_DATA_SOURCES } from '@/lib/data-sources/validation';
 import { ENVIRONMENTAL_CONSTANTS } from '@/lib/constants/environmental';
-import { AlertCircle, RefreshCw } from 'lucide-react';
+import { AlertCircle, RefreshCw, ChevronLeft, ChevronRight } from 'lucide-react';
 
-async function getLeaderboard(): Promise<{ data?: LeaderboardEntry[]; error?: string }> {
+async function getLeaderboard(page: number, pageSize: number): Promise<{ data?: LeaderboardEntry[]; total?: number; totalPages?: number; error?: string }> {
     try {
-        const res = await fetch('/api/leaderboard', {
+        const res = await fetch(`/api/leaderboard?page=${page}&pageSize=${pageSize}`, {
             cache: 'no-store',
         });
         if (!res.ok) {
             throw new Error(`Failed to fetch leaderboard: ${res.status}`);
         }
         const data = await res.json();
-        return { data };
+        return { data: data.data, total: data.total, totalPages: data.totalPages };
     } catch (error) {
         return { error: error instanceof Error ? error.message : 'Unknown error occurred' };
     }
@@ -29,26 +29,64 @@ async function getLeaderboard(): Promise<{ data?: LeaderboardEntry[]; error?: st
 
 export default function LeaderboardPage() {
     const t = useTranslations('leaderboard');
+    const router = useRouter();
+    const searchParams = useSearchParams();
     const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [showDataSources, setShowDataSources] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
+    const [total, setTotal] = useState(0);
+    const [pageCache, setPageCache] = useState<Record<string, LeaderboardEntry[]>>({});
 
+    // Get page and pageSize from URL
+    const page = Math.max(1, parseInt(searchParams?.get('page') || '1', 10));
+    const pageSize = Math.min(50, Math.max(10, parseInt(searchParams?.get('pageSize') || '10', 10)));
+
+    // Single fetch effect - read from searchParams directly
     useEffect(() => {
         const fetchData = async () => {
+            const cacheKey = `${page}-${pageSize}`;
+
+            // Check cache first
+            if (pageCache[cacheKey]) {
+                setEntries(pageCache[cacheKey]);
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
             setError(null);
-            const result = await getLeaderboard();
+            const result = await getLeaderboard(page, pageSize);
             if (result.error) {
                 setError(result.error);
                 setEntries([]);
             } else {
                 setEntries(result.data || []);
+                setTotalPages(result.totalPages || 0);
+                setTotal(result.total || 0);
+                // Cache this page
+                setPageCache((prev) => ({
+                    ...prev,
+                    [cacheKey]: result.data || [],
+                }));
             }
             setLoading(false);
         };
         fetchData();
-    }, []);
+    }, [page, pageSize, pageCache]);
+
+    const handlePageChange = (newPage: number) => {
+        router.push(`?page=${newPage}&pageSize=${pageSize}`);
+    };
+
+    const handlePageSizeChange = (newSize: number) => {
+        router.push(`?page=1&pageSize=${newSize}`);
+    };
+
+    // Calculate showing text
+    const startItem = (page - 1) * pageSize + 1;
+    const endItem = Math.min(page * pageSize, total);
 
     return (
         <>
@@ -286,6 +324,72 @@ export default function LeaderboardPage() {
                             </table>
                         </div>
                     </div>
+
+                    {/* Pagination Controls */}
+                    {!loading && !error && entries.length > 0 && (
+                        <div className="mt-6 space-y-4">
+                            {/* Showing text */}
+                            <div className="text-sm text-gray-600 dark:text-gray-400">
+                                Showing {startItem}–{endItem} of {total}
+                            </div>
+
+                            {/* Controls */}
+                            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                                <div className="flex items-center gap-2">
+                                    <span className="text-sm text-gray-600 dark:text-gray-400">Rows per page:</span>
+                                    <select
+                                        value={pageSize}
+                                        onChange={(e) => handlePageSizeChange(Number(e.target.value))}
+                                        className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 text-sm"
+                                    >
+                                        <option value={10}>10</option>
+                                        <option value={25}>25</option>
+                                        <option value={50}>50</option>
+                                    </select>
+                                </div>
+
+                                <div className="flex items-center gap-2">
+                                    <button
+                                        onClick={() => handlePageChange(page - 1)}
+                                        disabled={page === 1 || loading}
+                                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronLeft className="w-5 h-5" />
+                                    </button>
+
+                                    {/* Page numbers */}
+                                    <div className="flex items-center gap-1">
+                                        {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                                            const pageNum = i + 1;
+                                            return (
+                                                <button
+                                                    key={pageNum}
+                                                    onClick={() => handlePageChange(pageNum)}
+                                                    disabled={loading}
+                                                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                                                        page === pageNum
+                                                            ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
+                                                            : 'border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-800'
+                                                    }`}
+                                                >
+                                                    {pageNum}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
+
+                                    <button
+                                        onClick={() => handlePageChange(page + 1)}
+                                        disabled={page === totalPages || loading}
+                                        className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                                    >
+                                        <ChevronRight className="w-5 h-5" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="mt-8 space-y-3 bg-gray-50 dark:bg-gray-800 p-5 rounded-lg border border-gray-200 dark:border-gray-700">
                         <div className="flex items-center justify-between">
                             <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
